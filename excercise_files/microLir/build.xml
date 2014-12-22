@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  =======================================================================
+    KingLir build file
+  =======================================================================
+-->
+<project name="microLIR" default="build" basedir=".">
+    <!-- Set global properties for this build -->
+    <property name="src" value="src"/>
+    <property name="src.tests" value="tests"/>
+    <property name="build" value="build"/>
+    <property name="javadocs" value="javadocs"/>
+
+    <!--
+       ===================================================================
+         Sets up internal values
+       ===================================================================
+  -->
+    <target name="init" description="-> sets up internal values">
+        <!-- Create the classes directory structure used by compile -->
+        <mkdir dir="${build}"/>
+    </target>
+
+    <!--
+       ===================================================================
+         Generates the microLIR parser
+       ===================================================================
+  -->
+    <target name="parser" depends="init" description="-> generates the microLIR parser">
+    <java classname="java_cup.Main">
+       <arg value="-parser"/>
+       <arg value="Parser"/>
+       <arg value="${src}/microLIR/parser/LIR.cup"/>
+    </java>
+    <replace file="Parser.java" value='@SuppressWarnings(value={"all"}) class Parser'>
+	 <replacetoken>class Parser</replacetoken>
+    </replace>		
+    <replace file="Parser.java" value='@SuppressWarnings(value={"all"}) class CUP$Parser$actions'>
+	 <replacetoken>class CUP$Parser$actions</replacetoken>
+    </replace>		
+
+    <move file="Parser.java" todir="${src}/microLIR/parser"/>
+    <move file="sym.java" todir="${src}/microLIR/parser"/>
+    </target>
+
+    <!--
+       ===================================================================
+         Generates the microLIR scanner
+       ===================================================================
+  -->
+    <target name="scanner" depends="init" description="-> generates the microLIR scanner">
+    <java classname="JFlex.Main">
+       <arg value="${src}/microLIR/parser/LIR.lex"/>
+    </java>
+    <replace file="${src}/microLIR/parser/Lexer.java" value='@SuppressWarnings(value={"all"}) class Lexer'>
+	 <replacetoken>class Lexer</replacetoken>
+    </replace>		
+    </target>
+
+    <!--
+       ===================================================================
+         Compiles the sources
+       ===================================================================
+  -->
+    <target name="build" depends="init" description="-> compiles the source code to create the tree of classes">
+        <!-- Compile the java code from ${src} into ${build} -->
+        <echo message="Compiling sources..."/>
+        <javac srcdir="${src}"
+           destdir="${build}"
+           source="1.5"
+           debug="${debug}"
+           deprecation="${deprecation}"
+           optimize="${optimize}"/>
+    </target>
+	
+    <!--
+       ===================================================================
+         Cleans and the builds
+       ===================================================================
+  -->
+    <target name="rebuild" depends="clean, build" description="-> first cleans and then build everything">
+    </target>
+
+    <!--
+       ===================================================================
+         Deletes the build and dist directory trees
+       ===================================================================
+  -->
+    <target name="clean" description="-> cleans up build and dist directories">
+        <delete dir="${build}"/>
+    	<delete dir="${javadocs}"/>
+    </target>	
+
+    <!--
+       ===================================================================
+         Creates the source documentation
+       ===================================================================
+  -->
+    <target name="javadocs" depends="init" description="-> creates the source documentation">
+        <mkdir dir="${javadocs}"/>
+        <javadoc source="1.5"
+                packagenames="microLIR.*"
+                sourcepath="${src}"
+                destdir="${javadocs}"
+                author="true"
+                version="true"
+                Header="microLIR Reference"
+                windowtitle="microLIR Reference"
+                doctitle="microLIR Reference">
+        </javadoc>
+    </target>
+</project>
