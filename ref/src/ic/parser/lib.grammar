@@ -1,0 +1,7 @@
+S               -> libic
+libic           -> class CLASS_ID { libmethod }
+libmethod       -> static libmethod_type ID ( formals ) ; libmethod | 
+libmethod_type  -> void | type
+type            -> int | boolean | string | CLASS_ID | type [ ]
+formals         -> type ID formals_more | 
+formals_more    -> , type ID formals_more | 

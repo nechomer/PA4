@@ -1,0 +1,52 @@
+S                  -> program
+program            -> classDecl program | 
+classDecl          -> class CLASS_ID classDecl_extends { classContent }
+classDecl_extends  -> extends CLASS_ID | 
+classContent       -> field classContent | method classContent |  
+field              -> type ID field_more ;
+field_more         -> , ID field_more | 
+method             -> method_static method_type ID ( formals ) { method_body }
+method_static      -> static | 
+method_type        -> void | type
+method_body        -> stmt method_body | 
+type               -> int | boolean | string | CLASS_ID | type [ ]
+formals            -> type ID formals_more | 
+formals_more       -> , type ID formals_more | 
+stmt               -> stmt_open | stmt_closed
+stmt_open          -> if ( expr ) stmt
+stmt_open          -> if ( expr ) stmt_closed else stmt_open
+stmt_open          -> while ( expr ) stmt_open
+stmt_closed        -> stmt_simple
+stmt_closed        -> if ( expr ) stmt_closed else stmt_closed
+stmt_closed        -> while ( expr ) stmt_closed
+stmt_simple        -> location = expr ; | call ; | return stmt_ret ; | break ;
+stmt_simple        -> continue ; | { stmt_block } | type ID stmt_init ;
+stmt_init          -> = expr | 
+stmt_block         -> stmt stmt_block | 
+stmt_ret           -> expr | 
+expr               -> expr_8
+expr_8             -> expr_8 || expr_7
+expr_8             -> expr_7
+expr_7             -> expr_7 && expr_6
+expr_7             -> expr_6
+expr_6             -> expr_6 == expr_5 | expr_6 != expr_5    
+expr_6             -> expr_5
+expr_5             -> expr_5 < expr_4 | expr_5 <= expr_4
+expr_5             -> expr_5 > expr_4 | expr_5 >= expr_4
+expr_5             -> expr_4
+expr_4             -> expr_4 + expr_3 | expr_4 - expr_3
+expr_4             -> expr_3
+expr_3             -> expr_3 * expr_2 | expr_3 / expr_2 | expr_3 % expr_2
+expr_3             -> expr_2
+expr_2             -> - expr_2 | ! expr_2
+expr_2             -> expr_1
+expr_1             -> new CLASS_ID ( ) | new type [ expr ]
+expr_1             -> expr_0
+expr_0             -> location | call | this | expr_1 . length | literal | ( expr )
+location           -> ID | expr_1 . ID | expr_0 [ expr ]
+literal            -> INTEGER | STRING | true | false | null
+call               -> staticCall | virtualCall
+staticCall         -> CLASS_ID . ID ( call_args )
+virtualCall        -> ID ( call_args ) | expr_1 . ID ( call_args )
+call_args          -> expr call_args_more | 
+call_args_more     -> , expr call_args_more | 
