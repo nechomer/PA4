@@ -1,0 +1,671 @@
+package IC.Parser;
+
+import IC.*;
+import IC.Parser.*;
+import IC.AST.*;
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+
+parser code  {:
+
+	//**********************DEBUG*************************
+	public boolean printTokens = false;
+	public boolean printStates = false;
+	//**********************DEBUG*************************
+	
+	private Lexer lexer;
+	private int currentLine = 0;
+
+	public parser(Lexer lexer) {
+		super(lexer);
+		this.lexer = lexer;
+	}
+	
+	public int getLine() {
+		return currentLine;
+	}
+	
+	public String symbol_name_from_id(int id) {
+
+		return sym.terminalNames[id];
+	}
+	
+	public void syntax_error(Symbol s) {
+		
+		Token tok = (Token) s;
+		StringBuilder sb;
+		String exps = "";
+		List<Integer> validToken = expected_token_ids();
+		if(validToken.size() > 0) {
+			sb = new StringBuilder();
+			sb.append("Line " + tok.getLine()+": Syntax error; expected ");
+			for(int i=0;i<validToken.size();i++) {
+				exps = symbol_name_from_id(validToken.get(i));
+				sb.append(exps + " , ");
+				
+			}
+			sb.append("but found " + tok);
+			report_fatal_error(sb.toString(), null);
+		}
+		else
+			report_fatal_error("Line " + tok.getLine()+": Syntax error; unexpected " + tok, null);
+	}
+
+	public void report_fatal_error(String message, Object info){
+		throw new ParserException(message);
+	}
+
+	private void printGrammar(String str) {
+		if (printStates) { System.out.println(str); }
+	}
+
+	//**********************BONUS*************************
+	private boolean isFaultyDecl(Statement s) {
+		if(s instanceof LocalVariable) return true;
+		return false;
+	}
+:}
+
+
+scan with {:
+	Token t = lexer.next_token();
+	currentLine = t.getLine();
+
+	if (printTokens)
+		System.out.println(t.getLine() + ":" + t);
+	return t; 
+:};
+
+
+
+/*********** Symbol list - terminals ***********/
+
+terminal CLASS, EXTENDS, STATIC;
+terminal VOID, INTEGER, BOOLEAN, STRING;
+terminal RETURN, IF, ELSE, WHILE, BREAK, CONTINUE;
+terminal THIS, NEW, LENGTH;
+terminal LBRACKET, RBRACKET; /****array_type****/
+terminal LPAREN, RPAREN;
+terminal DOT, MINUS, NOT, UMINUS, MULT, DIV, MODULU, PLUS, LT, LTEQ, GT, GTEQ, EQEQ, NEQ, AND, OR, EQ;
+terminal LBRACE, RBRACE, SEMI, COMA;
+
+terminal java.lang.String IDENTIFIER; /****var_name****/
+terminal java.lang.String CLASS_ID; /****class_name****/
+terminal java.lang.Number INTEGER_LITERAL;
+terminal java.lang.Boolean TRUE_LITERAL;
+terminal java.lang.Boolean FALSE_LITERAL;
+terminal java.lang.String STRING_LITERAL;
+terminal NULL_LITERAL;
+
+
+
+/*********** Symbol list - non-terminals) ***********/
+
+non terminal Program program;
+non terminal ICClass icclass;
+non terminal List<ICClass> icclass_list;
+non terminal String class_extends;
+non terminal FieldsAndMethodsList class_body;
+
+non terminal Method method;
+non terminal List<Field> field_list;
+non terminal List<String> more_field_ids;
+non terminal Field field;
+
+non terminal StaticMethod static_method;
+non terminal VirtualMethod virtual_method;
+
+non terminal List<Statement> stmt_list;
+non terminal Statement stmt;
+non terminal StatementsBlock stmt_block;
+
+non terminal Assignment assignment_stmt;
+non terminal CallStatement call_stmt;
+non terminal Return return_stmt;
+non terminal If if_stmt;
+non terminal If if_else_stmt;
+non terminal While while_stmt;
+non terminal Break break_stmt;
+non terminal Continue continue_stmt;
+
+non terminal StaticCall static_call;
+non terminal VirtualCall virtual_call;
+
+non terminal CallParams call_without_exprs;
+non terminal CallParams call_with_exprs;
+non terminal CallParams call_with_expr;
+non terminal CallParams call_without_expr;
+non terminal java.lang.String dot_identifier;
+
+non terminal List<Formal> formal_list;
+non terminal Formal formal;
+non terminal Type type;
+
+non terminal Expression expr;
+non terminal List<Expression> expr_list;
+non terminal Location location;
+non terminal Call call_expr;
+non terminal Expression binop_expr;
+non terminal Expression unop_expr;
+non terminal Literal literal;
+
+
+
+/*********** Precedence declarations ***********/
+
+precedence nonassoc IF;
+precedence nonassoc ELSE;
+
+precedence right EQ;
+precedence left  OR;
+precedence left  AND;
+precedence left  EQEQ, NEQ;
+precedence left  LT, LTEQ, GT, GTEQ;
+precedence left  MINUS, PLUS;
+precedence left  DIV, MULT, MODULU;
+precedence right NOT, UMINUS;
+precedence left  LPAREN, RPAREN, LBRACKET, RBRACKET, DOT;
+
+
+
+/*********** The grammar ***********/
+
+program ::= icclass_list:iccl
+
+	{: RESULT = new Program(iccl); :}
+
+	| 		{: RESULT = new Program(new ArrayList<ICClass>()); printGrammar("made program"); :}
+
+	;
+icclass_list ::=  icclass:icc
+
+	{: List<ICClass> classList = new ArrayList<ICClass>(); classList.add(icc); RESULT = classList; printGrammar("made class list with 1 class"); :}
+
+	|		icclass_list:iccl icclass:icc
+
+	{: iccl.add(icc); RESULT = iccl; printGrammar("made new class, and added to class list "); :}
+
+	;
+
+icclass ::= CLASS CLASS_ID:ci class_extends:ce LBRACE class_body:cb RBRACE
+
+	{: 
+		Token c = ((Token)CUP$parser$stack.elementAt(CUP$parser$top-5));
+		if (ce == null) {		/* there is no extention to the class */
+		RESULT = new ICClass(c.getLine(), ci, cb.getFields(), cb.getMethods()); 
+		} else {
+		RESULT = new ICClass(c.getLine(), ci, ce,cb.getFields(), cb.getMethods()); 
+		}
+		printGrammar("made new class ");
+	:}
+
+	;
+
+class_extends ::= 	EXTENDS CLASS_ID:ci
+
+		{: RESULT = ci; printGrammar("class extends "); :}
+
+	| 	{: RESULT = null; printGrammar("class does not extends "); :}			/* return null as String */
+
+	;
+
+class_body ::= 	class_body:cb field_list:fl SEMI
+
+		{: cb.insertFields(fl); RESULT = cb; printGrammar("class body fields "); :}
+
+	|			class_body:cb method:m
+
+		{: cb.insertMethod(m); RESULT = cb; printGrammar("class body method "); :}
+
+	| 	{: RESULT = new FieldsAndMethodsList(); printGrammar("class body finished "); :}
+
+	;
+
+method ::= 	static_method:sm
+		
+		{: RESULT = sm; printGrammar("static method "); :}
+
+	|		virtual_method:vm
+
+		{: RESULT = vm; printGrammar("virtual method "); :}
+
+	;
+
+
+/* very complex, relys on formals.... */
+field_list ::= 	field:f more_field_ids:mfi
+
+	{: List<Field> fieldList = new ArrayList<Field>(); 
+		fieldList.add(f);
+		for(String fieldName: mfi){ Field fi = new Field(f.getType(), fieldName); fieldList.add(fi); } 
+		RESULT = fieldList; :}
+
+	;
+
+
+more_field_ids ::= COMA IDENTIFIER:id more_field_ids:mfi
+
+		{: RESULT = mfi; mfi.add(id); :}
+
+	|	
+
+		{: RESULT = new ArrayList<String>(); :}
+
+	;
+
+
+field ::= type:t IDENTIFIER:id
+
+		{: RESULT = new Field(t, id); printGrammar("added field " + id); :}
+
+	;
+
+static_method ::= STATIC type:t IDENTIFIER:id LPAREN RPAREN LBRACE stmt_list:sl RBRACE
+
+		{: RESULT = new StaticMethod(t, id, new ArrayList<Formal>(), sl); printGrammar("added static method no formals: " + id); :}
+
+	|	STATIC type:t IDENTIFIER:id LPAREN formal_list:fl RPAREN LBRACE stmt_list:sl RBRACE
+
+		{: RESULT = new StaticMethod(t, id, fl, sl); printGrammar("added static method " + id); :}
+
+	|	STATIC VOID IDENTIFIER:id LPAREN RPAREN LBRACE stmt_list:sl RBRACE
+
+		{: Token c = ((Token)CUP$parser$stack.elementAt(CUP$parser$top-5)); RESULT = new StaticMethod(new PrimitiveType(c.getLine(), DataTypes.VOID), id, new ArrayList<Formal>(), sl); printGrammar("added void static method no formals " + id); :}
+
+	|	STATIC VOID IDENTIFIER:id LPAREN formal_list:fl RPAREN LBRACE stmt_list:sl RBRACE
+
+		{: Token c = ((Token)CUP$parser$stack.elementAt(CUP$parser$top-6)); RESULT = new StaticMethod(new PrimitiveType(c.getLine(), DataTypes.VOID) , id, fl, sl); printGrammar("added void static method " + id); :}
+
+	;
+
+virtual_method ::=  type:t IDENTIFIER:id LPAREN RPAREN LBRACE stmt_list:sl RBRACE
+		
+		{: RESULT = new VirtualMethod(t, id, new ArrayList<Formal>(), sl); printGrammar("added virtual method no formals: " + id); :}
+
+	| 	 type:t IDENTIFIER:id LPAREN formal_list:fl RPAREN LBRACE stmt_list:sl RBRACE
+
+		{: RESULT = new VirtualMethod(t, id, fl, sl); printGrammar("added virtual method " + id); :}
+
+	|	 VOID IDENTIFIER:id LPAREN RPAREN LBRACE stmt_list:sl RBRACE
+
+		{: Token c = ((Token)CUP$parser$stack.elementAt(CUP$parser$top-5)); RESULT = new VirtualMethod(new PrimitiveType(c.getLine(), DataTypes.VOID), id, new ArrayList<Formal>(), sl); printGrammar("added void virtual method no formal: " + id); :}
+
+	|	 VOID IDENTIFIER:id LPAREN formal_list:fl RPAREN LBRACE stmt_list:sl RBRACE
+
+		{: Token c = ((Token)CUP$parser$stack.elementAt(CUP$parser$top-6)); RESULT = new VirtualMethod(new PrimitiveType(c.getLine(), DataTypes.VOID) , id, fl, sl); printGrammar("added void virtual method: " + id); :}
+
+	;
+
+
+stmt_list ::=		stmt_list:sl stmt:st
+
+		{: sl.add(st); RESULT = sl; :}
+
+	| 		{: RESULT = new ArrayList<Statement>(); :}		/* return empty List<Statement> */
+
+	;
+
+stmt ::= 	assignment_stmt:as SEMI
+
+		{: RESULT = as; printGrammar("assignment_stmt under stmt "); :}
+
+	|		call_stmt:cs
+
+		{: RESULT = cs; :}
+
+	|		return_stmt:rs SEMI
+
+		{: RESULT = rs; :}
+
+	|		if_stmt:is
+
+		{: RESULT = is; printGrammar("if_stmt under stmt "); :}
+
+	|		if_else_stmt:ies
+
+		{: RESULT = ies; :}
+
+	|		while_stmt:ws
+
+		{: RESULT = ws; :}
+
+	|		break_stmt:bs SEMI
+
+		{: RESULT = bs; printGrammar("break_stmt under stmt "); :}
+
+	|		continue_stmt:cs SEMI
+
+		{: RESULT = cs; :}
+
+	|		stmt_block:sb
+
+		{: RESULT = sb; :}
+
+	|		type:t IDENTIFIER:i SEMI
+
+		{: RESULT = new LocalVariable(t, i); :} 
+
+	|		type:t IDENTIFIER:i EQ expr:e SEMI
+
+		{: RESULT = new LocalVariable(t, i, e); :}
+
+	;
+
+assignment_stmt ::= location:l EQ expr:e
+
+		{: RESULT = new Assignment(l, e); printGrammar("location eq expr under assignment_stmt "); :}
+
+	;
+
+call_stmt ::= 	call_expr:ce SEMI
+
+		{: RESULT =  new CallStatement(ce); :}
+
+	;
+
+return_stmt ::= RETURN
+
+		{: RESULT = new Return(getLine()); :}
+
+	|			RETURN expr:e
+
+		{: RESULT = new Return(getLine(), e); :}
+
+	;
+
+if_stmt ::= IF LPAREN expr:e RPAREN stmt:s 
+
+		{: RESULT = new If(e, s); printGrammar("if_stmt if (expr) stmt "); 
+			if(isFaultyDecl(s)) throw new ParserException("syntax error; invalid declaration of variable inside if statement!"); 
+		:} %prec IF
+
+	;
+
+if_else_stmt ::= IF LPAREN expr:e RPAREN stmt:s1 ELSE stmt:s2 
+
+		{: RESULT = new If(e, s1, s2); 
+			if(isFaultyDecl(s2)) throw new ParserException("syntax error; invalid declaration of variable inside if statement!"); 
+		:} %prec ELSE
+
+	;
+
+while_stmt ::= WHILE LPAREN expr:e RPAREN stmt:s
+
+		{: RESULT = new While(e, s); :}
+
+	;
+
+break_stmt ::= BREAK
+
+		{: RESULT = new Break(getLine()); printGrammar("break_stmt "); :}
+
+	;
+
+continue_stmt ::= CONTINUE
+
+		{: RESULT = new Continue(getLine()); :}
+
+	;
+
+stmt_block ::=	LBRACE stmt_list:sl RBRACE
+
+		{: Token c = ((Token)CUP$parser$stack.elementAt(CUP$parser$top-2)); RESULT = new StatementsBlock(c.getLine(), sl); :}
+
+	;
+
+expr ::= location:l
+
+		{: RESULT = l; printGrammar("location in expr "); :}
+
+	|	call_expr:c
+
+		{: RESULT = c; :}
+
+	|	THIS
+
+		{: RESULT = new This(getLine()); :}
+
+	|	NEW CLASS_ID:ci LPAREN RPAREN
+
+		{: RESULT = new NewClass(getLine(), ci); :}
+
+	|	NEW type:t LBRACKET expr:e RBRACKET
+
+		{: t.incrementDimension(); RESULT = new NewArray(t, e); printGrammar("new in expr "); :}
+
+	|	expr:e DOT LENGTH
+
+		{: RESULT = new Length(e); :}
+
+	|	binop_expr:e
+
+		{: RESULT = e; :}
+
+	|	unop_expr:e
+
+		{: RESULT = e; :}
+
+	|	literal:l
+
+		{: RESULT = l; :}
+
+	|	LPAREN expr:e RPAREN
+
+		{: RESULT = new ExpressionBlock(e); :}
+
+	;
+
+call_expr ::= 	static_call:sc
+
+		{: RESULT = sc; :}
+
+	|			virtual_call:vc
+
+		{: RESULT = vc; :}
+
+	;
+
+expr_list ::= expr:e
+
+		{: List<Expression> expsList = new ArrayList<Expression>(); expsList.add(e); RESULT = expsList; :}
+
+	|	expr_list:el COMA expr:e
+
+		{: el.add(e); RESULT = el; :}
+
+	;
+
+formal_list ::= formal:f
+
+		{: List<Formal> formalList = new ArrayList<Formal>(); formalList.add(f); RESULT = formalList; :}
+
+	| 			formal_list:fl COMA formal:f
+
+		{: fl.add(f); RESULT = fl; :}
+
+	;
+
+formal  ::= type:t IDENTIFIER:i
+
+		{: RESULT = new Formal(t, i); :}
+
+	;
+
+type  ::= 		INTEGER
+
+	{: RESULT = new PrimitiveType(getLine(), DataTypes.INT); :}
+
+		|		BOOLEAN
+
+	{: RESULT = new PrimitiveType(getLine(), DataTypes.BOOLEAN); :}
+
+		|		STRING
+
+	{: RESULT = new PrimitiveType(getLine(), DataTypes.STRING); :}
+
+		|		CLASS_ID:ci
+
+	{: RESULT = new UserType(getLine(), ci); :}
+
+		| 		type:ft LBRACKET RBRACKET
+
+	{: ft.incrementDimension(); RESULT = ft; :} 
+
+	;
+
+static_call ::= CLASS_ID:ci DOT call_without_expr:cwe
+
+		{: Token c = ((Token)CUP$parser$stack.elementAt(CUP$parser$top-2)); RESULT = new StaticCall(c.getLine(), ci, cwe.getMethodName(), cwe.getArguments()); :}
+
+	;
+		
+virtual_call ::= call_with_expr:cwe
+
+		{: RESULT = new VirtualCall(cwe.getLine(), cwe.getLocation(), cwe.getMethodName(), cwe.getArguments()); :}
+
+	| call_without_expr:cwe
+
+		{: RESULT = new VirtualCall(cwe.getLine(), cwe.getMethodName(), cwe.getArguments()); :}
+
+	;
+
+call_with_expr ::= expr:e DOT call_without_expr:cwe	
+
+		{: cwe.setLocation(e); RESULT = cwe; :}
+
+	;
+
+call_without_expr ::= call_without_exprs:cwe
+
+		{: RESULT = cwe; :}
+
+	|	    IDENTIFIER:id call_with_exprs:cwe
+
+		{: Token c = ((Token)CUP$parser$stack.elementAt(CUP$parser$top-1)); cwe.setLine(c.getLine()); cwe.setMethodName(id); RESULT = cwe; :}
+
+
+	;
+
+call_without_exprs ::= IDENTIFIER:id LPAREN RPAREN
+
+		{: Token c = ((Token)CUP$parser$stack.elementAt(CUP$parser$top-2)); CallParams cp = new CallParams(); cp.setMethodName(id); cp.setArguments(new ArrayList<Expression>());  cp.setLine(c.getLine()); RESULT = cp; :}
+
+	;
+		
+call_with_exprs ::= LPAREN expr_list:el RPAREN
+
+		{: CallParams cp = new CallParams(); cp.setArguments(el); RESULT = cp; :}
+
+	;
+
+dot_identifier ::= DOT IDENTIFIER:id
+
+		{: RESULT = id; :}
+
+	;
+
+location ::=	IDENTIFIER:id
+
+		{: RESULT = new VariableLocation(getLine(), id); printGrammar("location identifier " + id); :}
+
+	|		expr:e dot_identifier:id
+
+		{: RESULT = new VariableLocation(getLine(), e, id); printGrammar("location dot identifier " + id); :}
+
+	|		expr:e1 LBRACKET expr:e2 RBRACKET
+
+		{: RESULT = new ArrayLocation(e1, e2); printGrammar("location expr[expr] : expr: " + e1 + "[expr] :" + e2); :}
+
+	;
+
+
+binop_expr	::=	expr:e1 PLUS expr:e2
+
+	{: RESULT = new MathBinaryOp(e1, BinaryOps.PLUS, e2); :}
+		
+	|			expr:e1 MINUS expr:e2
+	
+	{: RESULT = new MathBinaryOp(e1, BinaryOps.MINUS, e2); :}
+		
+	|	    	expr:e1 MULT expr:e2
+	
+	{: RESULT = new MathBinaryOp(e1, BinaryOps.MULTIPLY, e2); :}
+		
+	|			expr:e1 DIV expr:e2
+	
+	{: RESULT = new MathBinaryOp(e1, BinaryOps.DIVIDE, e2); :}
+		
+	|	    	expr:e1 MODULU expr:e2
+	
+	{: RESULT = new MathBinaryOp(e1, BinaryOps.MOD, e2); :}
+		
+	|			expr:e1 AND expr:e2
+	
+	{: RESULT = new LogicalBinaryOp(e1, BinaryOps.LAND, e2); :}
+		
+	|			expr:e1 OR expr:e2
+	
+	{: RESULT = new LogicalBinaryOp(e1, BinaryOps.LOR, e2); :}
+		
+	|			expr:e1 LT expr:e2
+	
+	{: RESULT = new LogicalBinaryOp(e1, BinaryOps.LT, e2); :}
+		
+	|			expr:e1 LTEQ expr:e2
+	
+	{: RESULT = new LogicalBinaryOp(e1, BinaryOps.LTE, e2); :}
+		
+	|			expr:e1 GT expr:e2
+	
+	{: RESULT = new LogicalBinaryOp(e1, BinaryOps.GT, e2); :}
+		
+	|			expr:e1 GTEQ expr:e2
+	
+	{: RESULT = new LogicalBinaryOp(e1, BinaryOps.GTE, e2); :}
+		
+	|			expr:e1 EQEQ expr:e2
+	
+	{: RESULT = new LogicalBinaryOp(e1, BinaryOps.EQUAL, e2); :}
+		
+	|			expr:e1 NEQ expr:e2
+	
+	{: RESULT = new LogicalBinaryOp(e1, BinaryOps.NEQUAL, e2); :}	
+	
+	;	
+		
+unop_expr	::=	NOT expr:e
+
+	{: RESULT = new LogicalUnaryOp(UnaryOps.LNEG, e); :}
+		
+	|			MINUS expr:e
+	
+	{: RESULT = new MathUnaryOp(UnaryOps.UMINUS, e); :} %prec UMINUS
+		
+	;
+		
+
+literal ::=	    STRING_LITERAL:st
+
+		{: RESULT = new Literal(getLine(), LiteralTypes.STRING, st); :}
+
+	|		INTEGER_LITERAL:integr
+
+		{: RESULT = new Literal(getLine(), LiteralTypes.INTEGER, integr); :}
+
+	|		TRUE_LITERAL
+
+		{: RESULT = new Literal(getLine(), LiteralTypes.TRUE); :}
+
+	|		FALSE_LITERAL
+
+		{: RESULT = new Literal(getLine(), LiteralTypes.FALSE); :}
+
+	|		NULL_LITERAL
+
+		{: RESULT = new Literal(getLine(), LiteralTypes.NULL); :}
+
+	;
+
