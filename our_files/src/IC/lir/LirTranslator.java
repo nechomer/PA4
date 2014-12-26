@@ -1,13 +1,17 @@
 package IC.lir;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import IC.BinaryOps;
 import IC.AST.ArrayLocation;
 import IC.AST.Assignment;
 import IC.AST.Break;
+import IC.AST.Call;
 import IC.AST.CallStatement;
 import IC.AST.Continue;
+import IC.AST.Expression;
 import IC.AST.ExpressionBlock;
 import IC.AST.Field;
 import IC.AST.Formal;
@@ -38,7 +42,7 @@ import IC.AST.VirtualCall;
 import IC.AST.VirtualMethod;
 import IC.AST.Visitor;
 import IC.AST.While;
-import IC.SymbolTable.Kind;
+import IC.SemanticChecks.*;
 
 public class LirTranslator implements Visitor {
 	
@@ -262,10 +266,13 @@ public class LirTranslator implements Visitor {
 
 	@Override
 	public Object visit(VariableLocation location) {
+		String lir = "";
+		String resReg = getNextReg();
+		
 		if ( ( ! location.isExternal() )  &&
 				 ( location.scope.retrieveIdentifier(location.getName()) instanceof Field  )  ){ // Implicit this
-				String lir = "";
-				String resReg = getNextReg();
+				lir = "";
+				resReg = getNextReg();
 				
 				// allocate object register and evaluate its value
 				if ( ! location.isLvalue() )
@@ -287,18 +294,18 @@ public class LirTranslator implements Visitor {
 				return lir;
 			
 			} else if ( location.isExternal() ) {
-				String lir = "";
-				String resReg = getNextReg();
+				lir = "";
+				resReg = getNextReg();
 				
 				// allocate object register and evaluate its value
 				if ( ! location.isLvalue() )
 					currReg++;
 				String objReg = getNextReg();
 				lir += location.getLocation().accept(this);
-				lir += nullCheckStr(objReg);
+				lir += nullPtrCheckStr(objReg);
 				
 				// get field offset
-				String className = location.getLocation().getTypeScope().getId();
+				String className = location.getLocation().scope.getName();
 				int offset = DispatchTableBuilder.getFieldOffset(className, location.getName());
 				
 				if ( location.isLvalue() ) {
@@ -312,11 +319,11 @@ public class LirTranslator implements Visitor {
 			} else {
 				if ( location.isLvalue() ) {
 					// variable is assignment target
-					String lir = "Move %s, " + location.getLirName() + "\n";
+					lir = "Move %s, " + location.getLirName() + "\n";
 					return lir;
 				} else {
 					// variable is a part of an expression
-					String lir = "Move " + location.getLirName() + ", " + curMaxReg() + "\n";
+					lir = "Move " + location.getLirName() + ", " + getNextReg() + "\n";
 					return lir;
 				}
 			}
@@ -324,14 +331,97 @@ public class LirTranslator implements Visitor {
 
 	@Override
 	public Object visit(ArrayLocation location) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		if ( location.isLvalue() ) {
+			
+			String lir = "";
+			
+			// array to R_T
+			String arrReg = getNextReg();
+			lir += location.getArray().accept(this);
+			lir += nullPtrCheckStr(arrReg);
 
+			// index to R_T+1
+			currReg++;
+			String indexReg = getNextReg();
+			lir += location.getIndex().accept(this);
+			lir += arrIdxOutOfBoundsCheckStr(arrReg, indexReg);
+			
+			// create assignment translation
+			lir += "MoveArray %s, " + arrReg + "[" + indexReg + "]\n";
+			
+			currReg--;
+			return lir;
+		} else {
+			String lir = "";
+
+			// Set R_T to contain the result
+			String resReg = getNextReg();
+			
+			// array to R_T+1
+			currReg++;
+			String arrReg = getNextReg();
+			lir += location.getArray().accept(this);
+			lir += nullPtrCheckStr(arrReg);
+			
+			// index to R_T+2
+			currReg++;
+			String indexReg = getNextReg();
+			lir += location.getIndex().accept(this);
+			lir += arrIdxOutOfBoundsCheckStr(arrReg, indexReg);
+			
+			// Write result to target register
+			lir += "MoveArray " + arrReg + "[" + indexReg + "], " + resReg + "\n"; 
+			
+			currReg -= 2;
+			
+			return lir;
+			
+		}
+	}
+	
+	private String callArgString(Call call, List<String> parameterRegisters) {
+		String lir = "";
+		List<Formal> fl = call.getMethod().getFormals();
+		for ( int i = 0; i < fl.size()-1 ; i++ ) 
+			lir += fl.get(i).getLirName() + "=" + parameterRegisters.get(i) + ", ";
+		if ( fl.size() > 0 )
+			lir += fl.get(fl.size()-1).getLirName() + "=" + parameterRegisters.get(fl.size()-1);
+		return lir;
+	}
+	
 	@Override
 	public Object visit(StaticCall call) {
-		// TODO Auto-generated method stub
-		return null;
+		String lir = "";
+		int startMax = currReg;
+
+		String resReg = getNextReg();
+		if ( call.isReturningVoid() )
+			resReg = "Rdummy";
+		
+		// R_T+1, R_T+2, ...   <--   evaluate arguments
+		List<String> paramRegs = new ArrayList<>(call.getArguments().size());
+		for ( Expression exp : call.getArguments() ) {
+			currReg++;
+			paramRegs.add(getNextReg());
+			lir += exp.accept(this);
+		}
+			
+		// R_T <- call the method
+		if ( call.getClassName().equals("Library") ) {
+			lir += "Library __" + call.getName() + "(";
+			for ( int i = 0; i < paramRegs.size()-1; i++ )
+				lir += paramRegs.get(i) + ",";
+			if ( paramRegs.size() > 0 )
+				lir += paramRegs.get(paramRegs.size()-1);
+		} else {
+			lir += "StaticCall _" + call.getClassName() + "_" + call.getName() + "(";
+			lir += callArgString(call, paramRegs);
+		}
+
+		lir += "), " + resReg + "\n";
+			
+		maxReg = startMax;
+		return lir;
 	}
 
 	@Override
@@ -340,6 +430,7 @@ public class LirTranslator implements Visitor {
 		return null;
 	}
 
+	
 	@Override
 	public Object visit(This thisExpression) {
 		// TODO Auto-generated method stub
@@ -366,52 +457,251 @@ public class LirTranslator implements Visitor {
 
 	@Override
 	public Object visit(MathBinaryOp binaryOp) {
-		// TODO Auto-generated method stub
-	    else {
-	      binaryLir += binaryOp.getOperator().getLirOp()  + " " + secReg + ", " + firstReg  + "\n";
-	    }
-	    
-		return null;
-	    
-	    return binaryLir;
+		String firstReg = getNextReg();
+		String binaryLir = "" + binaryOp.getFirstOperand().accept(this);
+		
+		currReg++;
+		String secReg = getNextReg();
+		binaryLir += binaryOp.getSecondOperand().accept(this);
+		
+		// add runtime divide by zero check
+		if ( binaryOp.getOperator() == BinaryOps.DIVIDE ) {
+			binaryLir += zeroDivCheckStr(secReg);
+		}
+		
+		if ( binaryOp.isStrCat() ) {
+			binaryLir += "Library __stringCat(" + firstReg  + "," + secReg + "), " + firstReg + "\n";
+		}
+		else {
+			binaryLir += binaryOp.getOperator().getLirOp()  + " " + secReg + ", " + firstReg  + "\n";
+		}
+		
+		currReg--;
+		
+		return binaryLir;
 	}
 
 	@Override
 	public Object visit(LogicalBinaryOp binaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		int lastReg = currReg;
+		
+		String binaryLir = "";
+		if ( ( binaryOp.getOperator() == BinaryOps.LAND ) ||
+				( binaryOp.getOperator() == BinaryOps.LOR ) )
+			binaryLir += andOrCode(binaryOp);
+		else
+			binaryLir += comparrisonCode(binaryOp);
+		
+		currReg = lastReg;
+		return binaryLir;
+	}
+	
+		
+		
+	private String comparrisonCode(LogicalBinaryOp binaryOp) {
+		
+		String testEnd = makeUniqueJumpLabel("logical_op_end");
+		String binaryLir = "";
+
+		String resReg = getNextReg();
+		binaryLir += "Move 0, " + resReg + "\n"; // default is false
+		currReg++;
+		
+		
+		// generate code to evaluate the 1st operand
+		String firstReg = getNextReg();
+		binaryLir += binaryOp.getFirstOperand().accept(this);
+		
+		// generate code to evaluate the 2nd operand
+		currReg++;
+		String secReg = getNextReg();
+		binaryLir += binaryOp.getSecondOperand().accept(this);
+		
+		binaryLir += "Compare " + firstReg + ", " + secReg + "\n";
+		binaryLir += binaryOp.getOperator().getLirOp() + " " + testEnd + "\n";
+		binaryLir += "Move 1, " + resReg + "\n";
+		binaryLir += testEnd + ":\n";
+		
+		return binaryLir;
+	}
+
+	private String andOrCode(LogicalBinaryOp binaryOp) {
+
+		String testEnd = makeUniqueJumpLabel("logical_op_end");
+		String binaryLir = "";
+
+		String firstReg = getNextReg();
+
+		// generate code to evaluate the 1st operand
+		binaryLir += binaryOp.getFirstOperand().accept(this);
+		
+		
+		if ( binaryOp.getOperator() == BinaryOps.LAND ) { // lazy "&&" evaluation
+			binaryLir += "Compare 0, " + firstReg + "\n" +
+					"JumpTrue " + testEnd + "\n" ;
+		} else if ( binaryOp.getOperator() == BinaryOps.LOR ) { // lazy "||" evaluation
+			binaryLir += "Compare 0, " + firstReg + "\n" +
+					"JumpFalse " + testEnd + "\n";
+		}
+		
+		// generate code to evaluate the 2nd operand
+		currReg++;
+		binaryLir += binaryOp.getSecondOperand().accept(this);
+		
+		String secReg = getNextReg();
+		
+		// Do actual operation and save the result in the 1st register
+		binaryLir += binaryOp.getOperator().getLirOp() + " " + secReg + "," + firstReg + "\n";
+		
+		binaryLir += testEnd + ":\n"; // add a point to jump to in case of lazy eval.
+
+		return binaryLir;
 	}
 
 	@Override
 	public Object visit(MathUnaryOp unaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		// Only negation of numeric type expression
+		
+		String reg = getNextReg();
+		String lir = "" + unaryOp.getOperand().accept(this);
+				
+		lir += "Neg " + reg  + "\n";
+		
+		return lir;
 	}
 
 	@Override
 	public Object visit(LogicalUnaryOp unaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		// Only negation of boolean type expression
+		
+		String reg = getNextReg();
+		String lir = "" + unaryOp.getOperand().accept(this);
+				
+		lir += "Xor 1," + reg  + "\n";
+		
+		return lir;
 	}
 
 	@Override
 	public Object visit(Literal literal) {
-		// TODO Auto-generated method stub
+		switch ( literal.getType() ) {
+		case INTEGER:
+			return "Move " + literal.getValue() + ", " + getNextReg() + "\n";
+		case NULL:
+			return "Move 0, " + getNextReg() + "\n";
+		case FALSE:
+			return "Move 0, " + getNextReg() + "\n";
+		case TRUE:
+			return "Move 1, " + getNextReg() + "\n";
+		case STRING:
+			return "Move " + strMap.get(literal.getValue()) + ", " + getNextReg() + "\n";
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(ExpressionBlock expressionBlock) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return expressionBlock.getExpression().accept(this);
 	}
 	
 	private String getNextReg() {
 		return "R" + (currReg);
 	}
-	
 	private String getNextLabel(String label) {
 		return "_" + label + "_" + (++currLabel);
 	}
-	
+	private static String runtimeErrorFuncs(){
+		return nullPtrCheckCode + arrIdxOutOfBoundsCheckCode + arrIdxCheckCode + zeroDivCheckCode;
+	} 
+
+
+	private static final String nullPtrCheckCode = 
+	"# Check Null Ptr Reference:\n" +
+	"# static void checkNullRef(array a){\n" +
+	"# 	if(a == null) {Library.println(...);\n" +
+	"# 	Library.exit(1);" +
+	"# 	}\n" +
+	"# }\n" +
+	"__checkNullRef:\n" +
+	"	Move a, R0\n" +
+	"	Compare 0, R0\n" +
+	"	JumpTrue _error1\n" +
+	"	Return Rdummy\n" +
+	"_error1:\n" +
+	"	Library __println(str_err_null_ptr_ref),Rdummy\n" +
+	"	Library __exit(1),Rdummy\n" + 
+	"\n";
+
+	private static final String arrIdxOutOfBoundsCheckCode = 
+	"# Check Array Index Out Of Bounds:\n" +
+	"# static void checkArrayAccess(array a, index i) {\n" +
+	"# 	if (i<0 || i>=a.length) {\n" +
+	"# 	Library.println(\"Runtime Error\");\n" +
+	"# 	}\n" +
+	"# }\n" +
+	"__checkArrayAccess:\n" +
+	"	Move i, R0\n" +
+	"	Compare 0, R0\n" +
+	"	JumpL _error2\n" +
+	"	ArrayLength a, R0\n" +
+	"	Compare i, R0\n" +
+	"	JumpLE _error2" +
+	"	Return Rdummy\n" +
+	"_error2:\n" +
+	"	Library __println(str_err_arr_out_of_bounds),Rdummy\n" +
+	"	Library __exit(1),Rdummy\n" + 
+	"\n";
+
+	private static final String arrIdxCheckCode = 
+	"# Check Array Allocation Is Not With Negative Number:\n" +
+	"# static void checkSize(size n) {\n" +
+	"# 	if (n<0) Library.println(\"Runtime Error\");\n" +
+	"# }\n" +
+	"__checkSize:\n" +
+	"	Move n, R0\n" +
+	"	Compare 0, R0\n" +
+	"	JumpLE _error3\n" +
+	"	Return Rdummy\n" +
+	"_error3:\n" +
+	"	Library __println(str_err_neg_arr_size),Rdummy\n" +
+	"	Library __exit(1),Rdummy\n" + 
+	"\n";
+
+	private static final String zeroDivCheckCode = 
+	"# Check Division By Zero:\n" +
+	"# static void checkZero(value b) {\n" +
+	"# 	if (b == 0) Library.println(\"Runtime Error\");\n" +
+	"# }\n" +
+	"__checkZero:\n" +
+	"	Move b, R0\n" +
+	"	Compare 0, R0" +
+	"	JumpTrue _error4\n" +
+	"	Return Rdummy\n" +
+	"_error4:\n" +
+	"	Library __println(str_err_div_by_zero),Rdummy\n" +
+	"	Library __exit(1),Rdummy\n" + 
+	"\n";
+
+	private String nullPtrCheckStr(String reg) {
+		return "StaticCall __checkNullRef(a=" + reg + "),Rdummy\n";
+	}
+
+	private String arrIdxOutOfBoundsCheckStr(String arrReg, String idxReg) {
+		return "StaticCall __checkArrayAccess(a=" + arrReg + ", i=" + idxReg + "),Rdummy\n";
+	}
+
+	private String arrIdxCheckStr(String sizeReg) {
+		return "StaticCall __checkSize(n=" + sizeReg + "),Rdummy\n";
+	}
+
+	private String zeroDivCheckStr(String intReg) {
+		return "StaticCall __checkZero(b=" + intReg + "),Rdummy\n";
+	}
+
+	private String makeUniqueJumpLabel(String name) {
+		return "_" + name + "_" +(++currLabel);
+	}
+
 }
