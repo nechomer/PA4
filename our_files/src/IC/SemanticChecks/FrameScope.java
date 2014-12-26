@@ -394,4 +394,16 @@ public class FrameScope {
 
 		return sb.toString();
 	}
+
+	public HashMap<String, ICClass> getClasses() {
+		return classes;
+	}
+
+	public HashMap<String, Method> getMethods() {
+		return methods;
+	}
+
+	public HashMap<String, Field> getFields() {
+		return fields;
+	}
 }

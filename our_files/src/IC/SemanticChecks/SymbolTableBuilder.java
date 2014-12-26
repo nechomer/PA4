@@ -6,7 +6,12 @@ import IC.SemanticChecks.FrameScope.ScopeType;
 public class SymbolTableBuilder implements Visitor {
 
     private final FrameScope rootScope;
-    private FrameScope currScope;
+    
+    public FrameScope getCurrScope() {
+		return currScope;
+	}
+
+	private FrameScope currScope;
     
 
     public SymbolTableBuilder(String name) {

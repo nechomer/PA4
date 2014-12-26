@@ -3,6 +3,7 @@ package IC;
 import IC.AST.*;
 import IC.Parser.*;
 import IC.SemanticChecks.*;
+import IC.lir.DispatchTableBuilder;
 
 import java.io.File;
 import java.io.FileReader;
@@ -86,6 +87,9 @@ public class Compiler {
             TypeTabelBuilder ttb = new TypeTabelBuilder(progFileName); 
      		programNode.accept(ttb);
      		
+     		// Build the Dispatch Table
+     		DispatchTableBuilder.createDispatchTable(stb.getRootScope());
+     		
      		if (dumpSymtab) {
 	            // Print the symbol table
 	            System.out.println();
@@ -94,6 +98,9 @@ public class Compiler {
 	            // Print the Type table
 	            System.out.println();
 	     		System.out.println(ttb);
+	     		
+	     		System.out.println();
+	     		System.out.println(DispatchTableBuilder.printDVS());
      		}
     		
 			    		
