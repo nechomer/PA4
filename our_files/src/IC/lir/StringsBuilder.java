@@ -1,10 +1,16 @@
 package IC.lir;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import IC.LiteralTypes;
 import IC.AST.ArrayLocation;
 import IC.AST.Assignment;
 import IC.AST.Break;
 import IC.AST.CallStatement;
 import IC.AST.Continue;
+import IC.AST.Expression;
 import IC.AST.ExpressionBlock;
 import IC.AST.Field;
 import IC.AST.Formal;
@@ -18,11 +24,13 @@ import IC.AST.LogicalBinaryOp;
 import IC.AST.LogicalUnaryOp;
 import IC.AST.MathBinaryOp;
 import IC.AST.MathUnaryOp;
+import IC.AST.Method;
 import IC.AST.NewArray;
 import IC.AST.NewClass;
 import IC.AST.PrimitiveType;
 import IC.AST.Program;
 import IC.AST.Return;
+import IC.AST.Statement;
 import IC.AST.StatementsBlock;
 import IC.AST.StaticCall;
 import IC.AST.StaticMethod;
@@ -36,200 +44,255 @@ import IC.AST.While;
 
 public class StringsBuilder implements Visitor {
 
+	private static Map<String, String> strings = new LinkedHashMap<>();
+	private static int counter = 1;
+	
 	public StringsBuilder() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Object visit(Program program) {
-		// TODO Auto-generated method stub
+		for (ICClass icClass: program.getClasses()) {
+			icClass.accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(ICClass icClass) {
-		// TODO Auto-generated method stub
+		for (Method m: icClass.getMethods()) {
+			m.accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(Field field) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(VirtualMethod method) {
-		// TODO Auto-generated method stub
+		for (Statement s : method.getStatements()) {
+			s.accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(StaticMethod method) {
-		// TODO Auto-generated method stub
+		for (Statement s : method.getStatements()) {
+			s.accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(LibraryMethod method) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(Formal formal) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(PrimitiveType type) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(UserType type) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(Assignment assignment) {
-		// TODO Auto-generated method stub
+		assignment.getAssignment().accept(this);
+		assignment.getVariable().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(CallStatement callStatement) {
-		// TODO Auto-generated method stub
+		callStatement.getCall().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(Return returnStatement) {
-		// TODO Auto-generated method stub
+		if (returnStatement.hasValue()) {
+			returnStatement.getValue().accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(If ifStatement) {
-		// TODO Auto-generated method stub
+		ifStatement.getCondition().accept(this);
+		ifStatement.getOperation().accept(this);
+		if (ifStatement.hasElse()) {
+			ifStatement.getElseOperation().accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(While whileStatement) {
-		// TODO Auto-generated method stub
+		whileStatement.getCondition().accept(this);
+		whileStatement.getOperation().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(Break breakStatement) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(Continue continueStatement) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(StatementsBlock statementsBlock) {
-		// TODO Auto-generated method stub
+		for (Statement s: statementsBlock.getStatements()) {
+			s.accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(LocalVariable localVariable) {
-		// TODO Auto-generated method stub
+		if (localVariable.hasInitValue()) {
+			localVariable.getInitValue().accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(VariableLocation location) {
-		// TODO Auto-generated method stub
+		if (location.isExternal()) {
+			location.getLocation().accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(ArrayLocation location) {
-		// TODO Auto-generated method stub
+		location.getArray().accept(this);
+		location.getIndex().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(StaticCall call) {
-		// TODO Auto-generated method stub
+		for (Expression e: call.getArguments()) {
+			e.accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(VirtualCall call) {
-		// TODO Auto-generated method stub
+		if (call.isExternal()) {
+			call.getLocation().accept(this);
+		}
+		for (Expression e: call.getArguments()) {
+			e.accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(This thisExpression) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(NewClass newClass) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(NewArray newArray) {
-		// TODO Auto-generated method stub
+		newArray.getSize().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(Length length) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(MathBinaryOp binaryOp) {
-		// TODO Auto-generated method stub
+		binaryOp.getFirstOperand().accept(this);
+		binaryOp.getSecondOperand().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(LogicalBinaryOp binaryOp) {
-		// TODO Auto-generated method stub
+		binaryOp.getFirstOperand().accept(this);
+		binaryOp.getSecondOperand().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(MathUnaryOp unaryOp) {
-		// TODO Auto-generated method stub
+		unaryOp.getOperand().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(LogicalUnaryOp unaryOp) {
-		// TODO Auto-generated method stub
+		unaryOp.getOperand().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(Literal literal) {
-		// TODO Auto-generated method stub
+		if (literal.getType() == LiteralTypes.STRING) {
+			if (!strings.containsKey(literal.getValue())) {
+				strings.put("" + literal.getValue(), "str" + counter);
+				counter++;
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(ExpressionBlock expressionBlock) {
-		// TODO Auto-generated method stub
+		expressionBlock.getExpression().accept(this);
 		return null;
+	}
+
+	
+	public static String exportStringLirTable() {
+		String str = null;
+		String tmp;
+		str = buildErrorStrings();
+		Iterator<String> iter = strings.keySet().iterator();
+		while(iter.hasNext()) {
+			tmp = iter.next();
+			str += strings.get(tmp) + ":	" + tmp + "\n";
+		}
+			
+		return str;
+	}
+	
+	private static String buildErrorStrings() {
+		String str = "str_err_null_ptr_ref:		\"Runtime Error: Null pointer dereference!\"\n";
+		str+= "str_err_arr_out_of_bounds:	\"Runtime Error: Array index out of bounds!\"\n";
+		str+= "str_err_neg_arr_size:	\"Runtime Error: Array allocation with negative array size!\"\n";
+		str+= "str_err_div_by_zero:	\"Runtime Error: Division by zero!\"\n";
+		return str;
+	}
+	
+	public static Map<String,String> getStringsMap() {
+		return strings;
 	}
 
 }

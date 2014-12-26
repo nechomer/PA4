@@ -3,7 +3,12 @@ package IC;
 import IC.AST.*;
 import IC.Parser.*;
 import IC.SemanticChecks.*;
+<<<<<<< Updated upstream
 import IC.lir.DispatchTableBuilder;
+=======
+import IC.lir.LirTranslator;
+import IC.lir.StringsBuilder;
+>>>>>>> Stashed changes
 
 import java.io.File;
 import java.io.FileReader;
@@ -16,7 +21,6 @@ import java_cup.runtime.Symbol;
 public class Compiler {
     public static void main(String[] args)
     {
-    	StringBuilder sb = new StringBuilder();
     	parser pp;
     	LibParser lp;
     	Symbol result;
@@ -25,12 +29,13 @@ public class Compiler {
     	String fullPath;
     	String progFileName, libFileName;
     	int index;
-    	boolean printAst = false, dumpSymtab = false;
+    	boolean printAst = false, dumpSymtab = false, printLir = false;
     	try {
     		
     		for (int i = 0; i< args.length; i++ ) {
     			if (args[i].equals("-dump-symtab")) dumpSymtab = true;
     			if (args[i].equals("-print-ast")) printAst = true;
+    			if (args[i].equals("-print-lir")) printLir = true;
     		}
     		
     		if (args.length > 1) { // Library file is also supplied
@@ -102,6 +107,19 @@ public class Compiler {
 	     		System.out.println();
 	     		System.out.println(DispatchTableBuilder.printDVS());
      		}
+     		
+     		//generate strings for lir
+     		StringsBuilder sb = new StringsBuilder();
+     		programNode.accept(sb);
+     		
+     		//translate program to lir
+     		LirTranslator lt = new LirTranslator();
+     		programNode.accept(lt);
+     		
+     		if(printLir) {
+     			//print lir program
+     			
+     		}
     		
 			    		
     	} catch (ParserException | SemanticException | LexicalError e) {
@@ -110,7 +128,6 @@ public class Compiler {
     	} catch (IOException e) {
     		System.err.printf("IO Error:\n%s\n", e.getMessage());
     	} catch (Exception e) {
-    		// TODO Auto-generated catch block
     		e.printStackTrace();
     	}
     
