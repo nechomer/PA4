@@ -50,7 +50,7 @@ private static final String arrIdxCheckCode =
 "	Compare 0, R0\n" +
 "	JumpLE _error3\n" +
 "	Return Rdummy\n" +
-"_error3:\n"
+"_error3:\n" +
 "	Library __println(str_err_neg_arr_size),Rdummy\n" +
 "	Library __exit(1),Rdummy\n" + 
 "\n";
