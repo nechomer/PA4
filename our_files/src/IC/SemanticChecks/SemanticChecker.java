@@ -737,6 +737,7 @@ public class SemanticChecker implements Visitor {
 				return a;
 			} else if (a.getName().equals("string") //check if both strings
 					&& b.getName().equals("string")) {
+				binaryOp.setStrCat(true);
 				return a;
 			} else {
 				throw new SemanticException(binaryOp, "Type mismatch: "

@@ -3,12 +3,9 @@ package IC;
 import IC.AST.*;
 import IC.Parser.*;
 import IC.SemanticChecks.*;
-<<<<<<< Updated upstream
 import IC.lir.DispatchTableBuilder;
-=======
 import IC.lir.LirTranslator;
 import IC.lir.StringsBuilder;
->>>>>>> Stashed changes
 
 import java.io.File;
 import java.io.FileReader;
@@ -113,13 +110,13 @@ public class Compiler {
      		programNode.accept(sb);
      		
      		//translate program to lir
-     		LirTranslator lt = new LirTranslator();
+     		LirTranslator lt = new LirTranslator(StringsBuilder.getStringsMap());
      		programNode.accept(lt);
      		
-     		if(printLir) {
+     		//if(printLir) {
      			//print lir program
      			
-     		}
+     		//}
     		
 			    		
     	} catch (ParserException | SemanticException | LexicalError e) {

@@ -7,27 +7,30 @@ package IC;
  */
 public enum BinaryOps {
 
-	PLUS("+", "addition"),
-	MINUS("-", "subtraction"),
-	MULTIPLY("*", "multiplication"),
-	DIVIDE("/", "division"),
-	MOD("%", "modulo"),
-	LAND("&&", "logical and"),
-	LOR("||", "logical or"),
-	LT("<", "less than"),
-	LTE("<=", "less than or equal to"),
-	GT(">", "greater than"),
-	GTE(">=", "greater than or equal to"),
-	EQUAL("==", "equality"),
-	NEQUAL("!=", "inequality");
+	PLUS("+", "addition", "Add"),
+	MINUS("-", "subtraction", "Sub"),
+	MULTIPLY("*", "multiplication", "Mul"),
+	DIVIDE("/", "division", "Div"),
+	MOD("%", "modulo", "Mod"),
+	LAND("&&", "logical and", "And"),
+	LOR("||", "logical or", "Or"),
+	LT("<", "less than", "JumpLE"),
+	LTE("<=", "less than or equal to", "JumpL"),
+	GT(">", "greater than", "JumpGE"),
+	GTE(">=", "greater than or equal to", "JumpG"),
+	EQUAL("==", "equality", "JumpFalse"),
+	NEQUAL("!=", "inequality", "JumpTrue");
 	
 	private String operator;
 	
 	private String description;
+	
+	private String lirOp;
 
-	private BinaryOps(String operator, String description) {
+	private BinaryOps(String operator, String description, String lirOp) {
 		this.operator = operator;
 		this.description = description;
+		this.lirOp = lirOp;
 	}
 
 	/**
@@ -46,5 +49,14 @@ public enum BinaryOps {
 	 */
 	public String getDescription() {
 		return description;
+	}
+	
+	/**
+	 * Returns a LIR representation of the operator.
+	 * 
+	 * @return The LIR operator.
+	 */
+	public String getLirOp() {
+		return lirOp;
 	}
 }
