@@ -516,6 +516,7 @@ public class SemanticChecker implements Visitor {
 								+ " when argument defined is of type " + formal.getName()+ " with " + formal.getDimension() +" dimensions");
 			}
 		}
+		call.setMethod(method);
 		return method.getType();
 	}
 
@@ -602,6 +603,7 @@ public class SemanticChecker implements Visitor {
 								+ " when argument defined is of type " + formal.getName()+ " with " + formal.getDimension() +" dimensions");
 			}
 		}
+		call.setMethod((Method)m);
 		return ((Method) m).getType();
 	}
 
