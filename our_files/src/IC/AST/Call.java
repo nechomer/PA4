@@ -12,6 +12,8 @@ public abstract class Call extends Expression {
 	private String name;
 
 	private List<Expression> arguments;
+	
+	private Method method;
 
 	/**
 	 * Constructs a new method call node. Used by subclasses.
@@ -35,6 +37,14 @@ public abstract class Call extends Expression {
 
 	public List<Expression> getArguments() {
 		return arguments;
+	}
+
+	public Method getMethod() {
+		return method;
+	}
+
+	public void setMethod(Method method) {
+		this.method = method;
 	}
 
 }
