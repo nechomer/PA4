@@ -60,7 +60,7 @@ public class LirTranslator implements Visitor {
 
 	@Override
 	public Object visit(Program program) {
-		String lir = "";
+		String lir = runtimeErrorFuncs();
 		for (ICClass icClass : program.getClasses()) {
             lir += icClass.accept(this);
         }
@@ -126,7 +126,7 @@ public class LirTranslator implements Visitor {
 	@Override
 	public Object visit(LibraryMethod method) {
 		// Translation is not required 
-		return null;
+		return "";
 	}
 
 	@Override
@@ -149,15 +149,14 @@ public class LirTranslator implements Visitor {
 
 	@Override
 	public Object visit(Assignment assignment) {
-		String lir = "";
 		String reg = getNextReg();
-		lir += assignment.getAssignment().accept(this);
+		String lirAss = "" + assignment.getAssignment().accept(this);
 		currReg++;
 		assignment.getVariable().setLhs(true);
-		lir += assignment.getVariable().accept(this);
-		lir += reg;
+		String lirVar = "" + assignment.getVariable().accept(this);
+		lirAss += String.format(lirVar, reg);
 		currReg--;
-		return lir;
+		return lirAss;
 	}
 
 	@Override
@@ -257,9 +256,9 @@ public class LirTranslator implements Visitor {
 		if ( localVariable.hasInitValue() ) {
 			String reg = getNextReg();
 			lir += localVariable.getInitValue().accept(this);
-			lir += "Move " + reg + ", " /*+ localVariable.getUID()*/ + "\n";
+			lir += "Move " + reg + ", " + localVariable.getName() + "\n";
 		} else {
-			lir += "Move 0, " /*+ localVariable.getUID()*/ + "\n";
+			lir += "Move 0, " + localVariable.getName() + "\n";
 		}
 		return lir;
 	}
@@ -683,7 +682,7 @@ public class LirTranslator implements Visitor {
 	"# Check Null Ptr Reference:\n" +
 	"# static void checkNullRef(array a){\n" +
 	"# 	if(a == null) {Library.println(...);\n" +
-	"# 	Library.exit(1);" +
+	"# 	Library.exit(1);\n" +
 	"# 	}\n" +
 	"# }\n" +
 	"__checkNullRef:\n" +

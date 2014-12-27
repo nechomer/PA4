@@ -1,0 +1,20 @@
+class ObjTest {
+	static void main ( string[] args ) {
+		A a1;
+		A a2 = null;
+		A a3 = new A();
+//		a1.foo();
+//		a2.foo();
+		a3.foo();
+//		Library.printi(a1.f);
+//		Library.printi(a2.f);
+		Library.printi(a3.f);
+	}
+}
+
+class A {
+	int f;
+	void foo() {
+		f = 3;
+	}
+}

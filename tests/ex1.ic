@@ -1,0 +1,37 @@
+class A {
+  string str;
+  int i;
+
+  static int sfunc(boolean b) 
+  {
+	{
+		int x;
+		x=5;
+		A.foo();
+	}
+  }
+
+	static void foo() {}
+
+  void vfunc(A a, int max, int val) 
+  {
+  	i=5; 
+  }
+}
+class B extends A {
+    int j;
+
+    void vfunc(A a, int max, int val) {
+    }
+}
+
+class C {
+  static void main(string[] args) {
+    A[][] a = null;
+	a[0][1].vfunc();
+  }
+ 
+  int foo(){
+  	return 5;
+  } 
+}
