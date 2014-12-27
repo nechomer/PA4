@@ -1,0 +1,3 @@
+Parsed -Linput/Library/libic.sig successfully!
+Parsed ex1.ic successfully!
+5: semantic error;  no return statement in non void method
