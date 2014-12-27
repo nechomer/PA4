@@ -1,0 +1,54 @@
+class A extends B{
+  string str;
+  int i;
+
+  static int sfunc(boolean b) {
+    if (b) {
+      {
+        int k = 5;
+      }
+      return 1;
+    }
+    else {
+      A x = new A();
+      x.i = 9;
+      x.str = "hello";
+      return 0;
+    }
+  }
+
+  void vfunc(A a, int max, int val) { 
+    int[] arr = new int[max];
+    int i = 0;
+	//sfunc();
+    while (i < max){
+        arr[i] = val;
+        i = i + 1;
+        if (a == null)
+          break;
+    }
+	int test;
+	test = 3;
+	{
+		int test = 5;
+		int i = 1;
+		this.i = 3;
+	}
+
+  }
+}
+
+class B { //extends A {
+    int j;
+	//void i() {}
+    void vfunc(A a, int max, int val) {
+    }
+}
+
+class C {
+  static void main(string[] args) {
+    A a;
+	//a.vfunc();
+	//a.sfunc();
+  }
+}

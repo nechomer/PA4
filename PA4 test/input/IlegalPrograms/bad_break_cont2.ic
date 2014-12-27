@@ -1,0 +1,21 @@
+class A {
+  string str;
+
+}
+
+
+class B extends A{
+	static void main(string[] s) {
+		while(true){
+	
+		}
+		
+		continue;
+		
+		while(false){
+			continue;
+		}
+	}
+
+}
+

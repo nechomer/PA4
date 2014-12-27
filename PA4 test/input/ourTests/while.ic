@@ -1,0 +1,12 @@
+class Test {
+	void foo() {
+		while (a != b) {
+			break;
+		}
+		while (true) {
+			doNothing();
+			continue;
+			{ int a=5; }
+		}
+	}
+}

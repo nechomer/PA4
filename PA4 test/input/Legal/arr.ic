@@ -1,0 +1,33 @@
+class A {
+	int x;
+	static void main ( string[] args ) {
+		new A().foo();
+		new B().tovtovmaspik();
+	}
+	
+	void foo() {
+		x = 5;
+		A a = new A();
+		a.x = 4;
+		int y = a.x;
+		aField = new A();
+		aField.x = 3;
+		print();
+	}
+	
+	A aField;
+	
+	void print() {
+		Library.printi(aField.x);
+		Library.println("");
+	}
+}
+class B {
+	int f1;
+	int f2;
+	int f3;
+	boolean tovtovmaspik(){
+		return false;
+	}
+	
+}

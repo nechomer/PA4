@@ -1,0 +1,31 @@
+class A {
+  string str;
+
+    void sfunc(int i, boolean b, int z, boolean b2) 
+	{
+	
+	}
+	
+	int sfunc2(int i){
+		return 2;
+	}
+	
+	A sfunc3(int i){
+		A a;
+		return a;
+	}
+}
+
+
+class B {
+	static void main(string[] s) {}
+
+		void foo(){
+		A a;
+		int i;
+		a = A.sfunc3(i);	
+	}
+	
+	
+}
+
