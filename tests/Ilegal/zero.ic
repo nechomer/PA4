@@ -1,8 +1,0 @@
-class Zero {
-	static void main ( string[] args ) {
-		//int x = 1/0;
-		int y = 2;
-		int z = 4/y;
-		Library.printi(z);
-	}
-}
