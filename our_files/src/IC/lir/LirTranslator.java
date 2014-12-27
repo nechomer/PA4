@@ -304,7 +304,7 @@ public class LirTranslator implements Visitor {
 				lir += nullPtrCheckStr(objReg);
 				
 				// get field offset
-				String className = location.getLocation().scope.getName();
+				String className = location.getLocation().scope.getClassOfScope();
 				int offset = DispatchTableBuilder.getFieldOffset(className, location.getName());
 				
 				if ( location.isLhs() ) {
