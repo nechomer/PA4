@@ -1,0 +1,90 @@
+class Check {
+	// predicates
+	static void isint(int arg){}
+	static void isstr(string arg){}
+	static void isbool(boolean arg){}
+	static void isA(A arg){}
+	static void isB(B arg){}
+	static void isC(C arg){}
+}
+
+class A {
+	C c;
+	string s;
+	int n;
+}
+
+class B extends A {
+}
+
+class C {
+	boolean t;
+	A a;
+	B b;
+}
+
+class App {
+	static void main(string[] args) {
+		int n;
+		boolean bool;
+		string s;
+		int[] arr;
+		A a;
+		B b;
+		C c;
+		
+		// integers
+		Check.isint(n);
+		Check.isint(1);
+		Check.isint(00);
+		Check.isint(1+1);
+		Check.isint(n-2);
+		Check.isint(n*n);
+		Check.isint(n/2);
+		Check.isint(-2);
+		Check.isint(arr.length);
+		Check.isint(b.n);
+		Check.isint(arr[0]);
+		
+		// booleans
+		Check.isbool(bool);
+		Check.isbool(true);
+		Check.isbool(false);
+		Check.isbool(1 == 2);
+		Check.isbool(1 < 2);
+		Check.isbool(1 > 2);
+		Check.isbool(1 <= 2);
+		Check.isbool(1 >= 2);
+		Check.isbool(1 != 2);
+		Check.isbool(!true);
+		Check.isbool(!bool);
+		Check.isbool(c.t);
+		
+		// strings
+		Check.isstr(s);
+		Check.isstr("");
+		Check.isstr("Hello\n");
+		Check.isstr("a"+"b");
+		Check.isstr(null);
+		Check.isstr(a.s);
+		
+		// A
+		Check.isA(a);
+		Check.isA(c.a);
+		Check.isA(new A());
+		Check.isA(b);
+		Check.isA(null);
+
+		// B
+		Check.isB(b);
+		Check.isB(c.b);
+		Check.isB(new B());
+		Check.isB(null);
+	
+		// C
+		Check.isC(c);
+		Check.isC(a.c);
+		Check.isC(new C());
+		Check.isC(null);
+	}
+}

@@ -1,0 +1,24 @@
+// library checks
+class A {
+	static void main(string[] args) {
+		string s;
+		int i;
+		boolean b;
+		int[] a;
+		
+		Library.println(s); /* prints string s followed by a newline */
+		Library.print(s);   /* prints string s */
+		Library.printi(i);     /* prints integer i */
+		Library.printb(b); /* prints boolean b */
+		Library.readi();     /* reads an integer from the input */
+		Library.readln(); /* reads one line from the input */
+		Library.eof();   /* checks end-of-file on standard input */
+		Library.stoi(s, i); /* returns the integer that s represents or n if s is not an integer */
+		Library.itos(i);   /* returns a string representation of i */
+		Library.stoa(s); /* an array with the ascii codes of chars in s */
+		Library.atos(a); /* builds a string from the ascii codes in a */
+		Library.random(i); /* returns a random number between 0 and n-1 */
+		Library.time();        /* number of milliseconds since program start */
+		Library.exit(i);   /* terminates the program with exit code n */
+	}
+}

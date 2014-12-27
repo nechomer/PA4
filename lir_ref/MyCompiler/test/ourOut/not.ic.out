@@ -1,0 +1,64 @@
+Parsed ..\test\libic.sig successfully!
+Parsed ..\test\Legal\not.ic successfully!
+
+Global Symbol Table: ..\test\Legal\not.ic
+	Class: A
+	Class: B
+Children tables: A, B, Library
+
+Class Symbol Table: A
+	Static method: main {string[] -> void}
+	Virtual method: foo { -> void}
+Children tables: main, foo
+
+Class Symbol Table: B
+	Virtual method: bar { -> boolean}
+Children tables: bar
+
+Class Symbol Table: Library
+	Static method: println {string -> void}
+	Static method: print {string -> void}
+	Static method: printi {int -> void}
+	Static method: printb {boolean -> void}
+	Static method: readi { -> int}
+	Static method: readln { -> string}
+	Static method: eof { -> boolean}
+	Static method: stoi {string, int -> int}
+	Static method: itos {int -> string}
+	Static method: stoa {string -> int[]}
+	Static method: atos {int[] -> string}
+	Static method: random {int -> int}
+	Static method: time { -> int}
+	Static method: exit {int -> int}
+
+Method Symbol Table: main
+	Parameter: string[] args
+
+Method Symbol Table: foo
+
+Method Symbol Table: bar
+
+Type Table: ..\test\Legal\not.ic
+	1: Primitive type: int
+	0: Primitive type: boolean
+	4: Primitive type: null
+	2: Primitive type: string
+	3: Primitive type: void
+	5: Class: A
+	6: Class: B
+	7: Array type: string[]
+	20: Array type: int[]
+	8: Method type: {string[] -> void}
+	9: Method type: { -> void}
+	10: Method type: { -> boolean}
+	11: Method type: {string -> void}
+	13: Method type: {int -> void}
+	14: Method type: {boolean -> void}
+	15: Method type: { -> int}
+	16: Method type: { -> string}
+	18: Method type: {string, int -> int}
+	19: Method type: {int -> string}
+	21: Method type: {string -> int[]}
+	23: Method type: {int[] -> string}
+	24: Method type: {int -> int}
+

@@ -1,0 +1,54 @@
+Parsed ..\test\libic.sig successfully!
+Parsed ..\test\Ilegal\zero.ic successfully!
+
+Global Symbol Table: ..\test\Ilegal\zero.ic
+	Class: Zero
+Children tables: Zero, Library
+
+Class Symbol Table: Zero
+	Static method: main {string[] -> void}
+Children tables: main
+
+Class Symbol Table: Library
+	Static method: println {string -> void}
+	Static method: print {string -> void}
+	Static method: printi {int -> void}
+	Static method: printb {boolean -> void}
+	Static method: readi { -> int}
+	Static method: readln { -> string}
+	Static method: eof { -> boolean}
+	Static method: stoi {string, int -> int}
+	Static method: itos {int -> string}
+	Static method: stoa {string -> int[]}
+	Static method: atos {int[] -> string}
+	Static method: random {int -> int}
+	Static method: time { -> int}
+	Static method: exit {int -> int}
+
+Method Symbol Table: main
+	Parameter: string[] args
+	Local variable: int y
+	Local variable: int z
+
+Type Table: ..\test\Ilegal\zero.ic
+	1: Primitive type: int
+	0: Primitive type: boolean
+	4: Primitive type: null
+	2: Primitive type: string
+	3: Primitive type: void
+	5: Class: Zero
+	6: Array type: string[]
+	17: Array type: int[]
+	7: Method type: {string[] -> void}
+	8: Method type: {string -> void}
+	10: Method type: {int -> void}
+	11: Method type: {boolean -> void}
+	12: Method type: { -> int}
+	13: Method type: { -> string}
+	14: Method type: { -> boolean}
+	15: Method type: {string, int -> int}
+	16: Method type: {int -> string}
+	18: Method type: {string -> int[]}
+	20: Method type: {int[] -> string}
+	21: Method type: {int -> int}
+

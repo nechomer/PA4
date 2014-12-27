@@ -1,0 +1,102 @@
+Parsed ..\test\libic.sig successfully!
+Parsed ..\test\LegalPrograms\example2.ic successfully!
+
+Global Symbol Table: ..\test\LegalPrograms\example2.ic
+	Class: A
+	Class: B
+	Class: C
+Children tables: A, C, Library
+
+Class Symbol Table: A
+	Field: string str
+	Field: int i
+	Static method: sfunc {boolean -> int}
+	Virtual method: vfunc {A, int, int -> void}
+Children tables: B, sfunc, vfunc
+
+Class Symbol Table: C
+	Static method: main {string[] -> void}
+Children tables: main
+
+Class Symbol Table: Library
+	Static method: println {string -> void}
+	Static method: print {string -> void}
+	Static method: printi {int -> void}
+	Static method: printb {boolean -> void}
+	Static method: readi { -> int}
+	Static method: readln { -> string}
+	Static method: eof { -> boolean}
+	Static method: stoi {string, int -> int}
+	Static method: itos {int -> string}
+	Static method: stoa {string -> int[]}
+	Static method: atos {int[] -> string}
+	Static method: random {int -> int}
+	Static method: time { -> int}
+	Static method: exit {int -> int}
+
+Class Symbol Table: B
+	Field: int j
+	Virtual method: vfunc {A, int, int -> void}
+Children tables: vfunc
+
+Method Symbol Table: sfunc
+	Parameter: boolean b
+Children tables: statement block in sfunc, statement block in sfunc
+
+Method Symbol Table: vfunc
+	Parameter: A a
+	Parameter: int max
+	Parameter: int val
+	Local variable: int[] arr
+	Local variable: int i
+Children tables: statement block in vfunc
+
+Method Symbol Table: vfunc
+	Parameter: A a
+	Parameter: int max
+	Parameter: int val
+
+Statement Block Symbol Table ( located in sfunc )
+Children tables: statement block in statement block in sfunc
+
+Statement Block Symbol Table ( located in sfunc )
+	Local variable: A x
+
+Statement Block Symbol Table ( located in statement block in sfunc )
+	Local variable: int k
+
+Statement Block Symbol Table ( located in vfunc )
+
+Method Symbol Table: main
+	Parameter: string[] args
+	Local variable: A[][] a
+
+Type Table: ..\test\LegalPrograms\example2.ic
+	1: Primitive type: int
+	0: Primitive type: boolean
+	4: Primitive type: null
+	2: Primitive type: string
+	3: Primitive type: void
+	5: Class: A
+	6: Class: B, Superclass ID: 5
+	7: Class: C
+	11: Array type: string[]
+	22: Array type: int[]
+	29: Array type: int
+	32: Array type: A[]
+	33: Array type: A[][]
+	8: Method type: {boolean -> int}
+	9: Method type: {A, int, int -> void}
+	12: Method type: {string[] -> void}
+	13: Method type: {string -> void}
+	15: Method type: {int -> void}
+	16: Method type: {boolean -> void}
+	17: Method type: { -> int}
+	18: Method type: { -> string}
+	19: Method type: { -> boolean}
+	20: Method type: {string, int -> int}
+	21: Method type: {int -> string}
+	23: Method type: {string -> int[]}
+	25: Method type: {int[] -> string}
+	26: Method type: {int -> int}
+

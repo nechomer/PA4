@@ -1,0 +1,16 @@
+class A {
+  static void main(string[] args) {
+	int x = 1 + (2*3);
+	boolean b = true;
+	string s = "123" + "456";
+	x = x+5;
+	b = x > 9;
+	s = s + "123";
+  }
+  
+  void foo() { return; }
+}
+
+class B {
+
+}

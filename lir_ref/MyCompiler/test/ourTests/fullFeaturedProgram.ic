@@ -1,0 +1,56 @@
+class Test1 extends SuperTest {
+	int aField;
+	
+	void foo1() { }
+	void foo2(int a, int b) 
+	{
+		a=6;
+		a = b * 6;
+		test.aField = 4;
+		b[50] = c/60;
+	}
+	void foo3(int[][] sd, boolean[] b)
+	{
+		Test1.foo1();
+		Test1.foo2(a,b,c);
+		foo1();
+		foo2(a,b,c);
+		a.foo2();
+		a.foo2(a,b,c);
+	}
+	MyClass foo4(MyParam p, MyParam p2)
+	{
+		return a;
+		return a[50][30][40];
+		return this;
+		return new MyClass();
+		return new int[34];
+		return a.length;
+		return !a;
+		return -a;
+		return 5;
+		return true;
+		return false;
+		return null;
+		return (6);
+	}
+	
+}
+
+class Test2 {
+	int anotherField;
+	string a;
+	
+	static void foo2() { }
+	static void f004(boolean a, boolean b) 
+	{
+	
+	}
+	static int[][] foo4()
+	{
+	
+	}
+	static MyClass foo6(MyParamArr[][][] p3)
+	{
+	}
+}

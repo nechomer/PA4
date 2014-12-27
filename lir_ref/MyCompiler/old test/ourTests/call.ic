@@ -1,0 +1,16 @@
+class Test {
+	void foo() {
+		MyClass.foo();
+		MyClass.foo(a);
+		MyClass.foo(a,b,c);
+		
+		foo();
+		foo(a);
+		foo(a,b,c);
+		
+		a.foo();
+		a.foo(a);
+		a.foo(a,b,c);
+		
+	}
+}

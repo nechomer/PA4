@@ -1,0 +1,104 @@
+class A {
+
+/*  static int sfunc(boolean b) {
+    B x = null;
+    if (b) {
+	  Library.printb(b);
+      int b = 5;
+      x = new B();
+	  x.j = 9;
+	  x.gfunc(x,100,b);
+      return 1;
+    }
+    else {
+	  x.j = 42;
+      A x = new B();
+      x.i = 9;
+      x.str = "hello";
+	  B.sfunc(true);
+      return 0;
+    }
+	if(b)
+		Library.printi(x.j);
+  }
+
+  void vfunc(A a, int max, int val) {
+    int[] arr = new int[max];
+    int i = 0;
+    while (i < max){
+        arr[i] = val;
+        i = i + 1;
+        Library.printi(i);
+        if (a == null)
+          break;
+		continue;
+    }
+  }
+*/  
+  static int zfunc(boolean b) {
+	int str = 5;
+	//A.zfunc(str);
+	A a = new A();
+	{
+		str = 6;
+		a.str = "str_25";
+		string str = a.str;
+		Library.println(str);
+		A.foo("hi");
+	}
+	Library.printi(str);
+	a.bar("Refaeli");
+	Library.println(a.str);
+	return 0;
+  }
+  
+/*  void gfunc(A a, int max, int val) {
+  	  gfunc(a,max,val);
+	  this.vfunc(a,max,val);
+	  string zfunc = str;
+	  Library.println(zfunc);
+  }
+*/  
+  string str;
+  int i;
+  
+  static void foo( string str_25 ) {
+	int i = 5;
+	Library.println(str_25);
+  }
+  
+  void bar(string str_28) {
+	str = str_28;
+  }
+  
+}
+
+class B extends A {
+    int j;
+
+    void vfunc(A a, int min, int val) {
+		if (a == this)
+			return;
+		if (i < this.j)
+			Library.println(str);
+		if (a.i < j)
+			Library.println(a.str);
+    }
+	
+	static int zfunc(boolean z) {
+		return 0;
+	}
+	
+	static void main(){}
+	
+}
+
+class C {
+  static void main(string[] args) {
+    /*A[][] a = null;
+	Library.printi(a.length);
+	Library.print(a[0][1].str + "\n");
+  */
+	A.zfunc(true);
+  }
+}
