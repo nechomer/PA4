@@ -151,7 +151,7 @@ public class LirTranslator implements Visitor {
 		String reg = getNextReg();
 		lir += assignment.getAssignment().accept(this);
 		currReg++;
-		/*assignment.getVariable().setLvalue(true);*/
+		assignment.getVariable().setLhs(true);
 		lir += assignment.getVariable().accept(this);
 		lir += reg;
 		currReg--;
@@ -273,16 +273,17 @@ public class LirTranslator implements Visitor {
 				resReg = getNextReg();
 				
 				// allocate object register and evaluate its value
-				if ( ! location.isLvalue() )
+				if ( ! location.isLhs() )
 					currReg++;
 				String objReg = getNextReg();
 				lir += "Move this, " + objReg + "\n";
 				
 				// get field offset
-				String className = getFieldClass(location.scope, location.getName());
+				String className = location.scope.get
+						getFieldClass(location.scope, location.getName());
 				int offset = DispatchTableBuilder.getFieldOffset(className, location.getName());
 				
-				if ( location.isLvalue() ) {
+				if ( location.isLhs() ) {
 					lir += "MoveField %s, " + objReg + "." + offset + "\n";
 				} else {
 					lir += "MoveField " + objReg + "." + offset + ", " + resReg + "\n";
@@ -296,7 +297,7 @@ public class LirTranslator implements Visitor {
 				resReg = getNextReg();
 				
 				// allocate object register and evaluate its value
-				if ( ! location.isLvalue() )
+				if ( ! location.isLhs() )
 					currReg++;
 				String objReg = getNextReg();
 				lir += location.getLocation().accept(this);
@@ -306,7 +307,7 @@ public class LirTranslator implements Visitor {
 				String className = location.getLocation().scope.getName();
 				int offset = DispatchTableBuilder.getFieldOffset(className, location.getName());
 				
-				if ( location.isLvalue() ) {
+				if ( location.isLhs() ) {
 					lir += "MoveField %s, " + objReg + "." + offset + "\n";
 				} else {
 					lir += "MoveField " + objReg + "." + offset + ", " + resReg + "\n";
@@ -315,7 +316,7 @@ public class LirTranslator implements Visitor {
 				
 				return lir;
 			} else {
-				if ( location.isLvalue() ) {
+				if ( location.isLhs() ) {
 					// variable is assignment target
 					lir = "Move %s, " + location.getLirName() + "\n";
 					return lir;
@@ -332,7 +333,7 @@ public class LirTranslator implements Visitor {
 		String lir = "";
 		String arrReg = "";
 		String indexReg = "";
-		if ( location.isLvalue() ) {
+		if ( location.isLhs() ) {
 			
 			// array to R_T
 			arrReg = getNextReg();
@@ -375,42 +376,13 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 	
-	private String callArgString(Call call, List<String> paramRegs) {
-		String lir = "";
-		String className = getCallClass(call);
-		MethodSymbol mSym = (MethodSymbol) (TypeTable.getClassSymTab(className)
-				.lookup(call.getName()));
-		List<Formal> fl = mSym.getFormals();
-		for ( int i = 0; i < fl.size()-1 ; i++ ) 
-			lir += fl.get(i).getLirName() + "=" + paramRegs.get(i) + ", ";
-		if ( fl.size() > 0 )
-			lir += fl.get(fl.size()-1).getLirName() + "=" + paramRegs.get(fl.size()-1);
-		return lir;
-	}
-	private String getCallClass(Call call) {
-		if ( call instanceof StaticCall )
-			return ((StaticCall) call).getClassName();
-		else {
-			VirtualCall vcall = (VirtualCall) call;
-			if ( vcall.isExternal() ) {
-				Expression loc = vcall.getLocation();
-				return loc.getTypeScope().getId();
-			} else {
-				SymbolTable parent = call.getEnclosingScope();
-				while ( parent.getKind() != Kind.CLASS )
-					parent = parent.getParentSymbolTable();
-				return parent.getId();
-			}
-		}
-	}
-
 	@Override
 	public Object visit(StaticCall call) {
 		String lir = "";
 		int startMax = currReg;
 
 		String resReg = getNextReg();
-		if ( call.isReturningVoid() )
+		if ( call.getMethod().getType().getName().equals("void") )
 			resReg = "Rdummy";
 		
 		// R_T+1, R_T+2, ...   <--   evaluate arguments
@@ -430,7 +402,7 @@ public class LirTranslator implements Visitor {
 				lir += paramRegs.get(paramRegs.size()-1);
 		} else {
 			lir += "StaticCall _" + call.getClassName() + "_" + call.getName() + "(";
-			lir += callArgString(call, paramRegs);
+			lir += getCallArgsStr(call, paramRegs);
 		}
 
 		lir += "), " + resReg + "\n";
@@ -445,7 +417,7 @@ public class LirTranslator implements Visitor {
 		int startMax = currReg;
 		
 		String resReg = getNextReg();
-		if ( call.isReturningVoid() )
+		if ( call.getMethod().getType().getName().equals("void") )
 			resReg = "Rdummy";
 		
 		// allocate object register and evaluate its value
@@ -459,7 +431,7 @@ public class LirTranslator implements Visitor {
 		}
 		
 		// calculate method offset
-		String className = getCallClass(call);
+		String className = call.getMethod().scope.getClassOfScope();
 		int methodOffset = DispatchTableBuilder.getMethodOffset(className, call.getName());
 		
 		// R_T+2, R_T+3, ...   <--   evaluate arguments
@@ -472,11 +444,20 @@ public class LirTranslator implements Visitor {
 			
 		// R_T <- call the method
 		lir += "VirtualCall " + objReg + "." + methodOffset;
-		lir += "(" + callArgString(call, paramRegs) + "), " + resReg + "\n";
+		lir += "(" + getCallArgsStr(call, paramRegs) + "), " + resReg + "\n";
 		
 		// pop used registers
 		currReg = startMax;
 		
+		return lir;
+	}
+
+	private String getCallArgsStr(Call call, List<String> paramRegs) {
+		List<Formal> fl = call.getMethod().getFormals();
+		String lir ="";
+		for ( int i = 0; i < fl.size() ; i++ ) {
+			lir += fl.get(i).getName() + "=" + paramRegs.get(i) + ((i+1==fl.size()) ? "" : ", ");
+		}
 		return lir;
 	}
 
