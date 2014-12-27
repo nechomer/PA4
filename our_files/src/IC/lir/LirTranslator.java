@@ -1,12 +1,16 @@
 package IC.lir;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import IC.AST.ArrayLocation;
 import IC.AST.Assignment;
 import IC.AST.Break;
+import IC.AST.Call;
 import IC.AST.CallStatement;
 import IC.AST.Continue;
+import IC.AST.Expression;
 import IC.AST.ExpressionBlock;
 import IC.AST.Field;
 import IC.AST.Formal;
@@ -37,7 +41,6 @@ import IC.AST.VirtualCall;
 import IC.AST.VirtualMethod;
 import IC.AST.Visitor;
 import IC.AST.While;
-import IC.SymbolTable.Kind;
 
 public class LirTranslator implements Visitor {
 	
@@ -165,7 +168,7 @@ public class LirTranslator implements Visitor {
 		
 		if ( returnStatement.hasValue() ) {
 			String reg = getNextReg() ;
-			String lir = returnStatement.getValue().accept(this);
+			String lir = "" + returnStatement.getValue().accept(this);
 			lir += "Return " + reg + "\n";
 			return lir;
 		}
@@ -261,10 +264,13 @@ public class LirTranslator implements Visitor {
 
 	@Override
 	public Object visit(VariableLocation location) {
+		String lir = "";
+		String resReg = getNextReg();
+		
 		if ( ( ! location.isExternal() )  &&
 				 ( location.scope.retrieveIdentifier(location.getName()) instanceof Field  )  ){ // Implicit this
-				String lir = "";
-				String resReg = getNextReg();
+				lir = "";
+				resReg = getNextReg();
 				
 				// allocate object register and evaluate its value
 				if ( ! location.isLvalue() )
@@ -286,18 +292,18 @@ public class LirTranslator implements Visitor {
 				return lir;
 			
 			} else if ( location.isExternal() ) {
-				String lir = "";
-				String resReg = getNextReg();
+				lir = "";
+				resReg = getNextReg();
 				
 				// allocate object register and evaluate its value
 				if ( ! location.isLvalue() )
 					currReg++;
 				String objReg = getNextReg();
 				lir += location.getLocation().accept(this);
-				lir += nullCheckStr(objReg);
+				lir += nullPtrCheckStr(objReg);
 				
 				// get field offset
-				String className = location.getLocation().getTypeScope().getId();
+				String className = location.getLocation().scope.getName();
 				int offset = DispatchTableBuilder.getFieldOffset(className, location.getName());
 				
 				if ( location.isLvalue() ) {
@@ -311,11 +317,11 @@ public class LirTranslator implements Visitor {
 			} else {
 				if ( location.isLvalue() ) {
 					// variable is assignment target
-					String lir = "Move %s, " + location.getLirName() + "\n";
+					lir = "Move %s, " + location.getLirName() + "\n";
 					return lir;
 				} else {
 					// variable is a part of an expression
-					String lir = "Move " + location.getLirName() + ", " + curMaxReg() + "\n";
+					lir = "Move " + location.getLirName() + ", " + getNextReg() + "\n";
 					return lir;
 				}
 			}
@@ -323,80 +329,361 @@ public class LirTranslator implements Visitor {
 
 	@Override
 	public Object visit(ArrayLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		String lir = "";
+		String arrReg = "";
+		String indexReg = "";
+		if ( location.isLvalue() ) {
+			
+			// array to R_T
+			arrReg = getNextReg();
+			lir += location.getArray().accept(this);
+			lir += nullPtrCheckStr(arrReg);
+
+			// index to R_T+1
+			currReg++;
+			indexReg = getNextReg();
+			lir += location.getIndex().accept(this);
+			lir += arrIdxOutOfBoundsCheckStr(arrReg, indexReg);
+			
+			// create assignment translation
+			lir += "MoveArray %s, " + arrReg + "[" + indexReg + "]\n";
+			
+			currReg--;
+		} else {
+
+			// Set R_T to contain the result
+			String resReg = getNextReg();
+			
+			// array to R_T+1
+			currReg++;
+			arrReg = getNextReg();
+			lir += location.getArray().accept(this);
+			lir += nullPtrCheckStr(arrReg);
+			
+			// index to R_T+2
+			currReg++;
+			indexReg = getNextReg();
+			lir += location.getIndex().accept(this);
+			lir += arrIdxOutOfBoundsCheckStr(arrReg, indexReg);
+			
+			// Write result to target register
+			lir += "MoveArray " + arrReg + "[" + indexReg + "], " + resReg + "\n"; 
+			
+			currReg -= 2;
+				
+		}
+		return lir;
+	}
+	
+	private String callArgString(Call call, List<String> paramRegs) {
+		String lir = "";
+		String className = getCallClass(call);
+		MethodSymbol mSym = (MethodSymbol) (TypeTable.getClassSymTab(className)
+				.lookup(call.getName()));
+		List<Formal> fl = mSym.getFormals();
+		for ( int i = 0; i < fl.size()-1 ; i++ ) 
+			lir += fl.get(i).getLirName() + "=" + paramRegs.get(i) + ", ";
+		if ( fl.size() > 0 )
+			lir += fl.get(fl.size()-1).getLirName() + "=" + paramRegs.get(fl.size()-1);
+		return lir;
+	}
+	private String getCallClass(Call call) {
+		if ( call instanceof StaticCall )
+			return ((StaticCall) call).getClassName();
+		else {
+			VirtualCall vcall = (VirtualCall) call;
+			if ( vcall.isExternal() ) {
+				Expression loc = vcall.getLocation();
+				return loc.getTypeScope().getId();
+			} else {
+				SymbolTable parent = call.getEnclosingScope();
+				while ( parent.getKind() != Kind.CLASS )
+					parent = parent.getParentSymbolTable();
+				return parent.getId();
+			}
+		}
 	}
 
 	@Override
 	public Object visit(StaticCall call) {
-		// TODO Auto-generated method stub
-		return null;
+		String lir = "";
+		int startMax = currReg;
+
+		String resReg = getNextReg();
+		if ( call.isReturningVoid() )
+			resReg = "Rdummy";
+		
+		// R_T+1, R_T+2, ...   <--   evaluate arguments
+		List<String> paramRegs = new ArrayList<>(call.getArguments().size());
+		for (Expression argument : call.getArguments()) {
+			currReg++;
+			paramRegs.add(getNextReg());
+			lir += argument.accept(this);
+		}
+			
+		// R_T <- call the method
+		if ( call.getClassName().equals("Library") ) {
+			lir += "Library __" + call.getName() + "(";
+			for ( int i = 0; i < paramRegs.size()-1; i++ )
+				lir += paramRegs.get(i) + ",";
+			if ( paramRegs.size() > 0 )
+				lir += paramRegs.get(paramRegs.size()-1);
+		} else {
+			lir += "StaticCall _" + call.getClassName() + "_" + call.getName() + "(";
+			lir += callArgString(call, paramRegs);
+		}
+
+		lir += "), " + resReg + "\n";
+			
+		currReg = startMax;
+		return lir;
 	}
 
 	@Override
 	public Object visit(VirtualCall call) {
-		// TODO Auto-generated method stub
-		return null;
+		String lir = "";
+		int startMax = currReg;
+		
+		String resReg = getNextReg();
+		if ( call.isReturningVoid() )
+			resReg = "Rdummy";
+		
+		// allocate object register and evaluate its value
+		currReg++;
+		String objReg = getNextReg();
+		if ( call.isExternal() ) {
+			lir += call.getLocation().accept(this);
+			lir += nullPtrCheckStr(objReg);
+		} else {
+			lir += "Move this, " + objReg + "\n";
+		}
+		
+		// calculate method offset
+		String className = getCallClass(call);
+		int methodOffset = DispatchTableBuilder.getMethodOffset(className, call.getName());
+		
+		// R_T+2, R_T+3, ...   <--   evaluate arguments
+		List<String> paramRegs = new ArrayList<>(call.getArguments().size());
+		for (Expression argument : call.getArguments()) {
+			currReg++;
+			paramRegs.add(getNextReg());
+			lir += argument.accept(this);
+		}
+			
+		// R_T <- call the method
+		lir += "VirtualCall " + objReg + "." + methodOffset;
+		lir += "(" + callArgString(call, paramRegs) + "), " + resReg + "\n";
+		
+		// pop used registers
+		currReg = startMax;
+		
+		return lir;
 	}
 
 	@Override
 	public Object visit(This thisExpression) {
-		// TODO Auto-generated method stub
-		return null;
+		String reg = getNextReg();
+		String lir = "Move this, " + reg + "\n";
+		return lir;
 	}
 
 	@Override
 	public Object visit(NewClass newClass) {
-		// TODO Auto-generated method stub
-		return null;
+		String lir = "";
+		String resReg = getNextReg();
+		String DVName = DispatchTableBuilder.getDispatchTableName(newClass.getName());
+		int sizeOfObject = DispatchTableBuilder.getNumFields(newClass.getName()) *4 + 4;
+		lir += "Library __allocateObject(" + sizeOfObject + "), " + resReg + "\n";
+		lir += "MoveField " + DVName + ", " + resReg + ".0\n";
+		return lir;
 	}
 
 	@Override
 	public Object visit(NewArray newArray) {
-		// TODO Auto-generated method stub
-		return null;
+		String lir = "";
+		
+		// R_T+1 <- array size
+		currReg++;
+		String sizeReg = getNextReg();
+		lir += newArray.getSize().accept(this);
+		lir += arrIdxCheckStr(sizeReg);
+		currReg--;
+		
+		// R_T <- new array of size (R_T+1)*4
+		String resReg = getNextReg();
+		lir += "Mul 4, " + sizeReg + "\n";
+		lir += "Library __allocateArray(" + sizeReg + "), " + resReg + "\n";		
+		
+		return lir;
 	}
 
 	@Override
 	public Object visit(Length length) {
-		// TODO Auto-generated method stub
-		return null;
+		String lir = "";
+		
+		// R_T+1 <- the array
+		currReg++;
+		String arrReg = getNextReg();
+		lir += length.getArray().accept(this);
+		lir += nullPtrCheckStr(arrReg);
+		currReg--;
+		
+		// R_T <- array length
+		String resReg = getNextReg();
+		lir += "ArrayLength " + arrReg + ", " + resReg + "\n";
+		
+		return lir;
 	}
 
 	@Override
 	public Object visit(MathBinaryOp binaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		String firstReg = getNextReg();
+		String binaryLir = "" + binaryOp.getFirstOperand().accept(this);
+		
+		currReg++;
+		String secReg = getNextReg();
+		binaryLir += binaryOp.getSecondOperand().accept(this);
+		
+		// add runtime divide by zero check
+		if ( binaryOp.getOperator() == BinaryOps.DIVIDE ) {
+			binaryLir += zeroDivCheckStr(secReg);
+		}
+		
+		if ( binaryOp.isStrCat() ) {
+			binaryLir += "Library __stringCat(" + firstReg  + "," + secReg + "), " + firstReg + "\n";
+		}
+		else {
+			binaryLir += binaryOp.getOperator().getLirOp()  + " " + secReg + ", " + firstReg  + "\n";
+		}
+		
+		currReg--;
+		
+		return binaryLir;
 	}
 
 	@Override
 	public Object visit(LogicalBinaryOp binaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		int lastReg = currReg;
+		
+		String binaryLir = "";
+		if ( ( binaryOp.getOperator() == BinaryOps.LAND ) ||
+				( binaryOp.getOperator() == BinaryOps.LOR ) )
+			binaryLir += andOrCode(binaryOp);
+		else
+			binaryLir += comparrisonCode(binaryOp);
+		
+		currReg = lastReg;
+		return binaryLir;
+	}
+	
+		
+		
+	private String comparrisonCode(LogicalBinaryOp binaryOp) {
+		
+		String testEnd = makeUniqueJumpLabel("logical_op_end");
+		String binaryLir = "";
+
+		String resReg = getNextReg();
+		binaryLir += "Move 0, " + resReg + "\n"; // default is false
+		currReg++;
+		
+		
+		// generate code to evaluate the 1st operand
+		String firstReg = getNextReg();
+		binaryLir += binaryOp.getFirstOperand().accept(this);
+		
+		// generate code to evaluate the 2nd operand
+		currReg++;
+		String secReg = getNextReg();
+		binaryLir += binaryOp.getSecondOperand().accept(this);
+		
+		binaryLir += "Compare " + firstReg + ", " + secReg + "\n";
+		binaryLir += binaryOp.getOperator().getLirOp() + " " + testEnd + "\n";
+		binaryLir += "Move 1, " + resReg + "\n";
+		binaryLir += testEnd + ":\n";
+		
+		return binaryLir;
+	}
+
+	private String andOrCode(LogicalBinaryOp binaryOp) {
+
+		String testEnd = makeUniqueJumpLabel("logical_op_end");
+		String binaryLir = "";
+
+		String firstReg = getNextReg();
+
+		// generate code to evaluate the 1st operand
+		binaryLir += binaryOp.getFirstOperand().accept(this);
+		
+		
+		if ( binaryOp.getOperator() == BinaryOps.LAND ) { // lazy "&&" evaluation
+			binaryLir += "Compare 0, " + firstReg + "\n" +
+					"JumpTrue " + testEnd + "\n" ;
+		} else if ( binaryOp.getOperator() == BinaryOps.LOR ) { // lazy "||" evaluation
+			binaryLir += "Compare 0, " + firstReg + "\n" +
+					"JumpFalse " + testEnd + "\n";
+		}
+		
+		// generate code to evaluate the 2nd operand
+		currReg++;
+		binaryLir += binaryOp.getSecondOperand().accept(this);
+		
+		String secReg = getNextReg();
+		
+		// Do actual operation and save the result in the 1st register
+		binaryLir += binaryOp.getOperator().getLirOp() + " " + secReg + "," + firstReg + "\n";
+		
+		binaryLir += testEnd + ":\n"; // add a point to jump to in case of lazy eval.
+
+		return binaryLir;
 	}
 
 	@Override
 	public Object visit(MathUnaryOp unaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		// Only negation of numeric type expression
+		
+		String reg = getNextReg();
+		String lir = "" + unaryOp.getOperand().accept(this);
+				
+		lir += "Neg " + reg  + "\n";
+		
+		return lir;
 	}
 
 	@Override
 	public Object visit(LogicalUnaryOp unaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		// Only negation of boolean type expression
+		
+		String reg = getNextReg();
+		String lir = "" + unaryOp.getOperand().accept(this);
+				
+		lir += "Xor 1," + reg  + "\n";
+		
+		return lir;
 	}
 
 	@Override
 	public Object visit(Literal literal) {
-		// TODO Auto-generated method stub
+		switch ( literal.getType() ) {
+		case INTEGER:
+			return "Move " + literal.getValue() + ", " + getNextReg() + "\n";
+		case NULL:
+			return "Move 0, " + getNextReg() + "\n";
+		case FALSE:
+			return "Move 0, " + getNextReg() + "\n";
+		case TRUE:
+			return "Move 1, " + getNextReg() + "\n";
+		case STRING:
+			return "Move " + strMap.get(literal.getValue()) + ", " + getNextReg() + "\n";
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(ExpressionBlock expressionBlock) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return expressionBlock.getExpression().accept(this);
 	}
 	
 	private String getNextReg() {
