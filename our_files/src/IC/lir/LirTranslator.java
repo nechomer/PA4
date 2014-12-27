@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import IC.BinaryOps;
 import IC.AST.ArrayLocation;
 import IC.AST.Assignment;
 import IC.AST.Break;
@@ -279,8 +280,7 @@ public class LirTranslator implements Visitor {
 				lir += "Move this, " + objReg + "\n";
 				
 				// get field offset
-				String className = location.scope.get
-						getFieldClass(location.scope, location.getName());
+				String className = location.scope.getClassOfScope();
 				int offset = DispatchTableBuilder.getFieldOffset(className, location.getName());
 				
 				if ( location.isLhs() ) {
@@ -318,11 +318,11 @@ public class LirTranslator implements Visitor {
 			} else {
 				if ( location.isLhs() ) {
 					// variable is assignment target
-					lir = "Move %s, " + location.getLirName() + "\n";
+					lir = "Move %s, " + location.getName() + "\n";
 					return lir;
 				} else {
 					// variable is a part of an expression
-					lir = "Move " + location.getLirName() + ", " + getNextReg() + "\n";
+					lir = "Move " + location.getName() + ", " + getNextReg() + "\n";
 					return lir;
 				}
 			}
@@ -759,6 +759,10 @@ public class LirTranslator implements Visitor {
 
 	private String zeroDivCheckStr(String intReg) {
 		return "StaticCall __checkZero(b=" + intReg + "),Rdummy\n";
+	}
+	
+	private String makeUniqueJumpLabel(String name) {
+		return "_" + name + "_" +(++currLabel);
 	}
 
 

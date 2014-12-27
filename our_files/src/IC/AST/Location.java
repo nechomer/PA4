@@ -7,6 +7,7 @@ package IC.AST;
  * @author Tovi Almozlino
  */
 public abstract class Location extends Expression {
+	private boolean lhs = false;
 
 	/**
 	 * Constructs a new variable reference node. Used by subclasses.
@@ -16,6 +17,15 @@ public abstract class Location extends Expression {
 	 */
 	protected Location(int line) {
 		super(line);
+	}
+	
+	public void setLhs(boolean lhs) {
+		this.lhs  = lhs;
+		
+	}
+	
+	public boolean isLhs() {
+		return lhs;
 	}
 
 }
