@@ -1,0 +1,68 @@
+class A {
+	static void main(string[] args) {
+		int v;
+		v = 3;
+		//this.v = "string value";
+		{
+			boolean v;
+			v = true;
+			{
+				A v;
+				v = new A();
+				{
+					B v;
+					v = null;
+				}
+				//this.v = v.aFunc();
+				//this.v = args[0];
+				B bObj = new B();
+				v = bObj.cField.arr[0];
+			}
+		}
+		v = args.length;
+		v = C.sfunc(args[0]);
+	}
+	
+	string aFunc() {
+		vfunc();
+		return "";
+	}
+	
+	void vfunc() {
+		int v;
+		v = 3;
+		this.v = "string value";
+		{
+			boolean v;
+			v = true;
+			{
+				A v;
+				v = new A();
+				{
+					B v;
+					v = null;
+				}
+				this.v = v.aFunc();
+				//this.v = args[0];
+				B bObj = new B();
+				v = bObj.cField.arr[0];
+			}
+		}
+		//v = args.length;
+		v = C.sfunc("Hello");
+	}
+
+	string v;
+}
+
+class B extends A {
+	C cField;
+}
+
+class C { 
+	A[] arr;
+	
+	static int sfunc(string arg){
+		return 5;
+	}
+}

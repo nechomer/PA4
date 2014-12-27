@@ -1,0 +1,25 @@
+class Test {
+	void foo() {
+		if (a>50) {
+			a=60;
+		}
+		if(b == c) {
+			c[67]=0;
+		}
+		else {
+			c[67]=1;
+		}		
+		if(a==b)
+			if(b==c)
+				a=50;
+			else
+				a=60;
+		else
+			a=30;
+		if(a!=b)
+			if(a==c)
+				a=40;
+			else
+				a=50;
+	}
+}

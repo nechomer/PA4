@@ -1,0 +1,30 @@
+class A {
+  string str;
+
+  static void sfunc(int i, boolean b, int z, boolean b2) 
+	{
+	
+	}
+	
+	static int sfunc2(int i){
+		return 2;
+	}
+	
+	static A sfunc3(int i){
+		A a;
+		return a;
+	}
+}
+
+
+class B {
+	static void main(string[] s) {}
+
+		void foo(){
+			boolean boo;
+			boo = A.sfunc2(2);
+		}
+	
+	
+}
+

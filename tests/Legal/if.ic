@@ -1,0 +1,16 @@
+class A {
+  static void main(string[] args) {
+  }
+  
+  void foo() { return; }
+}
+
+class B {
+	int bar() {
+		if ( 1 < 2 )
+			return 3;
+		else {
+			return 5;
+		}
+	}
+}
