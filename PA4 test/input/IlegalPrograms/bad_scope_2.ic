@@ -1,0 +1,11 @@
+class A {
+	int i;
+	static void main(string[] args){
+	}
+	
+	static void sf() {}
+	
+	void vFunc() {
+		sf();
+	}
+}

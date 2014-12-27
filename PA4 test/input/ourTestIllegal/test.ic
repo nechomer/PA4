@@ -1,0 +1,6 @@
+class IntTooBig {
+	void foo() {
+		int a = -2147483648;	
+		a = -2147483649;
+	}
+}

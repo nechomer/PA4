@@ -1,0 +1,37 @@
+class C {
+	static void main(string[] args){}
+}
+class A {
+	int i;
+
+	void main(string[] args)
+	{
+/*		A a;
+		int x;
+		x = 3;
+		a = a;
+		C c; 
+		D d;
+		a.g(a.f());
+		B b; // Should throw error!!
+		A[][] arr;
+		A[] brr;
+		brr = arr[0];
+*/	}
+
+	D f() {}
+	C g(A a){}
+	
+	void foo(int t) { 
+/*		boolean i;
+		this.foo(this.i); 
+		A[][] a = new A[][5];
+		a[0] = new A[72];
+		//a[1] = new A[true];
+		i[0] = 5;
+*/	}
+}
+
+class D extends A {
+	//static void main(string[] args){}
+}
