@@ -111,12 +111,16 @@ public class Compiler {
      		
      		//translate program to lir
      		LirTranslator lt = new LirTranslator(StringsBuilder.getStringsMap());
-     		programNode.accept(lt);
      		
-     		//if(printLir) {
+     		
+     		String lir = 
+     				StringsBuilder.exportStringLirTable() + "\n" +
+     				DispatchTableBuilder.printDVS()+ "\n" +
+     				programNode.accept(lt);
+     		if(printLir) {
      			//print lir program
-     			
-     		//}
+     			System.out.println(lir);
+     		}
     		
 			    		
     	} catch (ParserException | SemanticException | LexicalError e) {
