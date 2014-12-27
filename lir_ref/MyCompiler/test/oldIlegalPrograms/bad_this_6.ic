@@ -1,0 +1,8 @@
+class A{
+	int x;
+	static void main(string[] args) {
+		this.x = 5;
+	}
+	
+	static int this() {}
+}

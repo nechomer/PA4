@@ -1,0 +1,110 @@
+Parsed ..\test\libic.sig successfully!
+Parsed ..\test\LegalPrograms\type_expressions.ic successfully!
+
+Global Symbol Table: ..\test\LegalPrograms\type_expressions.ic
+	Class: Check
+	Class: A
+	Class: B
+	Class: C
+	Class: App
+Children tables: Check, A, C, App, Library
+
+Class Symbol Table: Check
+	Static method: isint {int -> void}
+	Static method: isstr {string -> void}
+	Static method: isbool {boolean -> void}
+	Static method: isA {A -> void}
+	Static method: isB {B -> void}
+	Static method: isC {C -> void}
+Children tables: isint, isstr, isbool, isA, isB, isC
+
+Class Symbol Table: A
+	Field: C c
+	Field: string s
+	Field: int n
+Children tables: B
+
+Class Symbol Table: C
+	Field: boolean t
+	Field: A a
+	Field: B b
+
+Class Symbol Table: App
+	Static method: main {string[] -> void}
+Children tables: main
+
+Class Symbol Table: Library
+	Static method: println {string -> void}
+	Static method: print {string -> void}
+	Static method: printi {int -> void}
+	Static method: printb {boolean -> void}
+	Static method: readi { -> int}
+	Static method: readln { -> string}
+	Static method: eof { -> boolean}
+	Static method: stoi {string, int -> int}
+	Static method: itos {int -> string}
+	Static method: stoa {string -> int[]}
+	Static method: atos {int[] -> string}
+	Static method: random {int -> int}
+	Static method: time { -> int}
+	Static method: exit {int -> int}
+
+Method Symbol Table: isint
+	Parameter: int arg
+
+Method Symbol Table: isstr
+	Parameter: string arg
+
+Method Symbol Table: isbool
+	Parameter: boolean arg
+
+Method Symbol Table: isA
+	Parameter: A arg
+
+Method Symbol Table: isB
+	Parameter: B arg
+
+Method Symbol Table: isC
+	Parameter: C arg
+
+Class Symbol Table: B
+
+Method Symbol Table: main
+	Parameter: string[] args
+	Local variable: int n
+	Local variable: boolean bool
+	Local variable: string s
+	Local variable: int[] arr
+	Local variable: A a
+	Local variable: B b
+	Local variable: C c
+
+Type Table: ..\test\LegalPrograms\type_expressions.ic
+	1: Primitive type: int
+	0: Primitive type: boolean
+	4: Primitive type: null
+	2: Primitive type: string
+	3: Primitive type: void
+	5: Class: Check
+	6: Class: A
+	7: Class: B, Superclass ID: 6
+	8: Class: C
+	9: Class: App
+	16: Array type: string[]
+	27: Array type: int[]
+	10: Method type: {int -> void}
+	11: Method type: {string -> void}
+	12: Method type: {boolean -> void}
+	13: Method type: {A -> void}
+	14: Method type: {B -> void}
+	15: Method type: {C -> void}
+	17: Method type: {string[] -> void}
+	22: Method type: { -> int}
+	23: Method type: { -> string}
+	24: Method type: { -> boolean}
+	25: Method type: {string, int -> int}
+	26: Method type: {int -> string}
+	28: Method type: {string -> int[]}
+	30: Method type: {int[] -> string}
+	31: Method type: {int -> int}
+

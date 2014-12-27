@@ -1,0 +1,161 @@
+re_null_ref_str:    "Runtime Error: Null pointer dereference!"
+re_array_index_str: "Runtime Error: Array index out of bounds!"
+re_array_alloc_str: "Runtime Error: Array allocation with non-positive array size!"
+re_zero_div_str:    "Runtime Error: Division by zero!"
+str1: "str_25"
+str2: "hi"
+str3: "Refaeli"
+
+_DV_A: [_A_bar]
+_DV_B: [_A_bar, _B_vfunc]
+_DV_C: []
+
+__checkNullRef:
+	# a is a reference
+	Move a, R0
+	Compare 0, R0
+	JumpTrue _rc_error_label1
+	Return Rdummy
+_rc_error_label1:
+	Library __println(re_null_ref_str),Rdummy
+	Library __exit(1),Rdummy
+
+__checkArrayAccess:
+	# a is an arry
+	# i is an index register
+	ArrayLength a, R0
+	Compare i, R0
+	JumpLE _rc_error_label2
+	Move i, R0
+	Compare 0, R0
+	JumpL _rc_error_label2
+	Return Rdummy
+_rc_error_label2:
+	Library __println(re_array_index_str),Rdummy
+	Library __exit(1),Rdummy
+
+__checkSize:
+	# n is an array length
+	Move n, R0
+	Compare 0, R0
+	JumpLE _rc_error_label3
+	Return Rdummy
+_rc_error_label3:
+	Library __println(re_array_alloc_str),Rdummy
+	Library __exit(1),Rdummy
+
+__checkZero:
+	# x is a value that should no be zero
+	Move x, R0
+	Compare 0, R0
+	JumpTrue _rc_error_label4
+	Return Rdummy
+_rc_error_label4:
+	Library __println(re_zero_div_str),Rdummy
+	Library __exit(1),Rdummy
+
+_A_zfunc:
+Move 5, R0
+Move R0, str_26
+Library __allocateObject(12), R0
+MoveField _DV_A, R0.0
+Move R0, a_27
+Move 6, R0
+Move R0, str_26
+Move str1, R0
+Move a_27, R1
+StaticCall __checkNullRef(a=R1),Rdummy
+MoveField R0, R1.1
+Move a_27, R1
+StaticCall __checkNullRef(a=R1),Rdummy
+MoveField R1.1, R0
+Move R0, str_28
+Move str_28, R1
+Library __println(R1), R0
+Move str2, R1
+StaticCall _A_foo(str_25_29=R1), R0
+Move str_26, R1
+Library __printi(R1), R0
+Move a_27, R1
+StaticCall __checkNullRef(a=R1),Rdummy
+Move str3, R2
+VirtualCall R1.0(str_28_31=R2), R0
+Move a_27, R2
+StaticCall __checkNullRef(a=R2),Rdummy
+MoveField R2.1, R1
+Library __println(R1), R0
+Move 0, R0
+Return R0
+
+_A_foo:
+Move 5, R0
+Move R0, i_30
+Move str_25_29, R1
+Library __println(R1), R0
+Return Rdummy
+
+_A_bar:
+Move str_28_31, R0
+Move this, R1
+MoveField R0, R1.1
+Return Rdummy
+
+_B_vfunc:
+Move 0, R0
+Move a_32, R1
+Move this, R2
+Compare R1, R2
+JumpFalse _logical_op_end_3
+Move 1, R0
+_logical_op_end_3:
+Compare 0, R0
+JumpTrue _false_label_1
+Return Rdummy
+_false_label_1:
+Move 0, R0
+Move this, R2
+MoveField R2.2, R1
+Move this, R3
+StaticCall __checkNullRef(a=R3),Rdummy
+MoveField R3.3, R2
+Compare R1, R2
+JumpLE _logical_op_end_6
+Move 1, R0
+_logical_op_end_6:
+Compare 0, R0
+JumpTrue _false_label_4
+Move this, R2
+MoveField R2.1, R1
+Library __println(R1), R0
+_false_label_4:
+Move 0, R0
+Move a_32, R2
+StaticCall __checkNullRef(a=R2),Rdummy
+MoveField R2.2, R1
+Move this, R3
+MoveField R3.3, R2
+Compare R1, R2
+JumpLE _logical_op_end_9
+Move 1, R0
+_logical_op_end_9:
+Compare 0, R0
+JumpTrue _false_label_7
+Move a_32, R2
+StaticCall __checkNullRef(a=R2),Rdummy
+MoveField R2.1, R1
+Library __println(R1), R0
+_false_label_7:
+Return Rdummy
+
+_B_zfunc:
+Move 0, R0
+Return R0
+
+_B_main:
+Return Rdummy
+
+
+_ic_main:
+Move 1, R1
+StaticCall _A_zfunc(b_25=R1), R0
+Library __exit(0),Rdummy

@@ -1,0 +1,113 @@
+package IC.Parser;
+
+import java.util.List;
+import java.util.LinkedList;
+
+import IC.AST.*;
+import IC.Parser.SyntaxError;
+import IC.Parser.Token;
+import IC.Parser.Lexer;
+import java_cup.runtime.*;
+import IC.Parser.ValuedToken;
+import IC.DataTypes;
+import IC.ICVoid;
+
+parser code  {:
+	/** Causes the parsr to print every token it reads.
+	 * This is useful for debugging.
+	 */
+	public boolean printAST;
+	
+	private Lexer lexer;
+
+	public LibraryParser(Lexer lexer) {
+		super(lexer);
+		this.lexer = lexer;
+	}
+	
+	public int getLine() {
+		return lexer.getLineNumber();
+	}
+	
+	public void syntax_error(Symbol s) {
+		Token tok = (Token) s;
+		System.err.println("Line " + tok.getLine()+": Syntax error; unexpected " + tok);
+	}
+	
+:}
+
+// This is just for debugging
+/*scan with {:
+	Token t = lexer.next_token();
+	System.out.println(t.getLine() + ":" + t);
+	return t; 
+:};*/
+
+terminal LP, RP, ASSIGN, BOOLEAN, BREAK, CLASS;
+terminal COMMA, CONTINUE, DIVIDE, DOT, EQUAL, EXTENDS;
+terminal ELSE, FALSE, GT, GTE, MOD, MINUS, LTE, LT, LOR, LNEG, NEW;
+terminal LENGTH, LCBR, LB, LAND,  INT,IF, MULTIPLY;
+terminal NEQUAL, NULL, PLUS, RB, RCBR, RETURN, SEMI, STATIC;
+terminal STRING, THIS, TRUE, VOID, WHILE;
+
+terminal String QUOTE;
+terminal Integer INTEGER;
+terminal String ID;
+terminal String CLASS_ID; 
+
+non terminal Library libic;
+non terminal List<LibraryMethod> declList;
+non terminal LibraryMethod decl;
+non terminal PrimitiveType type;
+non terminal List<Formal> formalLst;
+non terminal Formal formal;
+non terminal Integer arrIndicators;
+
+
+
+libic ::= CLASS CLASS_ID:library LCBR declList:d RCBR
+	{: if ( ! library.equals("Library" ) )
+			throw new SyntaxError(libraryleft, "Library can only be called Library but is named: "+library);
+		RESULT = new Library(libraryleft, d); :}
+;
+
+declList ::= declList:dl decl:d
+	{: dl.add(d); RESULT=dl; :}
+	| /*empty*/
+	{: RESULT = new LinkedList<LibraryMethod>(); :}
+;
+
+
+decl ::= STATIC type:r ID:name LP formalLst:fl RP SEMI
+	{: RESULT = new LibraryMethod(r, name, fl); :}
+	| STATIC VOID ID:name LP formalLst:fl RP SEMI
+	{: RESULT = new LibraryMethod(new ICVoid(nameleft), name, fl); :}
+;
+
+
+type ::= INT
+	{: RESULT = new PrimitiveType(parser.getLine(), DataTypes.INT); :}
+	| BOOLEAN
+	{: RESULT = new PrimitiveType(parser.getLine(), DataTypes.BOOLEAN); :}
+	| STRING
+	{: RESULT = new PrimitiveType(parser.getLine(), DataTypes.STRING); :}
+	| type:t LB RB
+	{: t.incrementDimension(); RESULT = t; :}
+;
+
+
+
+formalLst ::= formal:f
+	{: List<Formal> fl = new LinkedList<>();
+	   fl.add(f); RESULT = fl; :}
+	| formalLst:fl COMMA formal:f
+	{: fl.add(f); RESULT = fl; :}
+	| /*empty*/ 
+	{: RESULT = new LinkedList<Formal>(); :}
+;
+
+
+
+formal ::= type:t ID:name
+	{: RESULT = new Formal( t, name ); :}
+;

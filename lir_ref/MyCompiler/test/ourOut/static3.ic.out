@@ -1,0 +1,82 @@
+Parsed ..\test\libic.sig successfully!
+Parsed ..\test\LegalPrograms\static3.ic successfully!
+
+Global Symbol Table: ..\test\LegalPrograms\static3.ic
+	Class: A
+	Class: B
+Children tables: A, B, Library
+
+Class Symbol Table: A
+	Field: string str
+	Static method: sfunc {int, boolean, int, boolean -> void}
+	Static method: sfunc2 {int -> int}
+	Static method: sfunc3 {int -> A}
+Children tables: sfunc, sfunc2, sfunc3
+
+Class Symbol Table: B
+	Static method: main {string[] -> void}
+	Virtual method: foo { -> void}
+Children tables: main, foo
+
+Class Symbol Table: Library
+	Static method: println {string -> void}
+	Static method: print {string -> void}
+	Static method: printi {int -> void}
+	Static method: printb {boolean -> void}
+	Static method: readi { -> int}
+	Static method: readln { -> string}
+	Static method: eof { -> boolean}
+	Static method: stoi {string, int -> int}
+	Static method: itos {int -> string}
+	Static method: stoa {string -> int[]}
+	Static method: atos {int[] -> string}
+	Static method: random {int -> int}
+	Static method: time { -> int}
+	Static method: exit {int -> int}
+
+Method Symbol Table: sfunc
+	Parameter: int i
+	Parameter: boolean b
+	Parameter: int z
+	Parameter: boolean b2
+
+Method Symbol Table: sfunc2
+	Parameter: int i
+
+Method Symbol Table: sfunc3
+	Parameter: int i
+	Local variable: A a
+
+Method Symbol Table: main
+	Parameter: string[] s
+
+Method Symbol Table: foo
+	Local variable: int i
+	Local variable: boolean boo
+
+Type Table: ..\test\LegalPrograms\static3.ic
+	1: Primitive type: int
+	0: Primitive type: boolean
+	4: Primitive type: null
+	2: Primitive type: string
+	3: Primitive type: void
+	5: Class: A
+	6: Class: B
+	10: Array type: string[]
+	22: Array type: int[]
+	7: Method type: {int, boolean, int, boolean -> void}
+	8: Method type: {int -> int}
+	9: Method type: {int -> A}
+	11: Method type: {string[] -> void}
+	12: Method type: { -> void}
+	13: Method type: {string -> void}
+	15: Method type: {int -> void}
+	16: Method type: {boolean -> void}
+	17: Method type: { -> int}
+	18: Method type: { -> string}
+	19: Method type: { -> boolean}
+	20: Method type: {string, int -> int}
+	21: Method type: {int -> string}
+	23: Method type: {string -> int[]}
+	25: Method type: {int[] -> string}
+

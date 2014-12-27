@@ -1,0 +1,14 @@
+class C {
+  int f;
+  static void main(string[] args) {
+    Library.printi(C.foo().bar().f);
+  }
+  
+  static C foo(){
+    return new C();
+  }
+  
+  C bar() { 
+	return new C(); 
+  }
+}

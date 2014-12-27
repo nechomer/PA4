@@ -1,0 +1,99 @@
+class A {
+	static void main(string[] args) {
+		A a;
+		a.typechecker(a);
+		return;
+	}
+	
+	static string sfunc(int n, boolean bool, A a, B b) {
+		if ( bool ) {
+			if ( a == b ) {
+				while ( n < 5 ) {
+					if ( ( (a != b) == false ) && ( n != 6 ) ) 
+						return "String literal";
+					if ( bool || n+8-1*n/n == 7+00 )
+						return "Bye";
+				}
+			}
+		}
+		int x;
+		x = n;
+		A avar = b;
+		avar = a;
+		bool = true;
+		boolean t = bool;
+		A.sfunc( B.intfunc(), B.boolFunc(), avar, b );
+		return "see ya";
+	}
+	
+	string vfunc(int n, boolean bool, A a, B b) {
+		if ( bool ) {
+			if ( a == b ) {
+				while ( n < 5 ) {
+					if ( ( (a != b) == false ) && ( n != 6 ) ) 
+						return "String literal";
+					if ( bool || n+8-1*n/n == 7+00 )
+						return "Bye";
+				}
+			}
+		}
+		int x;
+		x = n;
+		A avar = b;
+		avar = a;
+		bool = true;
+		boolean t = bool;
+		A.sfunc( B.intfunc(), B.boolFunc(), avar, b );
+		if ( a != b )
+			return "see ya";
+		else
+			return "bye.";
+	}
+
+	// predicates
+	void isint(int arg){}
+	void isstr(string arg){}
+	void isbool(boolean arg){}
+	void isA(A arg){}
+	void isB(B arg){}
+	
+	boolean typechecker(A a) {
+		
+		isint(a.intfield);
+		isint(intfield);
+		isint(this.intfield);
+		
+		isstr(a.stringfield);
+		isstr(stringfield);
+		isstr(this.stringfield);
+		
+		isbool(a.boolfield);
+		isbool(boolfield);
+		isbool(this.boolfield);
+		
+		isA(a.afield);
+		isA(afield);
+		isA(this.afield);
+		
+		isA(a.bfield);
+		isA(bfield);
+		isA(this.bfield);
+		
+		isB(a.bfield);
+		isB(bfield);
+		isB(this.bfield);
+		
+		return true;
+	}
+	
+	int intfield;
+	string stringfield;
+	boolean boolfield;
+	A afield;
+	B bfield;
+}
+
+class B extends A {
+	static int intfunc() { return 1+3 ; }
+	static boolean boolFunc() { return false; }
+}

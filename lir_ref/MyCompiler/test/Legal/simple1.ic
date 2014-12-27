@@ -1,0 +1,22 @@
+class A {
+	static void main ( string[] args ) {
+		int[] arr = new int[3];
+		int j = 0;
+		while ( j < arr.length ) {
+			Library.printi(j+1);
+			Library.print(": ");
+			Library.printi(arr[j]);
+			Library.println("");
+			j = j+1;
+		}
+		arr = new int[12];
+		j = 0;
+		while ( j < arr.length ) {
+			Library.printi(j+1);
+			Library.print(": ");
+			Library.printi(arr[j]);
+			Library.println("");
+			j = j+1;
+		}
+	}
+}

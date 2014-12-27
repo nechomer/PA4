@@ -1,0 +1,19 @@
+class C {
+  int f;
+  static void main(string[] args) {
+/*    C[][] arr;
+	Library.printi((new C()).f);
+	new C().foo();
+	arr[1][2].foo();*/
+  }
+  void foo(){
+	this.foo();
+  }
+}
+/*
+class D {
+  C c;
+  void foo() {
+	c.f = 5;
+  }
+}*/

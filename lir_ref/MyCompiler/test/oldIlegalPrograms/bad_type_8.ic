@@ -1,0 +1,10 @@
+class A{
+	static void main(string[] args) {
+		return;
+	}
+	
+	void f(int i) {
+		while ( i )
+			return;
+	}
+}
