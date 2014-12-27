@@ -406,4 +406,19 @@ public class FrameScope {
 	public HashMap<String, Field> getFields() {
 		return fields;
 	}
+	
+	public String getClassOfScope() {
+		String ret = null;
+		FrameScope scope = this;
+
+		while (scope != null) {
+			
+			if (scope.getType() == ScopeType.Class) {
+				ret = scope.scopeName;
+				break;
+			}
+			scope = scope.getParent();//if have'nt found, advance to parent
+		}
+		return ret;
+	}
 }
