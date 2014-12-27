@@ -257,9 +257,9 @@ public class LirTranslator implements Visitor {
 		if ( localVariable.hasInitValue() ) {
 			String reg = getNextReg();
 			lir += localVariable.getInitValue().accept(this);
-			lir += "Move " + reg + ", " /*+ localVariable.getUID()*/ + "\n";
+			lir += "Move " + reg + ", " + localVariable.getName() + "\n";
 		} else {
-			lir += "Move 0, " /*+ localVariable.getUID()*/ + "\n";
+			lir += "Move 0, " + localVariable.getName() + "\n";
 		}
 		return lir;
 	}
