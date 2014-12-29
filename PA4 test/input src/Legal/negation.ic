@@ -1,0 +1,12 @@
+class A {
+  static void main(string[] args) {
+  }
+  
+  void foo() { return; }
+}
+
+class B {
+	int bar() {
+		return -5;
+	}
+}

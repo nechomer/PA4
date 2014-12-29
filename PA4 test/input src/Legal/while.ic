@@ -1,0 +1,17 @@
+class A {
+  static void main(string[] args) {
+  }
+  
+  void foo() { return; }
+}
+
+class B {
+	int bar() {
+		while ( 1 < 2 ) {
+			break;
+			return 3;
+			continue;
+		}
+		return 4;
+	}
+}

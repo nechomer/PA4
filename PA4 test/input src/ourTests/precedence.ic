@@ -1,0 +1,23 @@
+class Test {
+	int a,b,c;
+	boolean d,e,f;
+	void foo() {
+		c=a+b+c;
+		c=a-b-c;
+		c=a*b*c;
+		c=a/b/c;
+		c=---a;
+		c=a;
+		c=-a*b;
+		c=-a/b;
+		c=a+b/c*a-b;
+		
+		d= !!!d;
+		d= e&&f;
+		d= e||f;
+		d= e&&f&&d;
+		d= e||f||d;
+		d= (e<f) && (d<f);
+		d= (e<=f) && (d<=f) || (e<=f);
+	}
+}
