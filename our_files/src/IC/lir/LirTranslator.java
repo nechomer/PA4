@@ -58,6 +58,11 @@ public class LirTranslator implements Visitor {
 		this.strMap = strMap;
 	}
 
+	/**
+	 * @param program - The visited program
+	 * @return The complete string representation of the program's LIR code, appending each
+	 * of its class' LIR code in order
+	 */
 	@Override
 	public Object visit(Program program) {
 		String lir = runtimeErrorFuncs();
@@ -67,6 +72,11 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param icClass - The visited class
+	 * @return The string representation of the classe's LIR code, appending each of its method's
+	 * LIR code in order
+	 */
 	@Override
 	public Object visit(ICClass icClass) {
 		String lir = "";
@@ -77,12 +87,19 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param field - The visited field
+	 * @return null, A field doesn't require translation
+	 */
 	@Override
 	public Object visit(Field field) {
-		// Translation is not required 
 		return null;
 	}
 	
+	/**
+	 * @param method - The visited method
+	 * @return - The string representation of the appended method's statement's LIR code
+	 */
 	private String visitMethod(Method method) {
 		String lir = "";
         for (Statement statement : method.getStatements())
@@ -90,10 +107,18 @@ public class LirTranslator implements Visitor {
         return lir;
 	}
 	
+	/**
+	 * @param method - The visited method
+	 * @return - The method's label in LIR format
+	 */
 	private String getMethodLabel(Method method) {
 		return "_" + currClass + "_" + method.getName() + ":\n"; 
 	}
 	
+	/**
+	 * @param method - The visited virtual method
+	 * @return - The string representation of the virtual method's LIR code
+	 */
 	@Override
 	public Object visit(VirtualMethod method) {
 		String label = "\n" + getMethodLabel(method);
@@ -105,12 +130,18 @@ public class LirTranslator implements Visitor {
 		return label +lir;
 	}
 	
+	/**
+	 * @param method - The visited static method
+	 * @return - The string representation of the static method's LIR code
+	 */
 	@Override
 	public Object visit(StaticMethod method) {
 		String label = "\n" + getMethodLabel(method);
 		String lir = visitMethod(method);
 		
 		if( method.getType().getName().equals("void")) {
+			//Main method is also static - So it should have a program exit instruction
+			//attached at the end of the LIR code
 			if(method.getName().equals("main")){
 				label = "\n_ic_main:\n";
 				lir += "Library __exit(0),Rdummy\n";
@@ -123,30 +154,46 @@ public class LirTranslator implements Visitor {
 		return label +lir;
 	}
 
+	/**
+	 * @param method - Library method
+	 * @return the empty string, no translation is required for library methods
+	 */
 	@Override
 	public Object visit(LibraryMethod method) {
-		// Translation is not required 
 		return "";
 	}
 
+	/**
+	 * @param formal
+	 * @return the empty string, no translation is required for library methods
+	 */
 	@Override
 	public Object visit(Formal formal) {
-		// Translation is not required 
 		return null;
 	}
 
+	/**
+	 * @param type
+	 * @return the empty string, no translation is required for primitive types
+	 */
 	@Override
 	public Object visit(PrimitiveType type) {
-		// Translation is not required 
 		return null;
 	}
 
+	/**
+	 * @param type
+	 * @return the empty string, no translation is required for user types
+	 */
 	@Override
 	public Object visit(UserType type) {
-		// Translation is not required 
 		return null;
 	}
 
+	/**
+	 * @param assignment - The visited assignment
+	 * @return The assignment's string representation in LIR - Move <assignment>,<variable>
+	 */
 	@Override
 	public Object visit(Assignment assignment) {
 		String reg = getNextReg();
@@ -159,11 +206,19 @@ public class LirTranslator implements Visitor {
 		return lirAss;
 	}
 
+	/**
+	 * @param callStatement - The visited call statement
+	 * @return - The string LIr representation of the calling statement - Virtual or static
+	 */
 	@Override
 	public Object visit(CallStatement callStatement) {
 		return callStatement.getCall().accept(this);
 	}
 
+	/**
+	 * @param returnStatement - The visited return statement
+	 * @return The string representation of the return LIR instruction - Return <Reg>
+	 */
 	@Override
 	public Object visit(Return returnStatement) {
 		
@@ -178,6 +233,17 @@ public class LirTranslator implements Visitor {
 		}
 	}
 
+	/**
+	 * @param ifStatement - The visited if statement
+	 * @return - The string representation of the LIR if code.
+	 * 			 <condition> Compare 0, <conditionReg>
+	 * 			 JumpTrue <false unique label>
+	 * 			 <operation>
+	 *           Jump <end unique label> - For if else statements
+	 *           <false unique label>
+	 *           <else operation> (If exists)
+	 *           <end unique label>
+	 */
 	@Override
 	public Object visit(If ifStatement) {
 		String lir = "";
@@ -204,6 +270,18 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param whileStatement - The visited while statement
+	 * @return The string LIR code for the while loop.
+	 * 			<unique test label>
+	 * 			<while condition>
+	 * 			Compare 0, <ConditionReg>
+	 * 			JumpTrue <unique end label>
+	 * 			<while operation>
+	 * 			Jump <unique test label>
+	 * 			<unique end label>
+	 * 			
+	 */
 	@Override
 	public Object visit(While whileStatement) {
 		String lir = "";
@@ -230,16 +308,29 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param breakStatement - The visited break statement
+	 * @return - A string LIR code for break in a while loop - Jump <unique end label>
+	 */
 	@Override
 	public Object visit(Break breakStatement) {
 		return "Jump " + globalEndLabel + "\n";
 	}
 
+	/**
+	* @param continueStatement - The visited continue statement
+	 * @return - A string LIR code for break in a while loop - Jump <unique test label>
+	 */
 	@Override
 	public Object visit(Continue continueStatement) {
 		return "Jump " + globalTestLabel + "\n";
 	}
 
+	/**
+	 * @param statementsBlock - The visited statement block
+	 * @return - The string of LIR code for a statement block - 
+	 * Each statement is appended in order to the rest
+	 */
 	@Override
 	public Object visit(StatementsBlock statementsBlock) {
 		String lir = "";
@@ -250,6 +341,13 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param localVariable - The visited local variable
+	 * @return - The string representation of a LIR instruction for a local variable defintion,
+	 * including assigning an initial value - 
+	 * <Initial value instruction> (If there's an init value)
+	 * Move <Reg>, <local variable>
+	 */
 	@Override
 	public Object visit(LocalVariable localVariable) {
 		String lir = "";
@@ -263,6 +361,10 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param location
+	 * @return
+	 */
 	@Override
 	public Object visit(VariableLocation location) {
 		String lir = "";
@@ -328,6 +430,10 @@ public class LirTranslator implements Visitor {
 			}
 	}
 
+	/**
+	 * @param location
+	 * @return
+	 */
 	@Override
 	public Object visit(ArrayLocation location) {
 		String lir = "";
@@ -376,6 +482,10 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 	
+	/**
+	 * @param call
+	 * @return
+	 */
 	@Override
 	public Object visit(StaticCall call) {
 		String lir = "";
@@ -411,6 +521,10 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param call
+	 * @return
+	 */
 	@Override
 	public Object visit(VirtualCall call) {
 		String lir = "";
@@ -452,6 +566,11 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param call
+	 * @param paramRegs
+	 * @return
+	 */
 	private String getCallArgsStr(Call call, List<String> paramRegs) {
 		List<Formal> fl = call.getMethod().getFormals();
 		String lir ="";
@@ -461,6 +580,10 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param thisExpression
+	 * @return
+	 */
 	@Override
 	public Object visit(This thisExpression) {
 		String reg = getNextReg();
@@ -468,6 +591,10 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param newClass
+	 * @return
+	 */
 	@Override
 	public Object visit(NewClass newClass) {
 		String lir = "";
@@ -479,6 +606,10 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param newArray
+	 * @return
+	 */
 	@Override
 	public Object visit(NewArray newArray) {
 		String lir = "";
@@ -498,6 +629,10 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param length
+	 * @return
+	 */
 	@Override
 	public Object visit(Length length) {
 		String lir = "";
@@ -516,6 +651,10 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param binaryOp
+	 * @return
+	 */
 	@Override
 	public Object visit(MathBinaryOp binaryOp) {
 		String firstReg = getNextReg();
@@ -542,6 +681,10 @@ public class LirTranslator implements Visitor {
 		return binaryLir;
 	}
 
+	/**
+	 * @param binaryOp
+	 * @return
+	 */
 	@Override
 	public Object visit(LogicalBinaryOp binaryOp) {
 		
@@ -560,6 +703,10 @@ public class LirTranslator implements Visitor {
 	
 		
 		
+	/**
+	 * @param binaryOp
+	 * @return
+	 */
 	private String comparrisonCode(LogicalBinaryOp binaryOp) {
 		
 		String testEnd = makeUniqueJumpLabel("logical_op_end");
@@ -587,6 +734,10 @@ public class LirTranslator implements Visitor {
 		return binaryLir;
 	}
 
+	/**
+	 * @param binaryOp
+	 * @return
+	 */
 	private String andOrCode(LogicalBinaryOp binaryOp) {
 
 		String testEnd = makeUniqueJumpLabel("logical_op_end");
@@ -620,6 +771,10 @@ public class LirTranslator implements Visitor {
 		return binaryLir;
 	}
 
+	/**
+	 * @param unaryOp
+	 * @return
+	 */
 	@Override
 	public Object visit(MathUnaryOp unaryOp) {
 		// Only negation of numeric type expression
@@ -632,6 +787,10 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param unaryOp
+	 * @return
+	 */
 	@Override
 	public Object visit(LogicalUnaryOp unaryOp) {
 		// Only negation of boolean type expression
@@ -644,6 +803,10 @@ public class LirTranslator implements Visitor {
 		return lir;
 	}
 
+	/**
+	 * @param literal
+	 * @return
+	 */
 	@Override
 	public Object visit(Literal literal) {
 		switch ( literal.getType() ) {
@@ -661,23 +824,40 @@ public class LirTranslator implements Visitor {
 		return null;
 	}
 
+	/**
+	 * @param expressionBlock
+	 * @return
+	 */
 	@Override
 	public Object visit(ExpressionBlock expressionBlock) {
 		
 		return expressionBlock.getExpression().accept(this);
 	}
 	
+	/**
+	 * @return
+	 */
 	private String getNextReg() {
 		return "R" + (currReg);
 	}
+	/**
+	 * @param label
+	 * @return
+	 */
 	private String getNextLabel(String label) {
 		return "_" + label + "_" + (++currLabel);
 	}
+	/**
+	 * @return
+	 */
 	private static String runtimeErrorFuncs(){
 		return nullPtrCheckCode + arrIdxOutOfBoundsCheckCode + arrIdxCheckCode + zeroDivCheckCode;
 	} 
 
 
+	/**
+	 * 
+	 */
 	private static final String nullPtrCheckCode = 
 	"# Check Null Ptr Reference:\n" +
 	"# static void checkNullRef(array a){\n" +
@@ -695,6 +875,9 @@ public class LirTranslator implements Visitor {
 	"	Library __exit(1),Rdummy\n" + 
 	"\n";
 
+	/**
+	 * 
+	 */
 	private static final String arrIdxOutOfBoundsCheckCode = 
 	"# Check Array Index Out Of Bounds:\n" +
 	"# static void checkArrayAccess(array a, index i) {\n" +
@@ -715,6 +898,9 @@ public class LirTranslator implements Visitor {
 	"	Library __exit(1),Rdummy\n" + 
 	"\n";
 
+	/**
+	 * 
+	 */
 	private static final String arrIdxCheckCode = 
 	"# Check Array Allocation Is Not With Negative Number:\n" +
 	"# static void checkSize(size n) {\n" +
@@ -730,6 +916,9 @@ public class LirTranslator implements Visitor {
 	"	Library __exit(1),Rdummy\n" + 
 	"\n";
 
+	/**
+	 * 
+	 */
 	private static final String zeroDivCheckCode = 
 	"# Check Division By Zero:\n" +
 	"# static void checkZero(value b) {\n" +
@@ -745,22 +934,43 @@ public class LirTranslator implements Visitor {
 	"	Library __exit(1),Rdummy\n" + 
 	"\n";
 
+	/**
+	 * @param reg
+	 * @return
+	 */
 	private String nullPtrCheckStr(String reg) {
 		return "StaticCall __checkNullRef(a=" + reg + "),Rdummy\n";
 	}
 
+	/**
+	 * @param arrReg
+	 * @param idxReg
+	 * @return
+	 */
 	private String arrIdxOutOfBoundsCheckStr(String arrReg, String idxReg) {
 		return "StaticCall __checkArrayAccess(a=" + arrReg + ", i=" + idxReg + "),Rdummy\n";
 	}
 
+	/**
+	 * @param sizeReg
+	 * @return
+	 */
 	private String arrIdxCheckStr(String sizeReg) {
 		return "StaticCall __checkSize(n=" + sizeReg + "),Rdummy\n";
 	}
 
+	/**
+	 * @param intReg
+	 * @return
+	 */
 	private String zeroDivCheckStr(String intReg) {
 		return "StaticCall __checkZero(b=" + intReg + "),Rdummy\n";
 	}
 	
+	/**
+	 * @param name
+	 * @return
+	 */
 	private String makeUniqueJumpLabel(String name) {
 		return "_" + name + "_" +(++currLabel);
 	}
