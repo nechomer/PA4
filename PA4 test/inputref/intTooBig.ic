@@ -1,6 +1,0 @@
-class IntTooBig {
-	static void main(string[] args) {
-		int x = 2147483648;	
-		x = 2147483649;
-	}
-}
