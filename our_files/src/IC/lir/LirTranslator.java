@@ -36,7 +36,6 @@ import IC.AST.StatementsBlock;
 import IC.AST.StaticCall;
 import IC.AST.StaticMethod;
 import IC.AST.This;
-import IC.AST.Type;
 import IC.AST.UserType;
 import IC.AST.VariableLocation;
 import IC.AST.VirtualCall;
@@ -305,15 +304,7 @@ public class LirTranslator implements Visitor {
 				lir += nullPtrCheckStr(objReg);
 				
 				// get field offset
-				String f = "";
-				Object loc = location.getLocation();
-				while (!(loc instanceof VariableLocation)) {
-					loc = ((ArrayLocation) loc).getArray();
-				}
-				if (loc instanceof VariableLocation) {
-					f = ((VariableLocation) loc).getName();
-				}
-				String className = ((Type)location.getLocation().scope.retrieveIdentifier(f)).getName();
+				String className = location.getcName();
 				int offset = DispatchTableBuilder.getFieldOffset(className, location.getName());
 				
 				if ( location.isLhs() ) {

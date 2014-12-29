@@ -1,14 +1,22 @@
 class C {
-  int f;
+  int s;
   static void main(string[] args) {
-    Library.printi(C.foo().bar().f);
+    //Library.printi(D.foo().bar().f);
+  }
+  void m() {
+    Library.printi(s);
+  }
+}
+
+class D {
+
+  int f;
+
+  static D foo(){
+    return new D();
   }
   
-  static C foo(){
-    return new C();
-  }
-  
-  C bar() { 
-	return new C(); 
+  D bar() { 
+  return new D(); 
   }
 }

@@ -397,6 +397,7 @@ public class SemanticChecker implements Visitor {
 		} else {
 			//The variable is a class, so it is looked up
 			Type ctype = (Type) location.getLocation().accept(this);
+			location.setcName(ctype.getName());
 			ICClass c = (ICClass) location.scope.retrieveIdentifier(ctype
 					.getName());
 			//Look up the field definition in the class
