@@ -97,7 +97,7 @@ public class DispatchTableBuilder {
 	    for ( String className : classMethodOffsets.keySet() ) {
 	      if ( !( className.equals("Library") || className.equals("Global") ) )
 	          dvs += "# class " + className + "\n# Dispatch vector:\n" + 
-	        		  getDispatchTableName(className) + "\n" + getOffsetComment(className) + "\n";
+	        		  getDispatchTable(className) + "\n" + getOffsetComment(className) + "\n";
 	    }
 	    return dvs;
 	  }
