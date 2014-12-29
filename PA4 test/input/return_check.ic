@@ -1,87 +1,90 @@
 class ReturnCheck {
-	
-	static void main(string[] args) {
+  
+  static void main(string[] args) {
+    ReturnCheck rc = new ReturnCheck();
+    rc.checkRetFuncs();
+  }
 
-		retvoid();
-		retvobj();
-		retArr();
-		retArrLocation();
-		retThis();
-		retNewObjThis();
-		retNewObj();
-		retNewArr();
-		retArrLength();
-		retNegation();
-		retNegative();
-		retNull();
-		retIntCalling();
+  void checkRetFuncs() {
+    retvoid();
+    retvobj();
+    retArr();
+    retArrLocation();
+    retThis();
+    retNewObjThis();
+    retNewObj();
+    retNewArr();
+    retArrLength();
+    retNegation();
+    retNegative();
+    retNull();
+    retIntCalling();
+  }
 
-	}
+  void retvoid() {
+    return;
+  }
 
-	void retvoid() {
-		return;
-	}
+  C retvobj() {
+    C c = new C();
+    return c;
+  }
 
-	C retvobj() {
-		C c = new C();
-		return c;
-	}
+  C[] retArr() {
+    C[] c = new C[2];
+    return c;
+  }
 
-	C[] retArr() {
-		C[] c = new C[2];
-		return c;
-	}
+  C retArrLocation() {
+    C[] c = new C[1];
+    c[1] = new C();
+    return c[1];
+  }
 
-	C retArrLocation() {
-		C[] c = new C[1];
-		c[1] = new C();
-		return c[1];
-	}
+  C retThis() {
+    return (new C()).retThis();
+  }
 
-	C retThis() {
-		return (new C()).retThis();
-	}
+  C retNewObjThis() {
+    return (new C()).retThis();
+  }
 
-	C retNewObjThis() {
-		return (new C()).retThis();
-	}
+  C retNewObj() {
+    return new C();
+  }
 
-	C retNewObj() {
-		return new C();
-	}
+  int[] retNewArr() {
+    return new int[34];
+  }
 
-	int[] retNewArr() {
-		return new int[34];
-	}
+  int retArrLength() {
+    int[] arr = new int[2];
+    return arr.length;
+  }
 
-	int retArrLength() {
-		int[] arr = new int[2];
-		return arr.length;
-	}
+  boolean retNegation() {
+    boolean a = true;
+    return !a;
+  }
 
-	int retNegation() {
-		boolean a = true;
-		return !a;
-	}
+  int retNegative() {
+    int a = 1;
+    return -a;
+  }
 
-	int retNegative() {
-		int a = 1;
-		return -a;
-	}
+  string retNull() {
+    return null;
+  }
 
-	int retNull() {
-		return null;
-	}
-
-	int retIntCalling() {
-		return (6);
-	}
+  int retIntCalling() {
+    return (6);
+  }
 }
 
 class C {
 
-	C retThis() {
-		return this;
-	}
-	
+  C retThis() {
+    return this;
+  }
+  
 }

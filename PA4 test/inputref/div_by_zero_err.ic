@@ -1,0 +1,5 @@
+class DivByZero {
+	static void main ( string[] args ) {
+		int x = 1/0;
+	}
+}

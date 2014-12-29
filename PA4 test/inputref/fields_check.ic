@@ -1,0 +1,23 @@
+class FieldCheck {
+
+  static void main(string[] args) {
+
+    //check fields, should print initial values
+    Library.printi((new C()).f);
+    Library.printb((new C()).b);
+    Library.println((new C()).s);
+    Library.printi((new C()).c.f);
+
+  }
+}
+
+class C {
+  int f;
+  boolean b;
+  string s;
+  C c;
+
+  void foo(){
+  }
+  
+}

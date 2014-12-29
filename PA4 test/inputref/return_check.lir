@@ -1,7 +1,7 @@
-str_err_null_ptr_ref:		"Runtime Error: Null pointer dereference!"
-str_err_arr_out_of_bounds:	"Runtime Error: Array index out of bounds!"
-str_err_neg_arr_size:	"Runtime Error: Array allocation with negative array size!"
-str_err_div_by_zero:	"Runtime Error: Division by zero!"
+re_null_ref_str:    "Runtime Error: Null pointer dereference!"
+re_array_index_str: "Runtime Error: Array index out of bounds!"
+re_array_alloc_str: "Runtime Error: Array allocation with non-positive array size!"
+re_zero_div_str:    "Runtime Error: Division by zero!"
 
 # class ReturnCheck
 # Dispatch vector:
@@ -14,69 +14,56 @@ _DV_C: [_C_retThis]
 # Field offsets
 
 
-# Check Null Ptr Reference:
-# static void checkNullRef(array a){
-# 	if(a == null) {Library.println(...);
-# 	Library.exit(1);
-# 	}
-# }
 __checkNullRef:
+	# a is a reference
 	Move a, R0
 	Compare 0, R0
-	JumpTrue _error1
+	JumpTrue _rc_error_label1
 	Return Rdummy
-_error1:
-	Library __println(str_err_null_ptr_ref),Rdummy
+_rc_error_label1:
+	Library __println(re_null_ref_str),Rdummy
 	Library __exit(1),Rdummy
 
-# Check Array Index Out Of Bounds:
-# static void checkArrayAccess(array a, index i) {
-# 	if (i<0 || i>=a.length) {
-# 	Library.println("Runtime Error");
-# 	}
-# }
 __checkArrayAccess:
-	Move i, R0
-	Compare 0, R0
-	JumpL _error2
+	# a is an arry
+	# i is an index register
 	ArrayLength a, R0
 	Compare i, R0
-	JumpLE _error2	Return Rdummy
-_error2:
-	Library __println(str_err_arr_out_of_bounds),Rdummy
+	JumpLE _rc_error_label2
+	Move i, R0
+	Compare 0, R0
+	JumpL _rc_error_label2
+	Return Rdummy
+_rc_error_label2:
+	Library __println(re_array_index_str),Rdummy
 	Library __exit(1),Rdummy
 
-# Check Array Allocation Is Not With Negative Number:
-# static void checkSize(size n) {
-# 	if (n<0) Library.println("Runtime Error");
-# }
 __checkSize:
+	# n is an array length
 	Move n, R0
 	Compare 0, R0
-	JumpLE _error3
+	JumpLE _rc_error_label3
 	Return Rdummy
-_error3:
-	Library __println(str_err_neg_arr_size),Rdummy
+_rc_error_label3:
+	Library __println(re_array_alloc_str),Rdummy
 	Library __exit(1),Rdummy
 
-# Check Division By Zero:
-# static void checkZero(value b) {
-# 	if (b == 0) Library.println("Runtime Error");
-# }
 __checkZero:
-	Move b, R0
-	Compare 0, R0	JumpTrue _error4
+	# x is a value that should no be zero
+	Move x, R0
+	Compare 0, R0
+	JumpTrue _rc_error_label4
 	Return Rdummy
-_error4:
-	Library __println(str_err_div_by_zero),Rdummy
+_rc_error_label4:
+	Library __println(re_zero_div_str),Rdummy
 	Library __exit(1),Rdummy
 
 
 _ic_main:
 Library __allocateObject(4), R0
 MoveField _DV_ReturnCheck, R0.0
-Move R0, rc
-Move rc, R1
+Move R0, rc_32
+Move rc_32, R1
 StaticCall __checkNullRef(a=R1),Rdummy
 VirtualCall R1.0(), Rdummy
 Library __exit(0),Rdummy
@@ -117,8 +104,8 @@ Return Rdummy
 _ReturnCheck_retvobj:
 Library __allocateObject(4), R0
 MoveField _DV_C, R0.0
-Move R0, c
-Move c, R0
+Move R0, c_33
+Move c_33, R0
 Return R0
 
 _ReturnCheck_retArr:
@@ -126,8 +113,8 @@ Move 2, R1
 StaticCall __checkSize(n=R1),Rdummy
 Mul 4, R1
 Library __allocateArray(R1), R0
-Move R0, c
-Move c, R0
+Move R0, c_34
+Move c_34, R0
 Return R0
 
 _ReturnCheck_retArrLocation:
@@ -135,15 +122,15 @@ Move 1, R1
 StaticCall __checkSize(n=R1),Rdummy
 Mul 4, R1
 Library __allocateArray(R1), R0
-Move R0, c
+Move R0, c_35
 Library __allocateObject(4), R0
 MoveField _DV_C, R0.0
-Move c, R1
+Move c_35, R1
 StaticCall __checkNullRef(a=R1),Rdummy
 Move 1, R2
 StaticCall __checkArrayAccess(a=R1, i=R2),Rdummy
 MoveArray R0, R1[R2]
-Move c, R1
+Move c_35, R1
 StaticCall __checkNullRef(a=R1),Rdummy
 Move 1, R2
 StaticCall __checkArrayAccess(a=R1, i=R2),Rdummy
@@ -181,23 +168,23 @@ Move 2, R1
 StaticCall __checkSize(n=R1),Rdummy
 Mul 4, R1
 Library __allocateArray(R1), R0
-Move R0, arr
-Move arr, R1
+Move R0, arr_36
+Move arr_36, R1
 StaticCall __checkNullRef(a=R1),Rdummy
 ArrayLength R1, R0
 Return R0
 
 _ReturnCheck_retNegation:
 Move 1, R0
-Move R0, a
-Move a, R0
+Move R0, a_37
+Move a_37, R0
 Xor 1,R0
 Return R0
 
 _ReturnCheck_retNegative:
 Move 1, R0
-Move R0, a
-Move a, R0
+Move R0, a_38
+Move a_38, R0
 Neg R0
 Return R0
 

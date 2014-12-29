@@ -1,0 +1,15 @@
+class A {
+
+  static void main(string[] args) {
+  	Library.printb((new B()).bar());
+  }
+
+}
+
+class B {
+
+	boolean bar() {
+		return 1+3==4 && false;
+	}
+	
+}
