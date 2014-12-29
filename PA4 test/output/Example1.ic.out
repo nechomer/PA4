@@ -1,0 +1,3 @@
+# Parsed -Linput/Library/libic.sig successfully!
+# Parsed Example1.ic successfully!
+43: semantic error; Invalid assignment of type int to variable of type string
