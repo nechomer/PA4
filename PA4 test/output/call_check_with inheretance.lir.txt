@@ -1,0 +1,5 @@
+foo inside X
+foo inside Y
+foo inside Z
+static foo inside main class
+foo inside main class
