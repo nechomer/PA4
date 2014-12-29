@@ -1,0 +1,38 @@
+class Check {
+	// predicates
+	static void isint(int arg){}
+	static void isstr(string arg){}
+	static void isbool(boolean arg){}
+	static void isA(A arg){}
+	static void isB(B arg){}
+	static void isC(C arg){}
+}
+
+class A {
+	C c;
+	string s;
+	int n;
+}
+
+class B extends A {
+}
+
+class C {
+	boolean t;
+	A a;
+	B b;
+}
+
+class App {
+	static void main(string[] args) {
+		int n;
+		boolean bool;
+		string s;
+		int[] arr;
+		A a;
+		B b;
+		C c;
+		
+		Check.isint("hello");
+	}
+}
