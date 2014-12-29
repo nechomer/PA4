@@ -1,0 +1,68 @@
+class PrecedenceCheck {
+
+	static void main(string[] args) {
+		int a = 1;
+		int b = 2;
+		int c = 3;
+
+		boolean d = true;
+		boolean e = false;
+		boolean f;
+
+		c=a+b+c;
+		Library.printi(c);
+		Library.println("");
+
+		c=c-b-a;
+		Library.printi(c);
+		Library.println("");
+
+		c=a*b*c;
+		Library.printi(c);
+		Library.println("");
+
+		c=c/b/a;
+		Library.printi(c);
+		Library.println("");
+
+		c=---a;
+		Library.printi(c);
+		Library.println("");
+
+		c=a;
+		Library.printi(c);
+		Library.println("");
+
+		c=-a*b;
+		Library.printi(c);
+		Library.println("");
+
+		c=-b/a;
+		Library.printi(c);
+		Library.println("");
+
+		c=a+c*a/b-b;
+		Library.printi(c);
+		Library.println("");
+		
+		f= !!!d;
+		Library.printb(f);
+		Library.println("");
+
+		f= e&&f&&d;
+		Library.printb(f);
+		Library.println("");
+
+		f= e||f||d;
+		Library.printb(f);
+		Library.println("");
+
+		f= (e!=f) && (a<b);
+		Library.printb(f);
+		Library.println("");
+
+		f= f && d || e;
+		Library.printb(f);
+		Library.println("");
+	}
+}

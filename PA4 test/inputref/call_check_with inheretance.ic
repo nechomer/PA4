@@ -1,0 +1,44 @@
+class CallChecks {
+
+  static void main(string[] args) {
+
+    X x = new X();
+    Y y = new Y();
+    Z z = new Z();
+
+    x.foo(1,2);
+    y.foo(1,2);
+    z.foo(1,2);
+
+    CallChecks.sfoo();
+    CallChecks c = new CallChecks();
+    c.foo();
+
+  }
+
+  void foo() {
+    Library.println("foo inside main class");
+  }
+
+  static void sfoo() {
+    Library.println("static foo inside main class");
+  }
+}
+
+class X {
+  void foo(int a, int b) {
+    Library.println("foo inside X");
+  }
+}
+
+class Y extends X {
+  void foo(int a, int b) {
+    Library.println("foo inside Y");
+  }
+}
+
+class Z extends Y {
+  void foo(int a, int b) {
+    Library.println("foo inside Z");
+  }
+}

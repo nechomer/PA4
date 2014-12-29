@@ -1,0 +1,23 @@
+class NullObj {
+
+	static void main ( string[] args ) {
+
+		A a = null;
+		A b = new A();
+
+		b.foo();
+
+		Library.printi(b.a);
+		Library.printi(a.a);
+
+	}
+}
+
+class A {
+	
+	int a;
+
+	void foo() {
+		a = 3;
+	}
+}

@@ -1,0 +1,79 @@
+class OperationsCheck {
+  static void main(string[] args) {
+    int a = 1;
+    int b = 2;
+    int c;
+
+    boolean d = true;
+    boolean e = false;
+    boolean f;
+
+    Library.println("a,b,c are :");
+    Library.printi(a);
+    Library.println("");
+    Library.printi(b);
+    Library.println("");
+    Library.printi(c);
+    Library.println("");
+
+    c=a+b;
+    Library.printi(c);
+    Library.println("");
+
+    c=a-b;
+    Library.printi(c);
+    Library.println("");
+
+    c=a*b;
+    Library.printi(c);
+    Library.println("");
+
+    c=a/2;
+    Library.printi(c);
+    Library.println("");
+
+    c=1%3;
+    Library.printi(c);
+    Library.println("");
+
+    f=a<b;
+    Library.printb(f);
+    Library.println("");
+
+    c=-b;
+    Library.printi(c);
+    Library.println("");
+
+    f=d&&e;
+    Library.printb(f);
+    Library.println("");
+
+    f=d||e;
+    Library.printb(f);
+    Library.println("");
+
+    f=a<=b;
+    Library.printb(f);
+    Library.println("");
+
+    f=a>b;
+    Library.printb(f);
+    Library.println("");
+
+    f=a>=b;
+    Library.printb(f);
+    Library.println("");
+
+    f=a==b;
+    Library.printb(f);
+    Library.println("");
+
+    f=a!=b;
+    Library.printb(f);
+    Library.println("");
+
+    f=!e;
+    Library.printb(f);
+    Library.println("");
+  }
+}

@@ -1,0 +1,21 @@
+class C {
+
+  static void main(string[] args) {
+    Library.printi(D.foo().bar().f);
+  }
+
+}
+
+class D {
+
+  int f;
+
+  static D foo(){
+    return new D();
+  }
+  
+  D bar() { 
+  return new D(); 
+  }
+  
+}

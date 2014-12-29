@@ -1,0 +1,32 @@
+class WhileCheck {
+
+	static void main (string[] args) {
+
+		int[] arr = new int[6];
+		int i = 0;
+
+		//print the empty array
+		while ( i < arr.length ) {
+			Library.printi(i);
+			Library.print(": ");
+			Library.printi(arr[i]);
+			Library.println("");
+			i = i+1;
+		}
+
+		//print the empty array
+		while ( i < arr.length ) {
+			arr[i] = arr.length - i;
+			i = i+1;
+		}
+
+		//print the full array
+		while ( i < arr.length ) {
+			Library.printi(i);
+			Library.print(": ");
+			Library.printi(arr[i]);
+			Library.println("");
+			i = i+1;
+		}
+	}
+}

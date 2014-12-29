@@ -1,3 +1,0 @@
-class NonMember {
-	int a = 5;
-}
