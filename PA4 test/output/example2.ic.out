@@ -1,3 +1,0 @@
-# Parsed -Linput/Library/libic.sig successfully!
-# Parsed example2.ic successfully!
-1: semantic error; Class A cannot extend B, since it's not yet been defined
