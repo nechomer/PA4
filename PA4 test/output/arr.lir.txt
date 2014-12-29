@@ -1,3 +1,1 @@
-Line 9: Syntax error; unexpected Label(_DV_ArrTest)
-Couldn't repair and continue parse
-java.lang.Exception: Can't recover from previous error(s)
+5Runtime Error: Array index out of bounds!
