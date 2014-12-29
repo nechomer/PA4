@@ -277,7 +277,7 @@ public class StringsBuilder implements Visitor {
 		Iterator<String> iter = strings.keySet().iterator();
 		while(iter.hasNext()) {
 			tmp = iter.next();
-			str += strings.get(tmp) + ":	" + tmp + "\n";
+			str += strings.get(tmp) + ":	\"" + tmp + "\""+ "\n";
 		}
 			
 		return str;
