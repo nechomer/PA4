@@ -10,17 +10,17 @@ ProgFileList = glob("input/*.lir")
 for Progfile in ProgFileList:
 	os.remove(Progfile)
 	
-ProgFileList = glob("inputref/*.lir")
-for Progfile in ProgFileList:
-	os.remove(Progfile)
+# ProgFileList = glob("inputref/*.lir")
+# for Progfile in ProgFileList:
+	# os.remove(Progfile)
 	
 ProgFileList = glob("output/*.txt")
 for Progfile in ProgFileList:
 	os.remove(Progfile)
 	
-ProgFileList = glob("outputref/*.txt")
-for Progfile in ProgFileList:
-	os.remove(Progfile)
+# ProgFileList = glob("outputref/*.txt")
+# for Progfile in ProgFileList:
+	# os.remove(Progfile)
 	
 
 

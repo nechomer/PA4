@@ -6,7 +6,7 @@ from subprocess import *
 
 
 
-ProgFileList = glob("input/*.lir")
+ProgFileList = glob("inputref/*.lir")
 for Progfile in ProgFileList:
 	os.remove(Progfile)
 
