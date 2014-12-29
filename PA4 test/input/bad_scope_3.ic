@@ -1,7 +1,0 @@
-class A {
-	int i;
-	static void main(string[] args){
-		string[] args;
-	}
-
-}
