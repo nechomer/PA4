@@ -45,9 +45,9 @@ public class Compiler {
 	                fullPath = args[1];
 	        		index = fullPath.lastIndexOf(File.separator);
 	        		libFileName = fullPath.substring(index + 1);
-	        		if (libraryProgramNode != null) {
-	        			System.out.println("Parsed " + libFileName + " successfully!");
-	        		}
+//	        		if (libraryProgramNode != null) {
+//	        			System.out.println("#Parsed " + libFileName + " successfully!");
+//	        		}
 	        	//In case it's not a library file - It should be a switch for printing!		
         		} else if (!args[1].equals("-dump-symtab") && !args[1].equals("-print-ast")) {
     				System.out.println("\n ERROR: Library file must be supplied with preceding -L ");
@@ -63,10 +63,10 @@ public class Compiler {
     		pp = new parser(new Lexer(new FileReader(args[0])));
     		result = pp.parse();
     		programNode = (ASTNode) result.value;
-    		if (programNode != null) { 
-    			System.out.println("Parsed " + progFileName + " successfully!");
-    			
-    		}
+//    		if (programNode != null) { 
+//    			System.out.println("#Parsed " + progFileName + " successfully!");
+//    			
+//    		}
     		
     		if (printAst) {
     			if (libraryProgramNode!= null) System.out.println(libraryProgramNode.accept(new PrettyPrinter(args[1]))); 
