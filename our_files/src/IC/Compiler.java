@@ -103,7 +103,7 @@ public class Compiler {
 	     		System.out.println(ttb);
 	     		
 	     		System.out.println();
-	     		System.out.println(DispatchTableBuilder.printDVS());
+	     		System.out.println(DispatchTableBuilder.printDispatchTable());
      		}
      		
      		//generate strings for lir
@@ -116,7 +116,7 @@ public class Compiler {
      		
      		String lir = 
      				StringsBuilder.exportStringLirTable() + "\n" +
-     				DispatchTableBuilder.printDVS()+ "\n" +
+     				DispatchTableBuilder.printDispatchTable()+ "\n" +
      				programNode.accept(lt);
      		if(printLir) {
      			//print lir program

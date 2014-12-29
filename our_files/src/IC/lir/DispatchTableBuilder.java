@@ -92,12 +92,12 @@ public class DispatchTableBuilder {
 	  /**
 	   * prints the dispatch vector
 	   */
-	  public static String printDVS() {
+	  public static String printDispatchTable() {
 	    String dvs = "";
 	    for ( String className : classMethodOffsets.keySet() ) {
 	      if ( !( className.equals("Library") || className.equals("Global") ) )
 	          dvs += "# class " + className + "\n# Dispatch vector:\n" + 
-	        		  getDispatchTable(className) + "\n" + getOffsetComment(className) + "\n";
+	        		  getDispatchTable(className) + "\n" + getfieldOffsetsCommentString(className) + "\n";
 	    }
 	    return dvs;
 	  }
@@ -115,29 +115,31 @@ public class DispatchTableBuilder {
 	    return 0;
 	    
 	  }
-
+	  
+	  public static int getFieldOffset(String className, String fieldName) {
+		    return classFieldOffsets.get(className).get(fieldName);
+	  }
+	  
 	  /**
 	   * returns a string containing the fields offsets
 	   */
-	  private static String getOffsetComment(String className) {
+	  private static String getfieldOffsetsCommentString(String className) {
 	    
-	    LinkedHashMap<String, Integer> fto = classFieldOffsets.get(className);
-	    if ( fto == null )
+	    LinkedHashMap<String, Integer> fieldOffests = classFieldOffsets.get(className);
+	    if ( fieldOffests == null )
 	      return "";
 	    String comment = "# Field offsets\n";
-	    String[] fields = new String[fto.size()];
-	    for ( String name : fto.keySet() )
-	      fields[fto.get(name)-1] = name;
+	    String[] fields = new String[fieldOffests.size()];
+	    for ( String name : fieldOffests.keySet() )
+	      fields[fieldOffests.get(name)-1] = name;
 
-	    for ( int i = 0; i < fto.size(); i++ ) {
+	    for ( int i = 0; i < fieldOffests.size(); i++ ) {
 	      comment += "# " + (i+1) + ": " + fields[i] + "\n";
 	    }
 	    return comment;
 	  }
 	  
-	  public static int getFieldOffset(String className, String fieldName) {
-	    return classFieldOffsets.get(className).get(fieldName);
-	  }
+	
 	  
 }
 
