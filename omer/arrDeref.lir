@@ -2,25 +2,20 @@ str_err_null_ptr_ref:		"Runtime Error: Null pointer dereference!"
 str_err_arr_out_of_bounds:	"Runtime Error: Array index out of bounds!"
 str_err_neg_arr_size:	"Runtime Error: Array allocation with negative array size!"
 str_err_div_by_zero:	"Runtime Error: Division by zero!"
-str1:	"In Foo_rise"
-str2:	"In Foo_shine"
-str3:	"In Bar_rise"
-str4:	"In Bar_twinkle"
 
-# class Foo
+# class FieldCheck
 # Dispatch vector:
-_DV_Foo: [_Foo_rise, _Foo_shine]
+_DV_FieldCheck: []
 # Field offsets
-# 1: x
-# 2: y
 
-# class Bar
+# class C
 # Dispatch vector:
-_DV_Bar: [_Bar_rise, _Foo_shine, _Bar_twinkle]
+_DV_C: [_C_foo]
 # Field offsets
-# 1: x
-# 2: y
-# 3: z
+# 1: f
+# 2: b
+# 3: s
+# 4: c
 
 
 # Check Null Ptr Reference:
@@ -81,66 +76,38 @@ _error4:
 	Library __exit(1),Rdummy
 
 
-_Foo_rise:
-Move str1, R1
-Library __println(R1), Rdummy
-Move x, R1
-Library __printi(R1), Rdummy
-Move 2, R0
-Return R0
-
-_Foo_shine:
-Move str2, R1
-Library __println(R1), Rdummy
-Move x, R1
-Library __printi(R1), Rdummy
-Move 1, R0
-Return R0
-
 _ic_main:
-Library __allocateObject(16), R0
-MoveField _DV_Bar, R0.0
-Move R0, f
-Move f, R1
+Move 0, arr
+Library __allocateObject(20), R2
+MoveField _DV_C, R2.0
+StaticCall __checkNullRef(a=R2),Rdummy
+MoveField R2.1, R1
+Library __printi(R1), Rdummy
+Library __allocateObject(20), R2
+MoveField _DV_C, R2.0
+StaticCall __checkNullRef(a=R2),Rdummy
+MoveField R2.2, R1
+Library __printb(R1), Rdummy
+Library __allocateObject(20), R2
+MoveField _DV_C, R2.0
+StaticCall __checkNullRef(a=R2),Rdummy
+MoveField R2.3, R1
+Library __println(R1), Rdummy
+Library __allocateObject(20), R3
+MoveField _DV_C, R3.0
+StaticCall __checkNullRef(a=R3),Rdummy
+MoveField R3.4, R2
+StaticCall __checkNullRef(a=R2),Rdummy
+MoveField R2.1, R1
+Library __printi(R1), Rdummy
+Move arr, R2
+StaticCall __checkNullRef(a=R2),Rdummy
+Move 1, R3
+StaticCall __checkArrayAccess(a=R2, i=R3),Rdummy
+MoveArray R2[R3], R1
 StaticCall __checkNullRef(a=R1),Rdummy
-Move 1, R2
-VirtualCall R1.0(x=R2), R0
-Move f, R1
-StaticCall __checkNullRef(a=R1),Rdummy
-Move 2, R2
-VirtualCall R1.1(x=R2), R0
-Library __allocateObject(12), R0
-MoveField _DV_Foo, R0.0
-Move R0, f
-Move f, R1
-StaticCall __checkNullRef(a=R1),Rdummy
-Move 4, R2
-VirtualCall R1.0(x=R2), R0
-Move f, R1
-StaticCall __checkNullRef(a=R1),Rdummy
-Move 5, R2
-VirtualCall R1.1(x=R2), R0
-Library __allocateObject(16), R0
-MoveField _DV_Bar, R0.0
-Move R0, b
-Move b, R1
-StaticCall __checkNullRef(a=R1),Rdummy
-Move 3, R2
-VirtualCall R1.2(x=R2), R0
+VirtualCall R1.0(), Rdummy
 Library __exit(0),Rdummy
 
-_Bar_rise:
-Move str3, R1
-Library __println(R1), Rdummy
-Move x, R1
-Library __printi(R1), Rdummy
-Move 3, R0
-Return R0
-
-_Bar_twinkle:
-Move str4, R1
-Library __println(R1), Rdummy
-Move x, R1
-Library __printi(R1), Rdummy
-Move 4, R0
-Return R0
+_C_foo:
+Return Rdummy
