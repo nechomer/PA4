@@ -1,3 +1,1 @@
-Line 1: Syntax error; unexpected EOF
-Couldn't repair and continue parse
-java.lang.Exception: Can't recover from previous error(s)
+java.lang.RuntimeException: Illegal character at line 1 : 'E'
