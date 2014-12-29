@@ -1,0 +1,12 @@
+class StringConcatenation {
+  
+  static void main(string[] args) {
+
+	string s = "123" + "456";
+	Library.println(s);
+
+	s = "con" + "cat" + "ena" + "tion";
+	Library.println(s);
+	
+  }
+}

@@ -1,11 +1,9 @@
 class C {
-  int s;
+
   static void main(string[] args) {
-    //Library.printi(D.foo().bar().f);
+    Library.printi(D.foo().bar().f);
   }
-  void m() {
-    Library.printi(s);
-  }
+
 }
 
 class D {
@@ -19,4 +17,5 @@ class D {
   D bar() { 
   return new D(); 
   }
+  
 }

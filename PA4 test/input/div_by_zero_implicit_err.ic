@@ -1,0 +1,8 @@
+class DivByZero {
+	static void main ( string[] args ) {
+
+		int x = 1;
+		int y = 0;
+		x = x/y;
+	}
+}
