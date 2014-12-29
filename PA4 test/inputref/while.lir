@@ -1,0 +1,87 @@
+re_null_ref_str:    "Runtime Error: Null pointer dereference!"
+re_array_index_str: "Runtime Error: Array index out of bounds!"
+re_array_alloc_str: "Runtime Error: Array allocation with non-positive array size!"
+re_zero_div_str:    "Runtime Error: Division by zero!"
+
+# class A
+# Dispatch vector:
+_DV_A: [_A_foo]
+# Field offsets
+
+# class B
+# Dispatch vector:
+_DV_B: [_B_bar]
+# Field offsets
+
+
+__checkNullRef:
+	# a is a reference
+	Move a, R0
+	Compare 0, R0
+	JumpTrue _rc_error_label1
+	Return Rdummy
+_rc_error_label1:
+	Library __println(re_null_ref_str),Rdummy
+	Library __exit(1),Rdummy
+
+__checkArrayAccess:
+	# a is an arry
+	# i is an index register
+	ArrayLength a, R0
+	Compare i, R0
+	JumpLE _rc_error_label2
+	Move i, R0
+	Compare 0, R0
+	JumpL _rc_error_label2
+	Return Rdummy
+_rc_error_label2:
+	Library __println(re_array_index_str),Rdummy
+	Library __exit(1),Rdummy
+
+__checkSize:
+	# n is an array length
+	Move n, R0
+	Compare 0, R0
+	JumpLE _rc_error_label3
+	Return Rdummy
+_rc_error_label3:
+	Library __println(re_array_alloc_str),Rdummy
+	Library __exit(1),Rdummy
+
+__checkZero:
+	# x is a value that should no be zero
+	Move x, R0
+	Compare 0, R0
+	JumpTrue _rc_error_label4
+	Return Rdummy
+_rc_error_label4:
+	Library __println(re_zero_div_str),Rdummy
+	Library __exit(1),Rdummy
+
+
+_ic_main:
+Library __exit(0),Rdummy
+
+_A_foo:
+Return Rdummy
+Return Rdummy
+
+_B_bar:
+_test_label_1:
+Move 0, R0
+Move 1, R1
+Move 2, R2
+Compare R1, R2
+JumpLE _logical_op_end_3
+Move 1, R0
+_logical_op_end_3:
+Compare 0, R0
+JumpTrue _end_label_2
+Jump _end_label_2
+Move 3, R0
+Return R0
+Jump _test_label_1
+Jump _test_label_1
+_end_label_2:
+Move 4, R0
+Return R0

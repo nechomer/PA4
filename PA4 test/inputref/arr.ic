@@ -1,0 +1,27 @@
+class ArrTest {
+	int x;
+	static void main ( string[] args ) {
+		ArrTest[] arr = new ArrTest[5];
+		arr[0] = new ArrTest();
+		arr[0].x = 5;
+		Library.printi(arr[0].x);
+//		arr[-1].x = 1;
+		arr[5].x = 0;
+//		arr[2].x = 7; 
+		
+		Library.println("");
+		
+		int[] iarr;
+//		Library.printi(iarr.length);
+//		Library.printi(iarr[0]); 
+		iarr = new int[2];
+		iarr[1] = 39;
+		Library.printi(iarr[1]);
+		
+		Library.println("");
+
+		int[][] arr3 = new int[][3];
+		arr3[0] = new int[5];
+		Library.printi(arr3[0][0]);
+	}
+}

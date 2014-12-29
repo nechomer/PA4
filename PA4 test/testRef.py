@@ -10,7 +10,7 @@ ProgFileList = glob("input/*.lir")
 for Progfile in ProgFileList:
 	os.remove(Progfile)
 
-ProgFileList = glob("input/*.ic")
+ProgFileList = glob("inputref/*.ic")
 for Progfile in ProgFileList:
 	#fname = str(Progfile).split('\\')[-1:][0]
 	#f1 = open('output/'+fname+'.txt', 'w+')
@@ -20,7 +20,7 @@ for Progfile in ProgFileList:
 	
 time.sleep(5)	
 
-ProgFileList = glob("input/*.lir")
+ProgFileList = glob("inputref/*.lir")
 for Progfile in ProgFileList:
 	fname = str(Progfile).split('\\')[-1:][0]
 	f1 = open('outputref/'+fname+'.txt', 'w+')
