@@ -1,0 +1,19 @@
+a,b,c are :
+1
+2
+0
+3
+-1
+2
+0
+1
+true
+-2
+false
+true
+true
+false
+false
+false
+true
+true
