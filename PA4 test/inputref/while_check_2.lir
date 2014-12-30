@@ -2,12 +2,13 @@ re_null_ref_str:    "Runtime Error: Null pointer dereference!"
 re_array_index_str: "Runtime Error: Array index out of bounds!"
 re_array_alloc_str: "Runtime Error: Array allocation with non-positive array size!"
 re_zero_div_str:    "Runtime Error: Division by zero!"
-str1: ": "
+str1: "i is "
 str2: ""
+str3: "j is "
 
-# class WhileCheck
+# class A
 # Dispatch vector:
-_DV_WhileCheck: []
+_DV_A: []
 # Field offsets
 
 
@@ -57,103 +58,65 @@ _rc_error_label4:
 
 
 _ic_main:
-Move 6, R1
-StaticCall __checkSize(n=R1),Rdummy
-Mul 4, R1
-Library __allocateArray(R1), R0
-Move R0, arr_17
-Move 0, R0
-Move R0, i_18
+Move 0, i_17
+Move 0, j_18
 _test_label_1:
 Move 0, R0
-Move i_18, R1
-Move arr_17, R3
-StaticCall __checkNullRef(a=R3),Rdummy
-ArrayLength R3, R2
+Move 1, R1
+Move 2, R2
 Compare R1, R2
 JumpLE _logical_op_end_3
 Move 1, R0
 _logical_op_end_3:
 Compare 0, R0
 JumpTrue _end_label_2
-Move i_18, R1
-Library __printi(R1), Rdummy
-Move str1, R1
-Library __print(R1), Rdummy
-Move arr_17, R2
-StaticCall __checkNullRef(a=R2),Rdummy
-Move i_18, R3
-StaticCall __checkArrayAccess(a=R2, i=R3),Rdummy
-MoveArray R2[R3], R1
-Library __printi(R1), Rdummy
-Move str2, R1
-Library __println(R1), Rdummy
-Move i_18, R0
-Move 1, R1
-Add R1, R0
-Move R0, i_18
+Jump _end_label_2
 Jump _test_label_1
 _end_label_2:
-Move 0, R0
-Move R0, i_18
 _test_label_4:
 Move 0, R0
-Move i_18, R1
-Move arr_17, R3
-StaticCall __checkNullRef(a=R3),Rdummy
-ArrayLength R3, R2
+Move i_17, R1
+Move 3, R2
 Compare R1, R2
 JumpLE _logical_op_end_6
 Move 1, R0
 _logical_op_end_6:
 Compare 0, R0
 JumpTrue _end_label_5
-Move arr_17, R1
-StaticCall __checkNullRef(a=R1),Rdummy
-ArrayLength R1, R0
-Move i_18, R1
-Sub R1, R0
-Move arr_17, R1
-StaticCall __checkNullRef(a=R1),Rdummy
-Move i_18, R2
-StaticCall __checkArrayAccess(a=R1, i=R2),Rdummy
-MoveArray R0, R1[R2]
-Move i_18, R0
-Move 1, R1
-Add R1, R0
-Move R0, i_18
-Jump _test_label_4
-_end_label_5:
 Move 0, R0
-Move R0, i_18
+Move R0, j_18
 _test_label_7:
 Move 0, R0
-Move i_18, R1
-Move arr_17, R3
-StaticCall __checkNullRef(a=R3),Rdummy
-ArrayLength R3, R2
+Move j_18, R1
+Move 2, R2
 Compare R1, R2
 JumpLE _logical_op_end_9
 Move 1, R0
 _logical_op_end_9:
 Compare 0, R0
 JumpTrue _end_label_8
-Move i_18, R1
-Library __printi(R1), Rdummy
+Move j_18, R0
+Move 1, R1
+Add R1, R0
+Move R0, j_18
 Move str1, R1
 Library __print(R1), Rdummy
-Move arr_17, R2
-StaticCall __checkNullRef(a=R2),Rdummy
-Move i_18, R3
-StaticCall __checkArrayAccess(a=R2, i=R3),Rdummy
-MoveArray R2[R3], R1
+Move i_17, R1
 Library __printi(R1), Rdummy
 Move str2, R1
 Library __println(R1), Rdummy
-Move i_18, R0
-Move 1, R1
-Add R1, R0
-Move R0, i_18
+Move str3, R1
+Library __print(R1), Rdummy
+Move j_18, R1
+Library __printi(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
 Jump _test_label_7
 _end_label_8:
+Move i_17, R0
+Move 1, R1
+Add R1, R0
+Move R0, i_17
+Jump _test_label_4
+_end_label_5:
 Library __exit(0),Rdummy

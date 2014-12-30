@@ -1,1 +1,1 @@
-Runtime Error: Array index out of bounds!
+Runtime Error: Array allocation with non-positive array size!

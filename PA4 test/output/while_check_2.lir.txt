@@ -1,0 +1,12 @@
+i is 0
+j is 1
+i is 0
+j is 2
+i is 1
+j is 1
+i is 1
+j is 2
+i is 2
+j is 1
+i is 2
+j is 2
