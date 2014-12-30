@@ -1,90 +1,27 @@
-class ReturnCheck {
-  
+class A {
   static void main(string[] args) {
-    ReturnCheck rc = new ReturnCheck();
-    rc.checkRetFuncs();
+    
+    int i;
+    int j;
+
+    while ( 1 < 2 ) {
+    break;
   }
 
-  void checkRetFuncs() {
-    retvoid();
-    retvobj();
-    retArr();
-    retArrLocation();
-    retThis();
-    retNewObjThis();
-    retNewObj();
-    retNewArr();
-    retArrLength();
-    retNegation();
-    retNegative();
-    retNull();
-    retIntCalling();
+  while (i<3) {
+    j = 0;
+    while (j<2) {
+      j=j+1;
+      Library.print("i is ");
+      Library.printi(i);
+      Library.println("");
+      Library.print("j is ");
+      Library.printi(j);
+      Library.println("");
+    }
+    i=i+1;
   }
 
-  void retvoid() {
-    return;
   }
 
-  C retvobj() {
-    C c = new C();
-    return c;
-  }
-
-  C[] retArr() {
-    C[] c = new C[2];
-    return c;
-  }
-
-  C retArrLocation() {
-    C[] c = new C[1];
-    c[0] = new C();
-    return c[0];
-  }
-
-  C retThis() {
-    return (new C()).retThis();
-  }
-
-  C retNewObjThis() {
-    return (new C()).retThis();
-  }
-
-  C retNewObj() {
-    return new C();
-  }
-
-  int[] retNewArr() {
-    return new int[34];
-  }
-
-  int retArrLength() {
-    int[] arr = new int[2];
-    return arr.length;
-  }
-
-  boolean retNegation() {
-    boolean a = true;
-    return !a;
-  }
-
-  int retNegative() {
-    int a = 1;
-    return -a;
-  }
-
-  string retNull() {
-    return null;
-  }
-
-  int retIntCalling() {
-    return (6);
-  }
-}
-
-class C {
-
-  C retThis() {
-    return this;
-  }
-  
 }
