@@ -1,16 +1,19 @@
 class ArrIdxOutOfBounds {
-	static void main(string[] args) {
-		foo();
-	}
-	
-	int foo() {
-		
-		int[] x = new int[2];
-		int y;
+  static void main(string[] args) {
+    C.foo();
+  }
+}
 
-		//array index out of bounds 
-		y = x[2];
+class C {
 
-		return 1;
-	}
+    static int foo() {
+    
+    int[] x = new int[2];
+    int y;
+
+    //array index out of bounds 
+    y = x[2];
+
+    return 1;
+  }
 }
