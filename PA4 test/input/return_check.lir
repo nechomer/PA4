@@ -131,7 +131,7 @@ Move c, R0
 Return R0
 
 _ReturnCheck_retArrLocation:
-Move 1, R1
+Move 0, R1
 StaticCall __checkSize(n=R1),Rdummy
 Mul 4, R1
 Library __allocateArray(R1), R0
@@ -140,7 +140,7 @@ Library __allocateObject(4), R0
 MoveField _DV_C, R0.0
 Move c, R1
 StaticCall __checkNullRef(a=R1),Rdummy
-Move 1, R2
+Move 0, R2
 StaticCall __checkArrayAccess(a=R1, i=R2),Rdummy
 MoveArray R0, R1[R2]
 Move c, R1

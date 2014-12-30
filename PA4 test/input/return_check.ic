@@ -36,8 +36,8 @@ class ReturnCheck {
   }
 
   C retArrLocation() {
-    C[] c = new C[1];
-    c[1] = new C();
+    C[] c = new C[0];
+    c[0] = new C();
     return c[1];
   }
 
