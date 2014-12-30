@@ -2,7 +2,7 @@ re_null_ref_str:    "Runtime Error: Null pointer dereference!"
 re_array_index_str: "Runtime Error: Array index out of bounds!"
 re_array_alloc_str: "Runtime Error: Array allocation with non-positive array size!"
 re_zero_div_str:    "Runtime Error: Division by zero!"
-str1: "\n"
+str1: ""
 
 # class Arrays
 # Dispatch vector:

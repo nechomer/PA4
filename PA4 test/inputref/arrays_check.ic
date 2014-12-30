@@ -10,7 +10,7 @@ class Arrays {
 		arr[0].a = 5;
 		Library.printi(arr[0].a);
 		
-		Library.println("\n");
+		Library.println("");
 		
 		//check array of ints
 		int[] integerarr;
@@ -18,7 +18,7 @@ class Arrays {
 		integerarr[1] = 39;
 		Library.printi(integerarr[1]);
 		
-		Library.println("\n");
+		Library.println("");
 
 		//check array of array of ints
 		int[][] doublearr = new int[][3];
