@@ -1,27 +1,6 @@
-class A {
+class IntTooBig {
   static void main(string[] args) {
-    
-    int i;
-    int j;
-
-    while ( 1 < 2 ) {
-    break;
+    int x = 2147483648; 
+    x = 2147483649;
   }
-
-  while (i<3) {
-    j = 0;
-    while (j<2) {
-      j=j+1;
-      Library.print("i is ");
-      Library.printi(i);
-      Library.println("");
-      Library.print("j is ");
-      Library.printi(j);
-      Library.println("");
-    }
-    i=i+1;
-  }
-
-  }
-
 }

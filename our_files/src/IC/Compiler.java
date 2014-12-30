@@ -120,15 +120,12 @@ public class Compiler {
      				programNode.accept(lt);
      		if(printLir) {
      			//print lir program
-     			System.out.println(lir);
-     		}
      			String lirFileName = args[0].replaceAll(".ic$", ".lir");
 				FileWriter fw = new FileWriter(lirFileName);
 				fw.write(lir);
 				fw.close();
-//				System.out.println("IR written to " + lirFileName);
-    		
-			    		
+     		}
+	
     	} catch (ParserException | SemanticException | LexicalError e) {
     		System.out.println(e.getMessage());
     		//System.exit(1);
