@@ -1,0 +1,22 @@
+class ArrDereferenceCheck {
+
+	static void main(string[] args) {
+
+    	C[] arr;
+
+    	//check arr is null, not initialized, should print error
+    	arr[1].foo();
+
+    }
+}
+
+class C {
+  int f;
+  boolean b;
+  string s;
+  C c;
+
+  void foo(){
+  }
+  
+}

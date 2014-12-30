@@ -1,0 +1,13 @@
+class A {
+
+  static void main(string[] args) {
+  	Library.printb(B.bar());
+  }
+  
+}
+
+class B {
+	static boolean bar() {
+		return !true;
+	}
+}

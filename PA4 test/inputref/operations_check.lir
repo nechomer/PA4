@@ -1,0 +1,233 @@
+re_null_ref_str:    "Runtime Error: Null pointer dereference!"
+re_array_index_str: "Runtime Error: Array index out of bounds!"
+re_array_alloc_str: "Runtime Error: Array allocation with non-positive array size!"
+re_zero_div_str:    "Runtime Error: Division by zero!"
+str1: "a,b,c are :"
+str2: ""
+
+# class OperationsCheck
+# Dispatch vector:
+_DV_OperationsCheck: []
+# Field offsets
+
+
+__checkNullRef:
+	# a is a reference
+	Move a, R0
+	Compare 0, R0
+	JumpTrue _rc_error_label1
+	Return Rdummy
+_rc_error_label1:
+	Library __println(re_null_ref_str),Rdummy
+	Library __exit(1),Rdummy
+
+__checkArrayAccess:
+	# a is an arry
+	# i is an index register
+	ArrayLength a, R0
+	Compare i, R0
+	JumpLE _rc_error_label2
+	Move i, R0
+	Compare 0, R0
+	JumpL _rc_error_label2
+	Return Rdummy
+_rc_error_label2:
+	Library __println(re_array_index_str),Rdummy
+	Library __exit(1),Rdummy
+
+__checkSize:
+	# n is an array length
+	Move n, R0
+	Compare 0, R0
+	JumpLE _rc_error_label3
+	Return Rdummy
+_rc_error_label3:
+	Library __println(re_array_alloc_str),Rdummy
+	Library __exit(1),Rdummy
+
+__checkZero:
+	# x is a value that should no be zero
+	Move x, R0
+	Compare 0, R0
+	JumpTrue _rc_error_label4
+	Return Rdummy
+_rc_error_label4:
+	Library __println(re_zero_div_str),Rdummy
+	Library __exit(1),Rdummy
+
+
+_ic_main:
+Move 1, R0
+Move R0, a_17
+Move 2, R0
+Move R0, b_18
+Move 0, c_19
+Move 1, R0
+Move R0, d_20
+Move 0, R0
+Move R0, e_21
+Move 0, f_22
+Move str1, R1
+Library __println(R1), Rdummy
+Move a_17, R1
+Library __printi(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move b_18, R1
+Library __printi(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move c_19, R1
+Library __printi(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move a_17, R0
+Move b_18, R1
+Add R1, R0
+Move R0, c_19
+Move c_19, R1
+Library __printi(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move a_17, R0
+Move b_18, R1
+Sub R1, R0
+Move R0, c_19
+Move c_19, R1
+Library __printi(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move a_17, R0
+Move b_18, R1
+Mul R1, R0
+Move R0, c_19
+Move c_19, R1
+Library __printi(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move a_17, R0
+Move 2, R1
+StaticCall __checkZero(x=R1),Rdummy
+Div R1, R0
+Move R0, c_19
+Move c_19, R1
+Library __printi(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move 1, R0
+Move 3, R1
+Mod R1, R0
+Move R0, c_19
+Move c_19, R1
+Library __printi(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move 0, R0
+Move a_17, R1
+Move b_18, R2
+Compare R1, R2
+JumpLE _logical_op_end_1
+Move 1, R0
+_logical_op_end_1:
+Move R0, f_22
+Move f_22, R1
+Library __printb(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move b_18, R0
+Neg R0
+Move R0, c_19
+Move c_19, R1
+Library __printi(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move d_20, R0
+Compare 0, R0
+JumpTrue _logical_op_end_2
+Move e_21, R1
+And R1,R0
+_logical_op_end_2:
+Move R0, f_22
+Move f_22, R1
+Library __printb(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move d_20, R0
+Compare 0, R0
+JumpFalse _logical_op_end_3
+Move e_21, R1
+Or R1,R0
+_logical_op_end_3:
+Move R0, f_22
+Move f_22, R1
+Library __printb(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move 0, R0
+Move a_17, R1
+Move b_18, R2
+Compare R1, R2
+JumpL _logical_op_end_4
+Move 1, R0
+_logical_op_end_4:
+Move R0, f_22
+Move f_22, R1
+Library __printb(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move 0, R0
+Move a_17, R1
+Move b_18, R2
+Compare R1, R2
+JumpGE _logical_op_end_5
+Move 1, R0
+_logical_op_end_5:
+Move R0, f_22
+Move f_22, R1
+Library __printb(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move 0, R0
+Move a_17, R1
+Move b_18, R2
+Compare R1, R2
+JumpG _logical_op_end_6
+Move 1, R0
+_logical_op_end_6:
+Move R0, f_22
+Move f_22, R1
+Library __printb(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move 0, R0
+Move a_17, R1
+Move b_18, R2
+Compare R1, R2
+JumpFalse _logical_op_end_7
+Move 1, R0
+_logical_op_end_7:
+Move R0, f_22
+Move f_22, R1
+Library __printb(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move 0, R0
+Move a_17, R1
+Move b_18, R2
+Compare R1, R2
+JumpTrue _logical_op_end_8
+Move 1, R0
+_logical_op_end_8:
+Move R0, f_22
+Move f_22, R1
+Library __printb(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Move e_21, R0
+Xor 1,R0
+Move R0, f_22
+Move f_22, R1
+Library __printb(R1), Rdummy
+Move str2, R1
+Library __println(R1), Rdummy
+Library __exit(0),Rdummy

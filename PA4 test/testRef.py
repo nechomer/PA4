@@ -16,6 +16,7 @@ for Progfile in ProgFileList:
 	#f1 = open('output/'+fname+'.txt', 'w+')
 	args = ['PA4Ref.jar', Progfile,"-Linput/Library/libic.sig", "-print-lir"]
 	process = Popen(['java', '-jar']+list(args), stdout=PIPE, stderr=PIPE)
+	time.sleep(2)
 	#f1.close
 	
 time.sleep(5)	

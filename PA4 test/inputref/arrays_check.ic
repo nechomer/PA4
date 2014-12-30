@@ -1,0 +1,29 @@
+class Arrays {
+
+	int a;
+
+	static void main ( string[] args ) {
+
+		//check array of objects
+		Arrays[] arr = new Arrays[5];
+		arr[0] = new Arrays();
+		arr[0].a = 5;
+		Library.printi(arr[0].a);
+		
+		Library.println("\n");
+		
+		//check array of ints
+		int[] integerarr;
+		integerarr = new int[2];
+		integerarr[1] = 39;
+		Library.printi(integerarr[1]);
+		
+		Library.println("\n");
+
+		//check array of array of ints
+		int[][] doublearr = new int[][3];
+		doublearr[0] = new int[5];
+		doublearr[0][0] = 3;
+		Library.printi(doublearr[0][0]);
+	}
+}
