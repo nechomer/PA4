@@ -1,0 +1,2 @@
+String - non initialized is error in java!!!
+\n - What happens when appears in string???
