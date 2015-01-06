@@ -238,7 +238,7 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, breakStatement);
 		output.append("Break statement");
-		output.append(getScopeHierarchyString(breakStatement.scope));
+		//output.append(getScopeHierarchyString(breakStatement.scope));
 		return output.toString();
 	}
 
@@ -247,7 +247,7 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, continueStatement);
 		output.append("Continue statement");
-		output.append(getScopeHierarchyString(continueStatement.scope));
+		//output.append(getScopeHierarchyString(continueStatement.scope));
 		return output.toString();
 	}
 
@@ -256,6 +256,7 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, statementsBlock);
 		output.append("Block of statements");
+		output.append(getScopeHierarchyString(statementsBlock.scope.getParent()));
 		depth += 2;
 		for (Statement statement : statementsBlock.getStatements())
 			output.append(statement.accept(this));
@@ -286,15 +287,19 @@ public class PrettyPrinter implements Visitor {
 
 	public Object visit(VariableLocation location) {
 		StringBuffer output = new StringBuffer();
-
 		indent(output, location);
 		output.append("Reference to variable: " + location.getName());
-		if (location.isExternal())
+		Type t = null;
+		if (location.isExternal()){
 			output.append(", in external scope");
-		if (location.isExternal()) {
 			++depth;
 			output.append(location.getLocation().accept(this));
 			--depth;
+		}
+		else{
+			t = (Type)location.scope.retrieveIdentifier(location.getName());
+			output.append(", Type: " + t.getName());
+			output.append(getScopeHierarchyString(location.scope));
 		}
 		return output.toString();
 	}
@@ -454,7 +459,7 @@ public class PrettyPrinter implements Visitor {
 		FrameScope parentScope = scope;
 		while (parentScope.getType() != ScopeType.Method) {
 			result += " in " + parentScope.getName(); 
-			parentScope = scope.getParent();
+			parentScope = parentScope.getParent();
 		}
 		return result;
 	}
