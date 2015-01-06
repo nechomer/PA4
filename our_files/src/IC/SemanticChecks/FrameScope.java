@@ -4,6 +4,7 @@ package IC.SemanticChecks;
 import IC.AST.*;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -405,6 +406,31 @@ public class FrameScope {
 
 	public HashMap<String, Field> getFields() {
 		return fields;
+	}
+	
+	public HashMap<String, Type> getFormals() {
+		return formals;
+	}
+	
+	public boolean isStringType(int formalIdx) {
+		Iterator<String> iter = formals.keySet().iterator();
+		boolean ret = false;
+		Type t = null;
+		int idx = 0;
+		while(iter.hasNext()) {
+			if (idx == formalIdx) {
+				t = formals.get(iter.next());
+				if (t instanceof PrimitiveType && ((PrimitiveType)t).getName().equals("string")) {
+					ret = true;
+				}
+				if (t instanceof UserType) {
+					ret = true;
+				}
+				break;
+			}
+			idx++;
+		}
+		return ret;
 	}
 	
 	public String getClassOfScope() {

@@ -511,7 +511,9 @@ public class LirTranslator implements Visitor {
 		// library function call
 		if ( call.getClassName().equals("Library") ) {
 			for ( int i = 0; i < paramRegs.size(); i++ ) {
-				lir +=nullPtrCheckStr(paramRegs.get(i));
+				if (call.getMethod().scope.isStringType(i)) {
+					lir +=nullPtrCheckStr(paramRegs.get(i));
+				}
 			}
 			
 			lir += "Library __" + call.getName() + "(";
