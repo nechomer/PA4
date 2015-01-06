@@ -487,9 +487,9 @@ public class LirTranslator implements Visitor {
 	 * It may be a library function call or a static function defined in a user class
 	 * For user class:
 	 * StaticCall <function name in dispatch table>([args registers]), Reg
-	 * StaticCall __checkNullRef(a=Reg),Rdummy
+	 * StaticCall __checkNullRef(a=Reg),<Return reg>
 	 * For library call:
-	 *  
+	 * Library __<Library function name>(<arguments>),<Return reg>  
 	 */
 	@Override
 	public Object visit(StaticCall call) {
@@ -527,8 +527,9 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param call
-	 * @return
+	 * @param call - The visited virtual call
+	 * @return - The string representation of the LIR instruction for virtual call
+	 * VirtualCall [<Class reg>.]<method offset in dispatch table>(),<Return reg>
 	 */
 	@Override
 	public Object visit(VirtualCall call) {
@@ -549,11 +550,11 @@ public class LirTranslator implements Visitor {
 			lir += "Move this, " + objReg + "\n";
 		}
 		
-		// calculate method offset
+		// calculate method offset in the dispatch table
 		String className = call.getMethod().scope.getClassOfScope();
 		int methodOffset = DispatchTableBuilder.getMethodOffset(className, call.getName());
 		
-		// R_T+2, R_T+3, ...   <--   evaluate arguments
+		//evaluate arguments in the function call
 		List<String> paramRegs = new ArrayList<>(call.getArguments().size());
 		for (Expression argument : call.getArguments()) {
 			currReg++;
@@ -561,7 +562,7 @@ public class LirTranslator implements Visitor {
 			lir += argument.accept(this);
 		}
 			
-		// R_T <- call the method
+		//call the method
 		lir += "VirtualCall " + objReg + "." + methodOffset;
 		lir += "(" + getCallArgsStr(call, paramRegs) + "), " + resReg + "\n";
 		
@@ -572,9 +573,9 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param call
-	 * @param paramRegs
-	 * @return
+	 * @param call - the static/virtual call
+	 * @param paramRegs - The parameter registers list
+	 * @return - The string representation of all parameter registers in format of <Reg>=<Defined argument>
 	 */
 	private String getCallArgsStr(Call call, List<String> paramRegs) {
 		List<Formal> fl = call.getMethod().getFormals();
@@ -586,8 +587,9 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param thisExpression
-	 * @return
+	 * @param thisExpression - The visited expression in the "this" format
+	 * @return - The string representation of LIR instruction for "this" - Move this, <Reg>
+	 * This is for the case we need to access the instance itself
 	 */
 	@Override
 	public Object visit(This thisExpression) {
@@ -597,8 +599,10 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param newClass
-	 * @return
+	 * @param newClass - The visited new class 
+	 * @return - The LIR format for new class
+	 * Library_allocateObject(<object size>), <Reg>
+	 * MoveField <class name in dispatch table> <Reg>.0 
 	 */
 	@Override
 	public Object visit(NewClass newClass) {
@@ -612,21 +616,22 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param newArray
-	 * @return
+	 * @param newArray - The visited new array
+	 * @return - The LIR of new array
+	 * Library __allocateArray(<sizeReg>), <Reg>
 	 */
 	@Override
 	public Object visit(NewArray newArray) {
 		String lir = "";
 		
-		// R_T+1 <- array size
+		//array size
 		currReg++;
 		String sizeReg = getNextReg();
 		lir += newArray.getSize().accept(this);
 		lir += arrIdxCheckStr(sizeReg);
 		currReg--;
 		
-		// R_T <- new array of size (R_T+1)*4
+		//new array of size (array size)*4
 		String resReg = getNextReg();
 		lir += "Mul 4, " + sizeReg + "\n";
 		lir += "Library __allocateArray(" + sizeReg + "), " + resReg + "\n";		
@@ -635,21 +640,22 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param length
-	 * @return
+	 * @param length - The visited array length
+	 * @return - The LIR for array length access
+	 * ArrayLength<array reg>, <Reg>
 	 */
 	@Override
 	public Object visit(Length length) {
 		String lir = "";
 		
-		// R_T+1 <- the array
+		//the array
 		currReg++;
 		String arrReg = getNextReg();
 		lir += length.getArray().accept(this);
 		lir += nullPtrCheckStr(arrReg);
 		currReg--;
 		
-		// R_T <- array length
+		//array length
 		String resReg = getNextReg();
 		lir += "ArrayLength " + arrReg + ", " + resReg + "\n";
 		
@@ -657,8 +663,10 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param binaryOp
-	 * @return
+	 * @param binaryOp - The visited math binary operation
+	 * @return - The LIR for binOp
+	 * Can be also a string concatenation in case of a string operand with a + operator
+	 * <Operator> <Reg1>, <Reg2> 
 	 */
 	@Override
 	public Object visit(MathBinaryOp binaryOp) {
@@ -687,8 +695,9 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param binaryOp
-	 * @return
+	 * @param binaryOp - The visited logical binary operation
+	 * @return - The LIR for logical operation
+	 * Calls the methods which handle and, or, comparison for jump labels
 	 */
 	@Override
 	public Object visit(LogicalBinaryOp binaryOp) {
@@ -709,8 +718,13 @@ public class LirTranslator implements Visitor {
 		
 		
 	/**
-	 * @param binaryOp
-	 * @return
+	 * @param binaryOp - The visited logical comparison
+	 * @return - The string LIR to handle the comparison
+	 * Move 0, <Result Reg>
+	 * Compare <Reg2>,<Reg3>
+	 * Jump<compare operation> <logical_op_end label>
+	 * Move 1, <Result Reg>
+	 * <logical_op_end label>
 	 */
 	private String comparrisonCode(LogicalBinaryOp binaryOp) {
 		
@@ -740,8 +754,13 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param binaryOp
-	 * @return
+	 * @param binaryOp - The visited logical and/or
+	 * @return - The string LIR to handle the and/or
+	 * Compare 0, <Reg1>
+	 * For and/or : JumpTrue/JumpFalse <logical_op_end label>
+	 * <Eval Reg2>
+	 * And/OR <Reg2>, <Reg1>
+	 * <logical_op_end label>:
 	 */
 	private String andOrCode(LogicalBinaryOp binaryOp) {
 
@@ -777,8 +796,10 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param unaryOp
-	 * @return
+	 * @param unaryOp - The visited math unary operation 
+	 * @return - The LIR representation for the op, in the format
+	 * <Evaluate Reg1>
+	 * Neg <Reg1>
 	 */
 	@Override
 	public Object visit(MathUnaryOp unaryOp) {
@@ -793,8 +814,10 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param unaryOp
-	 * @return
+	 * @param unaryOp - The visited logical negation
+	 * @return - The LIR representation int the format:
+	 *  <Evaluate Reg1>
+	 *  Xor 1 <Reg>
 	 */
 	@Override
 	public Object visit(LogicalUnaryOp unaryOp) {
@@ -809,8 +832,9 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param literal
-	 * @return
+	 * @param literal - The visited literal
+	 * @return - The LIR format for literal access
+	 * Move <value<, <Reg>
 	 */
 	@Override
 	public Object visit(Literal literal) {
@@ -830,8 +854,8 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param expressionBlock
-	 * @return
+	 * @param expressionBlock - The visited expresstion block
+	 * @return - the LIR representation of an expression block
 	 */
 	@Override
 	public Object visit(ExpressionBlock expressionBlock) {

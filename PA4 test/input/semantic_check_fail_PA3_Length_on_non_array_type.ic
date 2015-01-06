@@ -1,0 +1,23 @@
+class LengthOnNonArrType {
+
+  static void main(string[] args) {
+
+      C[] arr;
+
+      Library.printi(arr.length);
+
+    }
+}
+
+class C {
+  int f;
+  boolean b;
+  string s;
+  C c;
+
+  void foo(){
+    c = new C();
+    Library.printi(c.length);
+  }
+  
+}
