@@ -57,8 +57,16 @@ public class SemanticChecker implements Visitor {
 					throw new SemanticException(m,
 							" Argument for main method isn't a string of arguments!");
 				}
+				if (!(m instanceof StaticMethod)) {
+					throw new SemanticException(m,
+							" Main method is not static! ");
+				}
 				main_cnt++;
 			}
+		}
+		if (main_cnt == 0) {
+			throw new SemanticException(program,
+					" No Main method in file!");
 		}
 		return null;
 	}
@@ -391,6 +399,11 @@ public class SemanticChecker implements Visitor {
 							"Use of field inside static method is not allowed");
 				return ((Field) variable).getType();
 			}
+			
+			if (variable instanceof VirtualMethod || variable instanceof StaticMethod) {
+				throw new SemanticException(location,
+						"Inappropriate Use Of Variable Location! Entered Method Name Instead Of Variable");
+			}
 
 			return (Type) variable;
 			
@@ -661,7 +674,11 @@ public class SemanticChecker implements Visitor {
 	@Override
 	public Object visit(Length length) {
 
-		length.getArray().accept(this);
+		Type t = (Type) length.getArray().accept(this);
+		if (t.getDimension() == 0) {
+			throw new SemanticException(length,
+					"Calling length on non array type!");
+		}
 		return new PrimitiveType(length.getLine(), DataTypes.INT);
 	}
 

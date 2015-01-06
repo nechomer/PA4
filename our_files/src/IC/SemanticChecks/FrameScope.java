@@ -176,8 +176,8 @@ public class FrameScope {
 	}
 
 	public void addLocalVar(LocalVariable lv) {
-		if (retrieveFormalType(lv.getName()) != null)
-			throw new SemanticException(lv, "Local variable " + lv.getName() + " is overriding a parameter");
+//		if (retrieveFormalType(lv.getName()) != null)
+//			throw new SemanticException(lv, "Local variable " + lv.getName() + " is overriding a parameter");
 
 		if (getLocalVar(lv.getName()) != null)
 			throw new SemanticException(lv, "Id " + lv.getName() + " is already defined in current scope");
