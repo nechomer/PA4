@@ -68,10 +68,7 @@ public class Compiler {
     			
     		}
     		
-    		if (printAst) {
-    			if (libraryProgramNode!= null) System.out.println(libraryProgramNode.accept(new PrettyPrinter(args[1]))); 
-    			if (programNode!= null) System.out.println(programNode.accept(new PrettyPrinter(args[0]))); 
-    		}
+    		
     		    		
     		// Add the Library AST to the list of class declarations
     		if (libraryProgramNode != null) { 
@@ -93,6 +90,11 @@ public class Compiler {
      		// Build the Dispatch Table
      		DispatchTableBuilder.createDispatchTable(stb.getRootScope());
      		
+     		if (printAst) {
+    			if (libraryProgramNode!= null) System.out.println(libraryProgramNode.accept(new PrettyPrinter(args[1]))); 
+    			if (programNode!= null) System.out.println(programNode.accept(new PrettyPrinter(args[0]))); 
+    		}
+     		
      		if (dumpSymtab) {
 	            // Print the symbol table
 	            System.out.println();
@@ -101,9 +103,6 @@ public class Compiler {
 	            // Print the Type table
 	            System.out.println();
 	     		System.out.println(ttb);
-	     		
-	     		System.out.println();
-	     		System.out.println(DispatchTableBuilder.printDispatchTable());
      		}
      		
      		//generate strings for lir

@@ -126,6 +126,7 @@ public class PrettyPrinter implements Visitor {
 		output.append("Parameter: " + formal.getName());
 		++depth;
 		output.append(formal.getType().accept(this));
+		output.append(", Symbol table: " + formal.scope.getName());
 		--depth;
 		return output.toString();
 	}
@@ -136,9 +137,9 @@ public class PrettyPrinter implements Visitor {
 		indent(output, method);
 		output.append("Declaration of virtual method: " + method.getName());
 		output.append(", Type: {" + TypeTabelBuilder.formatSig(method) + "}");
-		output.append(", Symbol Table: " + method.scope.getName());
+		output.append(", Symbol table: " + method.scope.getParent().getName());
 		depth += 2;
-		output.append(method.getType().accept(this));
+		//output.append(method.getType().accept(this));
 		for (Formal formal : method.getFormals())
 			output.append(formal.accept(this));
 		for (Statement statement : method.getStatements())
@@ -153,9 +154,9 @@ public class PrettyPrinter implements Visitor {
 		indent(output, method);
 		output.append("Declaration of static method: " + method.getName());
 		output.append(", Type: {" + TypeTabelBuilder.formatSig(method) + "}");
-		output.append(", Symbol Table: " + method.scope.getName());
+		output.append(", Symbol table: " + method.scope.getParent().getName());
 		depth += 2;
-		output.append(method.getType().accept(this));
+		//output.append(method.getType().accept(this));
 		for (Formal formal : method.getFormals())
 			output.append(formal.accept(this));
 		for (Statement statement : method.getStatements())
@@ -209,6 +210,7 @@ public class PrettyPrinter implements Visitor {
 		output.append("If statement");
 		if (ifStatement.hasElse())
 			output.append(", with Else operation");
+		output.append(getScopeHierarchyString(ifStatement.scope));
 		depth += 2;
 		output.append(ifStatement.getCondition().accept(this));
 		output.append(ifStatement.getOperation().accept(this));
@@ -226,6 +228,7 @@ public class PrettyPrinter implements Visitor {
 		depth += 2;
 		output.append(whileStatement.getCondition().accept(this));
 		output.append(whileStatement.getOperation().accept(this));
+		output.append(getScopeHierarchyString(whileStatement.scope));
 		depth -= 2;
 		return output.toString();
 	}
@@ -235,6 +238,7 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, breakStatement);
 		output.append("Break statement");
+		output.append(getScopeHierarchyString(breakStatement.scope));
 		return output.toString();
 	}
 
@@ -243,6 +247,7 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, continueStatement);
 		output.append("Continue statement");
+		output.append(getScopeHierarchyString(continueStatement.scope));
 		return output.toString();
 	}
 
@@ -268,6 +273,7 @@ public class PrettyPrinter implements Visitor {
 			output.append(", with initial value");
 			++depth;
 		}
+		output.append(getScopeHierarchyString(localVariable.scope));
 		++depth;
 		output.append(localVariable.getType().accept(this));
 		if (localVariable.hasInitValue()) {
@@ -441,5 +447,15 @@ public class PrettyPrinter implements Visitor {
 		output.append(expressionBlock.getExpression().accept(this));
 		--depth;
 		return output.toString();
+	}
+	
+	public String getScopeHierarchyString(FrameScope scope) {
+		String result = ", Symbol table: " + scope.getName();
+		FrameScope parentScope = scope;
+		while (parentScope.getType() != ScopeType.Method) {
+			result += " in " + parentScope.getName(); 
+			parentScope = scope.getParent();
+		}
+		return result;
 	}
 }
