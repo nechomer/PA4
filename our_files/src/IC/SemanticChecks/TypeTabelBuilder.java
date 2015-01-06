@@ -29,6 +29,7 @@ public class TypeTabelBuilder implements Visitor{
 		arrayType = new LinkedHashMap<Integer, Type>();
 		classes = new LinkedHashMap<Integer, ICClass>();
 		methods = new LinkedHashMap<Integer, Method>();
+		addPrimitive();
 	}
 	public TypeTabelBuilder(String name)
 	{
@@ -37,10 +38,20 @@ public class TypeTabelBuilder implements Visitor{
 		classes = new LinkedHashMap<Integer, ICClass>();
 		methods = new LinkedHashMap<Integer, Method>();
 		this.name = name;
+		addPrimitive();
 	}
 	
-    @Override
+	@Override
     public Object visit(Program program) {
+        for (ICClass icClass : program.getClasses()) {
+			Method method = icClass.scope.getMethod("main");
+			if (method != null) {
+		    	for (Formal formal : method.getFormals()) 
+		    		formal.accept(this);
+		    	addParm(method.getType());
+		    	methods.put(id++,method);
+			}
+        }
         for (ICClass icClass : program.getClasses()) {
             icClass.accept(this);
         }
@@ -50,17 +61,20 @@ public class TypeTabelBuilder implements Visitor{
     @Override
     public Object visit(ICClass icClass) {
     	
-        for (Field field : icClass.getFields()) {
-            field.accept(this);
-        }
-        
-        for (Method method : icClass.getMethods()) {
-            method.accept(this);        
-        }
-    	if(!classes.containsValue(icClass))
+    	if(!classes.containsValue(icClass)) {
+    		
     		classes.put(id++, icClass);
-    	
-        return null;
+    		
+	    	for (Field field : icClass.getFields()) {
+	    		field.accept(this);
+	    	}
+	
+	    	for (Method method : icClass.getMethods()) {
+	    		method.accept(this);        
+	    	}
+    	}
+
+    	return null;
     }
     
     @Override
@@ -70,17 +84,22 @@ public class TypeTabelBuilder implements Visitor{
     }
     
     private void visitMethod(Method method) {
-
+    	
+    	for (Formal formal : method.getFormals()) 
+    		formal.accept(this);
+    	
     	addParm(method.getType());
-        for (Formal formal : method.getFormals()) 
-            formal.accept(this);
-        
-        for (Statement statement : method.getStatements())
-            statement.accept(this);
-        
+    	
     	if(!containsMethod(method))
     		methods.put(id++,method);
+    
+    	
+    	for (Statement statement : method.getStatements())
+    		statement.accept(this);
+    	
     }
+    	
+    
     
     @Override
     public Object visit(VirtualMethod method) {
@@ -402,6 +421,20 @@ public class TypeTabelBuilder implements Visitor{
 		sb.append(formatType(m.getType()));
 
 		return sb.toString();
+	}
+	
+    private void addPrimitive() {
+		PrimitiveType ret;
+		ret = new PrimitiveType(0, DataTypes.INT);
+		addParm(ret);
+		ret = new PrimitiveType(0, DataTypes.BOOLEAN);
+		addParm(ret);
+		ret = new PrimitiveType(0, DataTypes.NULL);
+		addParm(ret);
+		ret = new PrimitiveType(0, DataTypes.STRING);
+		addParm(ret);
+		ret = new PrimitiveType(0, DataTypes.VOID);
+		addParm(ret);		
 	}
 
 }
