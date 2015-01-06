@@ -362,14 +362,17 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param location
-	 * @return
+	 * @param location - The visited variable location 
+	 * @return - The string representation of the LIR command for variable location
+	 * Move this, <Reg1> 
+	 * MoveField <Reg2>[.<offset2>] <Reg1>[.<offset1>]
+	 * The optional offsets are for a case it is a class' field assigned into another class' field 
 	 */
 	@Override
 	public Object visit(VariableLocation location) {
 		String lir = "";
 		String resReg = getNextReg();
-		
+		//In case it is a local field in a class
 		if ( ( ! location.isExternal() )  &&
 				 ( location.scope.retrieveIdentifier(location.getName()) instanceof Field  )  ){ // Implicit this
 				lir = "";
@@ -381,13 +384,13 @@ public class LirTranslator implements Visitor {
 				String objReg = getNextReg();
 				lir += "Move this, " + objReg + "\n";
 				
-				// get field offset
+				// get field offset in the dispatch table
 				String className = location.scope.getClassOfScope();
 				int offset = DispatchTableBuilder.getFieldOffset(className, location.getName());
 				
-				if ( location.isLhs() ) {
+				if ( location.isLhs() ) {//In case of an assignment
 					lir += "MoveField %s, " + objReg + "." + offset + "\n";
-				} else {
+				} else {//In case it is a direct access to the field, no assignment
 					lir += "MoveField " + objReg + "." + offset + ", " + resReg + "\n";
 					currReg--;
 				}
@@ -431,22 +434,21 @@ public class LirTranslator implements Visitor {
 	}
 
 	/**
-	 * @param location
-	 * @return
+	 * @param location - The visited array location
+	 * @return - The string represenation of the LIR array location
+	 * MoveArray <Reg2> <Reg1>[index]
 	 */
 	@Override
 	public Object visit(ArrayLocation location) {
 		String lir = "";
 		String arrReg = "";
 		String indexReg = "";
-		if ( location.isLhs() ) {
+		if ( location.isLhs() ) {//The array location gets an assignment
 			
-			// array to R_T
 			arrReg = getNextReg();
 			lir += location.getArray().accept(this);
 			lir += nullPtrCheckStr(arrReg);
 
-			// index to R_T+1
 			currReg++;
 			indexReg = getNextReg();
 			lir += location.getIndex().accept(this);
@@ -458,16 +460,13 @@ public class LirTranslator implements Visitor {
 			currReg--;
 		} else {
 
-			// Set R_T to contain the result
 			String resReg = getNextReg();
 			
-			// array to R_T+1
 			currReg++;
 			arrReg = getNextReg();
 			lir += location.getArray().accept(this);
 			lir += nullPtrCheckStr(arrReg);
 			
-			// index to R_T+2
 			currReg++;
 			indexReg = getNextReg();
 			lir += location.getIndex().accept(this);
@@ -483,8 +482,14 @@ public class LirTranslator implements Visitor {
 	}
 	
 	/**
-	 * @param call
-	 * @return
+	 * @param call - The visited static call
+	 * @return - The string representation of the LIR static function call
+	 * It may be a library function call or a static function defined in a user class
+	 * For user class:
+	 * StaticCall <function name in dispatch table>([args registers]), Reg
+	 * StaticCall __checkNullRef(a=Reg),Rdummy
+	 * For library call:
+	 *  
 	 */
 	@Override
 	public Object visit(StaticCall call) {
@@ -495,7 +500,7 @@ public class LirTranslator implements Visitor {
 		if ( call.getMethod().getType().getName().equals("void") )
 			resReg = "Rdummy";
 		
-		// R_T+1, R_T+2, ...   <--   evaluate arguments
+		// evaluate all arguments in the function call
 		List<String> paramRegs = new ArrayList<>(call.getArguments().size());
 		for (Expression argument : call.getArguments()) {
 			currReg++;
@@ -503,7 +508,7 @@ public class LirTranslator implements Visitor {
 			lir += argument.accept(this);
 		}
 			
-		// R_T <- call the method
+		// library function call
 		if ( call.getClassName().equals("Library") ) {
 			lir += "Library __" + call.getName() + "(";
 			for ( int i = 0; i < paramRegs.size()-1; i++ )
