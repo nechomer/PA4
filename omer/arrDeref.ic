@@ -14,16 +14,14 @@ class B extends A{
 
 class C {
   static void main(string[] args) {
-      int a;
-      int b;
-      string[] sArr = new string[10];
-      string s1;
-      string s2;
-      //s1 = s2+sArr[2];
-      a=b;
-      string args = "mom";
-      Library.println(sArr[2]);
-      Library.printi(a);
+      string[][] sArr = new string[][10];
+      sArr[1] = new string[4];
+      sArr[1][2] = "mom";
+      Library.println(sArr[1][2]);
+      int[] c = new int[2];
+      c[1] = 3;
+      Library.printi(c[0]);
+      Library.printi(c[1]);
   }
 }
 
