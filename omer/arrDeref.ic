@@ -16,9 +16,14 @@ class C {
   static void main(string[] args) {
       int a;
       int b;
+      string[] sArr = new string[10];
+      string s1;
+      string s2;
+      //s1 = s2+sArr[2];
       a=b;
       string args = "mom";
-      Library.println(args);
+      Library.println(sArr[2]);
       Library.printi(a);
   }
 }
+
