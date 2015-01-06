@@ -1,6 +1,24 @@
-class IntTooBig {
+class A{
+  int d;
+    boolean foo(int a){
+      int c;
+      boolean a = true;
+      return a;
+    }
+    
+}
+
+class B extends A{
+
+}
+
+class C {
   static void main(string[] args) {
-    int x = 2147483648; 
-    x = 2147483649;
+      int a;
+      int b;
+      a=b;
+      string args = "mom";
+      Library.println(args);
+      Library.printi(a);
   }
 }
