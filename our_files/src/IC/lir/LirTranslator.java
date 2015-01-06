@@ -682,7 +682,9 @@ public class LirTranslator implements Visitor {
 			binaryLir += zeroDivCheckStr(secReg);
 		}
 		
-		if ( binaryOp.isStrCat() ) {
+		if ( binaryOp.isStrCat() ) { // add a check for a string concatenation - no 2 null strings
+			binaryLir += nullPtrCheckStr(firstReg);
+			binaryLir += nullPtrCheckStr(secReg);
 			binaryLir += "Library __stringCat(" + firstReg  + "," + secReg + "), " + firstReg + "\n";
 		}
 		else {
@@ -965,7 +967,7 @@ public class LirTranslator implements Visitor {
 
 	/**
 	 * @param reg
-	 * @return
+	 * @return The LIR representation of null access checking
 	 */
 	private String nullPtrCheckStr(String reg) {
 		return "StaticCall __checkNullRef(a=" + reg + "),Rdummy\n";
@@ -974,7 +976,7 @@ public class LirTranslator implements Visitor {
 	/**
 	 * @param arrReg
 	 * @param idxReg
-	 * @return
+	 * @return The LIR representation of an array access - Checks it's a valid idx
 	 */
 	private String arrIdxOutOfBoundsCheckStr(String arrReg, String idxReg) {
 		return "StaticCall __checkArrayAccess(a=" + arrReg + ", i=" + idxReg + "),Rdummy\n";
@@ -982,7 +984,7 @@ public class LirTranslator implements Visitor {
 
 	/**
 	 * @param sizeReg
-	 * @return
+	 * @return The LIR representation of a new array size - Checks it's a valid size (non negative)
 	 */
 	private String arrIdxCheckStr(String sizeReg) {
 		return "StaticCall __checkSize(n=" + sizeReg + "),Rdummy\n";
@@ -990,7 +992,7 @@ public class LirTranslator implements Visitor {
 
 	/**
 	 * @param intReg
-	 * @return
+	 * @return The string LIR representation for a zero check of a Reg
 	 */
 	private String zeroDivCheckStr(String intReg) {
 		return "StaticCall __checkZero(b=" + intReg + "),Rdummy\n";
@@ -998,7 +1000,7 @@ public class LirTranslator implements Visitor {
 	
 	/**
 	 * @param name
-	 * @return
+	 * @return The LIR representation for a label in the program
 	 */
 	private String makeUniqueJumpLabel(String name) {
 		return "_" + name + "_" +(++currLabel);
