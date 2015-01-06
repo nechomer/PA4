@@ -1,5 +1,9 @@
 package IC.AST;
 
+import IC.SemanticChecks.FrameScope;
+import IC.SemanticChecks.FrameScope.ScopeType;
+import IC.SemanticChecks.TypeTabelBuilder;
+
 
 /**
  * Pretty printing visitor - travels along the AST and prints info about each
@@ -52,6 +56,14 @@ public class PrettyPrinter implements Visitor {
 		output.append("Declaration of class: " + icClass.getName());
 		if (icClass.hasSuperClass())
 			output.append(", subclass of " + icClass.getSuperClassName());
+		output.append(", Type: " + icClass.getName());
+		output.append(", Symbol table: ");
+		ScopeType parentType = icClass.scope.getParent().getType();
+		if (parentType != ScopeType.Global) {
+			output.append(icClass.scope.getParent().getName());
+		} else {
+			output.append("Global");
+		}
 		depth += 2;
 		for (Field field : icClass.getFields())
 			output.append(field.accept(this));
@@ -63,9 +75,8 @@ public class PrettyPrinter implements Visitor {
 
 	public Object visit(PrimitiveType type) {
 		StringBuffer output = new StringBuffer();
-
-		indent(output, type);
-		output.append("Primitive data type: ");
+		//indent(output, type);
+		output.append(", Type: ");
 		if (type.getDimension() > 0)
 			output.append(type.getDimension() + "-dimensional array of ");
 		output.append(type.getName());
@@ -75,8 +86,8 @@ public class PrettyPrinter implements Visitor {
 	public Object visit(UserType type) {
 		StringBuffer output = new StringBuffer();
 
-		indent(output, type);
-		output.append("User-defined data type: ");
+		//indent(output, type);
+		output.append(", Type: ");
 		if (type.getDimension() > 0)
 			output.append(type.getDimension() + "-dimensional array of ");
 		output.append(type.getName());
@@ -90,6 +101,7 @@ public class PrettyPrinter implements Visitor {
 		output.append("Declaration of field: " + field.getName());
 		++depth;
 		output.append(field.getType().accept(this));
+		output.append(", Symbol table: " + field.scope.getName());
 		--depth;
 		return output.toString();
 	}
@@ -123,6 +135,8 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, method);
 		output.append("Declaration of virtual method: " + method.getName());
+		output.append(", Type: {" + TypeTabelBuilder.formatSig(method) + "}");
+		output.append(", Symbol Table: " + method.scope.getName());
 		depth += 2;
 		output.append(method.getType().accept(this));
 		for (Formal formal : method.getFormals())
@@ -138,6 +152,8 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, method);
 		output.append("Declaration of static method: " + method.getName());
+		output.append(", Type: {" + TypeTabelBuilder.formatSig(method) + "}");
+		output.append(", Symbol Table: " + method.scope.getName());
 		depth += 2;
 		output.append(method.getType().accept(this));
 		for (Formal formal : method.getFormals())

@@ -316,7 +316,7 @@ public class FrameScope {
 		// Fields
 		for (Map.Entry<String, Field> entry : fields.entrySet()) {
 			sb.append("    Field: ");
-			sb.append(addBracketsToType(entry.getValue().getType()));
+			sb.append(TypeTabelBuilder.formatType(entry.getValue().getType()));
 			sb.append(" "+entry.getKey());
 			sb.append("\n");
 		}
@@ -331,7 +331,7 @@ public class FrameScope {
 
 			sb.append(entry.getKey());
 			sb.append(" {");
-			sb.append(methodDeclaration(entry.getValue()));
+			sb.append(TypeTabelBuilder.formatSig(entry.getValue()));
 			sb.append("}");
 			sb.append("\n");
 		}
@@ -339,7 +339,7 @@ public class FrameScope {
 		// Formals
 		for (Map.Entry<String, Type> entry : formals.entrySet()) {
 			sb.append("    Parameter: ");
-			sb.append(addBracketsToType(entry.getValue()));
+			sb.append(TypeTabelBuilder.formatType(entry.getValue()));
 			sb.append(" "+entry.getKey());
 			sb.append("\n");
 		}
@@ -347,7 +347,7 @@ public class FrameScope {
 		// Local variables
 		for (Map.Entry<String, Type> entry : localVars.entrySet()) {
 			sb.append("    Local variable: ");
-			sb.append(addBracketsToType(entry.getValue()));
+			sb.append(TypeTabelBuilder.formatType(entry.getValue()));
 			sb.append(" "+entry.getKey());
 			sb.append("\n");
 		}
@@ -369,31 +369,31 @@ public class FrameScope {
 		return sb.toString();
 	}
 
-	private String methodDeclaration(Method m) {
-		StringBuilder sb = new StringBuilder();
-
-		String delim = "";
-		for (Formal f : m.getFormals()) {
-			sb.append(delim);
-			sb.append(addBracketsToType(f.getType()));
-			delim = ", ";
-		}
-
-		sb.append(" -> ");
-		sb.append(addBracketsToType(m.getType()));
-
-		return sb.toString();
-	}
+//	private String methodDeclaration(Method m) {
+//		StringBuilder sb = new StringBuilder();
+//
+//		String delim = "";
+//		for (Formal f : m.getFormals()) {
+//			sb.append(delim);
+//			sb.append(TypeTabelBuilder.formatType(f.getType()));
+//			delim = ", ";
+//		}
+//
+//		sb.append(" -> ");
+//		sb.append(TypeTabelBuilder.formatType(m.getType()));
+//
+//		return sb.toString();
+//	}
 	
-	private String addBracketsToType(Type t) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(t.getName());
-		for (int i = 0; i < t.getDimension(); i++)
-			sb.append("[]");
-
-		return sb.toString();
-	}
+//	private String addBracketsToType(Type t) {
+//		StringBuilder sb = new StringBuilder();
+//
+//		sb.append(t.getName());
+//		for (int i = 0; i < t.getDimension(); i++)
+//			sb.append("[]");
+//
+//		return sb.toString();
+//	}
 
 	public HashMap<String, ICClass> getClasses() {
 		return classes;

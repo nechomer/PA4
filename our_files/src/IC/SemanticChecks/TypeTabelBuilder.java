@@ -397,7 +397,7 @@ public class TypeTabelBuilder implements Visitor{
 	}
 	
 	
-	private String formatType(Type t) {
+	public static String formatType(Type t) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(t.getName());
@@ -407,7 +407,7 @@ public class TypeTabelBuilder implements Visitor{
 		return sb.toString();
 	}
 
-	private String formatSig(Method m) {
+	public static String formatSig(Method m) {
 		StringBuilder sb = new StringBuilder();
 
 		String delim = "";
