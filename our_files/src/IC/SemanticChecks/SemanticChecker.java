@@ -397,6 +397,7 @@ public class SemanticChecker implements Visitor {
 				if (static_scope == true)
 					throw new SemanticException(location,
 							"Use of field inside static method is not allowed");
+				location.setLocationType(((Field) variable).getType());
 				return ((Field) variable).getType();
 			}
 			
