@@ -17,6 +17,8 @@ public class PrettyPrinter implements Visitor {
 	private int depth = 0; // depth of indentation
 
 	private String ICFilePath;
+	
+	private boolean libraryFlag = false;
 
 	/**
 	 * Constructs a new pretty printer visitor.
@@ -24,8 +26,9 @@ public class PrettyPrinter implements Visitor {
 	 * @param ICFilePath
 	 *            The path + name of the IC file being compiled.
 	 */
-	public PrettyPrinter(String ICFilePath) {
+	public PrettyPrinter(String ICFilePath, boolean flag) {
 		this.ICFilePath = ICFilePath;
+		this.libraryFlag = flag;
 	}
 
 	private void indent(StringBuffer output, ASTNode node) {
@@ -45,8 +48,15 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output);
 		output.append("Abstract Syntax Tree: " + ICFilePath + "\n");
-		for (ICClass icClass : program.getClasses())
+		boolean libClass = true;
+		for (ICClass icClass : program.getClasses()){
+			if (libClass && this.libraryFlag) {
+				libClass = !libClass;
+				continue;
+			}
 			output.append(icClass.accept(this));
+		}
+			
 		return output.toString();
 	}
 

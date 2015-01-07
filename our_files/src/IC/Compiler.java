@@ -91,8 +91,8 @@ public class Compiler {
      		DispatchTableBuilder.createDispatchTable(stb.getRootScope());
      		
      		if (printAst) {
-    			if (libraryProgramNode!= null) System.out.println(libraryProgramNode.accept(new PrettyPrinter(args[1]))); 
-    			if (programNode!= null) System.out.println(programNode.accept(new PrettyPrinter(args[0]))); 
+    			if (libraryProgramNode!= null) System.out.println(libraryProgramNode.accept(new PrettyPrinter(args[1],false))); 
+    			if (programNode!= null) System.out.println(programNode.accept(new PrettyPrinter(args[0],libraryProgramNode != null))); 
     		}
      		
      		if (dumpSymtab) {
