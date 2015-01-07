@@ -32,32 +32,6 @@ Abstract Syntax Tree: -Linput/Library/libic.sig
 
 Abstract Syntax Tree: input\precedence_check.ic
 
-1: Declaration of class: Library, Type: Library, Symbol table: Global
-    2: Declaration of library method: println, Type: void
-        2: Parameter: s, Type: string, Symbol table: println
-    3: Declaration of library method: print, Type: void
-        3: Parameter: s, Type: string, Symbol table: print
-    4: Declaration of library method: printi, Type: void
-        4: Parameter: i, Type: int, Symbol table: printi
-    5: Declaration of library method: printb, Type: void
-        5: Parameter: b, Type: boolean, Symbol table: printb
-    7: Declaration of library method: readi, Type: int
-    8: Declaration of library method: readln, Type: string
-    9: Declaration of library method: eof, Type: boolean
-    11: Declaration of library method: stoi, Type: int
-        11: Parameter: s, Type: string, Symbol table: stoi
-        11: Parameter: n, Type: int, Symbol table: stoi
-    13: Declaration of library method: itos, Type: string
-        13: Parameter: i, Type: int, Symbol table: itos
-    14: Declaration of library method: stoa, Type: int[]
-        14: Parameter: s, Type: string, Symbol table: stoa
-    15: Declaration of library method: atos, Type: string
-        15: Parameter: a, Type: int[], Symbol table: atos
-    17: Declaration of library method: random, Type: int
-        17: Parameter: n, Type: int, Symbol table: random
-    18: Declaration of library method: time, Type: int
-    19: Declaration of library method: exit, Type: int
-        19: Parameter: i, Type: int, Symbol table: exit
 1: Declaration of class: PrecedenceCheck, Type: PrecedenceCheck, Symbol table: Global
     3: Declaration of static method: main, Type: {string[] -> void}, Symbol table: PrecedenceCheck
         3: Parameter: args, Type: string[], Symbol table: main
