@@ -29,23 +29,62 @@ Abstract Syntax Tree: -Linput/Library/libic.sig
     18: Declaration of library method: time, Type: int
     19: Declaration of library method: exit, Type: int
         19: Parameter: i, Type: int, Symbol table: exit
-java.lang.NullPointerException
-	at IC.SemanticChecks.TypeTabelBuilder.formatType(TypeTabelBuilder.java:403)
-	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:306)
-	at IC.AST.VariableLocation.accept(VariableLocation.java:18)
-	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:343)
-	at IC.AST.StaticCall.accept(StaticCall.java:15)
-	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:186)
-	at IC.AST.CallStatement.accept(CallStatement.java:14)
-	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:162)
-	at IC.AST.StaticMethod.accept(StaticMethod.java:13)
-	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:74)
-	at IC.AST.ICClass.accept(ICClass.java:21)
-	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:51)
-	at IC.AST.Program.accept(Program.java:15)
-	at IC.Compiler.main(Compiler.java:95)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.lang.reflect.Method.invoke(Unknown Source)
-	at org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader.main(JarRsrcLoader.java:58)
+
+Abstract Syntax Tree: input\fields_check.ic
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+1: Declaration of class: FieldCheck, Type: FieldCheck, Symbol table: Global
+    3: Declaration of static method: main, Type: {string[] -> void}, Symbol table: FieldCheck
+        3: Parameter: args, Type: string[], Symbol table: main
+        6: Method call statement
+          6: Call to static method: printi, in class Library
+              6: Reference to variable: f, in external scope, Type: int, Symbol table: main
+                6: Parenthesized expression
+                  6: Instantiation of class: C, Type: C, Symbol table: main
+        7: Method call statement
+          7: Call to static method: printb, in class Library
+              7: Reference to variable: b, in external scope, Type: boolean, Symbol table: main
+                7: Parenthesized expression
+                  7: Instantiation of class: C, Type: C, Symbol table: main
+        8: Method call statement
+          8: Call to static method: println, in class Library
+              8: Reference to variable: s, in external scope, Type: string, Symbol table: main
+                8: Parenthesized expression
+                  8: Instantiation of class: C, Type: C, Symbol table: main
+        9: Method call statement
+          9: Call to static method: printi, in class Library
+              9: Reference to variable: f, in external scope, Type: int, Symbol table: main
+                9: Reference to variable: c, in external scope, Type: C, Symbol table: main
+                  9: Parenthesized expression
+                    9: Instantiation of class: C, Type: C, Symbol table: main
+14: Declaration of class: C, Type: C, Symbol table: Global
+    15: Declaration of field: f, Type: int, Symbol table: C
+    16: Declaration of field: b, Type: boolean, Symbol table: C
+    17: Declaration of field: s, Type: string, Symbol table: C
+    18: Declaration of field: c, Type: C, Symbol table: C
+    20: Declaration of virtual method: foo, Type: { -> void}, Symbol table: C
