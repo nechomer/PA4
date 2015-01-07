@@ -1,7 +1,5 @@
 package IC.AST;
 
-import com.oracle.jrockit.jfr.DataType;
-
 import IC.DataTypes;
 import IC.SemanticChecks.FrameScope;
 import IC.SemanticChecks.FrameScope.ScopeType;
@@ -290,19 +288,9 @@ public class PrettyPrinter implements Visitor {
 		StringBuffer output = new StringBuffer();
 		indent(output, location);
 		output.append("Reference to variable: " + location.getName());
-		Type t = null;
+		Type t = location.getLocationType();
 		if (location.isExternal()){
 			output.append(", in external scope");
-			Object obj = location.scope.retrieveIdentifier(location.getName());
-			if( obj instanceof LocalVariable ){
-				t = ((LocalVariable)obj).getType();
-			}
-			if( obj instanceof Formal ){
-				t = ((Formal)obj).getType();
-			}
-			if( obj instanceof Field ){
-				t = ((Field)obj).getType();
-			}
 			output.append(", Type: " + TypeTabelBuilder.formatType(t));
 			output.append(getScopeHierarchyString(location.scope));
 			++depth;
@@ -310,7 +298,6 @@ public class PrettyPrinter implements Visitor {
 			--depth;
 		}
 		else{
-			t = (Type)location.scope.retrieveIdentifier(location.getName());
 			output.append(", Type: " + TypeTabelBuilder.formatType(t));
 			output.append(getScopeHierarchyString(location.scope));
 		}
