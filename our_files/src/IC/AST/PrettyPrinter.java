@@ -1,5 +1,8 @@
 package IC.AST;
 
+import com.oracle.jrockit.jfr.DataType;
+
+import IC.DataTypes;
 import IC.SemanticChecks.FrameScope;
 import IC.SemanticChecks.FrameScope.ScopeType;
 import IC.SemanticChecks.TypeTabelBuilder;
@@ -30,7 +33,7 @@ public class PrettyPrinter implements Visitor {
 	private void indent(StringBuffer output, ASTNode node) {
 		output.append("\n");
 		for (int i = 0; i < depth; ++i)
-			output.append(" ");
+			output.append("  ");
 		if (node != null)
 			output.append(node.getLine() + ": ");
 	}
@@ -77,9 +80,7 @@ public class PrettyPrinter implements Visitor {
 		StringBuffer output = new StringBuffer();
 		//indent(output, type);
 		output.append(", Type: ");
-		if (type.getDimension() > 0)
-			output.append(type.getDimension() + "-dimensional array of ");
-		output.append(type.getName());
+		output.append(TypeTabelBuilder.formatType(type));
 		return output.toString();
 	}
 
@@ -88,9 +89,7 @@ public class PrettyPrinter implements Visitor {
 
 		//indent(output, type);
 		output.append(", Type: ");
-		if (type.getDimension() > 0)
-			output.append(type.getDimension() + "-dimensional array of ");
-		output.append(type.getName());
+		output.append(TypeTabelBuilder.formatType(type));
 		return output.toString();
 	}
 
@@ -170,6 +169,7 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, assignment);
 		output.append("Assignment statement");
+		output.append(getScopeHierarchyString(assignment.scope));
 		depth += 2;
 		output.append(assignment.getVariable().accept(this));
 		output.append(assignment.getAssignment().accept(this));
@@ -195,6 +195,7 @@ public class PrettyPrinter implements Visitor {
 		output.append("Return statement");
 		if (returnStatement.hasValue())
 			output.append(", with return value");
+		output.append(getScopeHierarchyString(returnStatement.scope));
 		if (returnStatement.hasValue()) {
 			++depth;
 			output.append(returnStatement.getValue().accept(this));
@@ -225,10 +226,10 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, whileStatement);
 		output.append("While statement");
+		output.append(getScopeHierarchyString(whileStatement.scope));
 		depth += 2;
 		output.append(whileStatement.getCondition().accept(this));
 		output.append(whileStatement.getOperation().accept(this));
-		output.append(getScopeHierarchyString(whileStatement.scope));
 		depth -= 2;
 		return output.toString();
 	}
@@ -238,7 +239,7 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, breakStatement);
 		output.append("Break statement");
-		//output.append(getScopeHierarchyString(breakStatement.scope));
+		output.append(getScopeHierarchyString(breakStatement.scope));
 		return output.toString();
 	}
 
@@ -247,7 +248,7 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, continueStatement);
 		output.append("Continue statement");
-		//output.append(getScopeHierarchyString(continueStatement.scope));
+		output.append(getScopeHierarchyString(continueStatement.scope));
 		return output.toString();
 	}
 
@@ -274,9 +275,9 @@ public class PrettyPrinter implements Visitor {
 			output.append(", with initial value");
 			++depth;
 		}
+		output.append(localVariable.getType().accept(this));
 		output.append(getScopeHierarchyString(localVariable.scope));
 		++depth;
-		output.append(localVariable.getType().accept(this));
 		if (localVariable.hasInitValue()) {
 			output.append(localVariable.getInitValue().accept(this));
 			--depth;
@@ -292,15 +293,28 @@ public class PrettyPrinter implements Visitor {
 		Type t = null;
 		if (location.isExternal()){
 			output.append(", in external scope");
+			Object obj = location.scope.retrieveIdentifier(location.getName());
+			if( obj instanceof LocalVariable ){
+				t = ((LocalVariable)obj).getType();
+			}
+			if( obj instanceof Formal ){
+				t = ((Formal)obj).getType();
+			}
+			if( obj instanceof Field ){
+				t = ((Field)obj).getType();
+			}
+			output.append(", Type: " + TypeTabelBuilder.formatType(t));
+			output.append(getScopeHierarchyString(location.scope));
 			++depth;
 			output.append(location.getLocation().accept(this));
 			--depth;
 		}
 		else{
 			t = (Type)location.scope.retrieveIdentifier(location.getName());
-			output.append(", Type: " + t.getName());
+			output.append(", Type: " + TypeTabelBuilder.formatType(t));
 			output.append(getScopeHierarchyString(location.scope));
 		}
+		
 		return output.toString();
 	}
 
@@ -308,7 +322,13 @@ public class PrettyPrinter implements Visitor {
 		StringBuffer output = new StringBuffer();
 
 		indent(output, location);
+		Type t = null;
+		if( location.getArray() instanceof VariableLocation){
+			t = (Type)location.scope.retrieveIdentifier(((VariableLocation)location.getArray()).getName());  ///TODO fix 
+		}
 		output.append("Reference to array");
+		output.append(", Type: " + t.getName());
+		output.append(getScopeHierarchyString(location.scope));
 		depth += 2;
 		output.append(location.getArray().accept(this));
 		output.append(location.getIndex().accept(this));
@@ -358,6 +378,8 @@ public class PrettyPrinter implements Visitor {
 
 		indent(output, newClass);
 		output.append("Instantiation of class: " + newClass.getName());
+		output.append(", Type: " + newClass.getName() );
+		output.append(getScopeHierarchyString(newClass.scope));
 		return output.toString();
 	}
 
@@ -368,6 +390,7 @@ public class PrettyPrinter implements Visitor {
 		output.append("Array allocation");
 		depth += 2;
 		output.append(newArray.getType().accept(this));
+		output.append(getScopeHierarchyString(newArray.scope));
 		output.append(newArray.getSize().accept(this));
 		depth -= 2;
 		return output.toString();
@@ -386,10 +409,12 @@ public class PrettyPrinter implements Visitor {
 
 	public Object visit(MathBinaryOp binaryOp) {
 		StringBuffer output = new StringBuffer();
-
+		PrimitiveType ret = new PrimitiveType(0, DataTypes.INT);
 		indent(output, binaryOp);
 		output.append("Mathematical binary operation: "
 				+ binaryOp.getOperator().getDescription());
+		output.append(", Type: " + ret.getName());
+		output.append(getScopeHierarchyString(binaryOp.scope));
 		depth += 2;
 		output.append(binaryOp.getFirstOperand().accept(this));
 		output.append(binaryOp.getSecondOperand().accept(this));
@@ -399,10 +424,12 @@ public class PrettyPrinter implements Visitor {
 
 	public Object visit(LogicalBinaryOp binaryOp) {
 		StringBuffer output = new StringBuffer();
-
+		PrimitiveType ret = new PrimitiveType(0, DataTypes.BOOLEAN);
 		indent(output, binaryOp);
 		output.append("Logical binary operation: "
 				+ binaryOp.getOperator().getDescription());
+		output.append(", Type: " + ret.getName());
+		output.append(getScopeHierarchyString(binaryOp.scope));
 		depth += 2;
 		output.append(binaryOp.getFirstOperand().accept(this));
 		output.append(binaryOp.getSecondOperand().accept(this));
@@ -412,10 +439,12 @@ public class PrettyPrinter implements Visitor {
 
 	public Object visit(MathUnaryOp unaryOp) {
 		StringBuffer output = new StringBuffer();
-
+		PrimitiveType ret = new PrimitiveType(0, DataTypes.INT);
 		indent(output, unaryOp);
 		output.append("Mathematical unary operation: "
 				+ unaryOp.getOperator().getDescription());
+		output.append(", Type: " + ret.getName());
+		output.append(getScopeHierarchyString(unaryOp.scope));
 		++depth;
 		output.append(unaryOp.getOperand().accept(this));
 		--depth;
@@ -424,10 +453,12 @@ public class PrettyPrinter implements Visitor {
 
 	public Object visit(LogicalUnaryOp unaryOp) {
 		StringBuffer output = new StringBuffer();
-
+		PrimitiveType ret = new PrimitiveType(0, DataTypes.BOOLEAN);
 		indent(output, unaryOp);
 		output.append("Logical unary operation: "
 				+ unaryOp.getOperator().getDescription());
+		output.append(", Type: " + ret.getName());
+		output.append(getScopeHierarchyString(unaryOp.scope));
 		++depth;
 		output.append(unaryOp.getOperand().accept(this));
 		--depth;
@@ -436,10 +467,23 @@ public class PrettyPrinter implements Visitor {
 
 	public Object visit(Literal literal) {
 		StringBuffer output = new StringBuffer();
-
+		
 		indent(output, literal);
-		output.append(literal.getType().getDescription() + ": "
-				+ literal.getType().toFormattedString(literal.getValue()));
+		output.append(literal.getType().getDescription().equals("Literal") ? "Null literal" : literal.getType().getDescription()); 
+		output.append(": "+ literal.getType().toFormattedString(literal.getValue()));
+		PrimitiveType ret = null;
+		switch(literal.getType().getDescription()) {
+			case ("Boolean literal") : ret = new PrimitiveType(literal.getLine(), DataTypes.BOOLEAN);
+				break;
+			case ("Integer literal") : ret = new PrimitiveType(literal.getLine(), DataTypes.INT);
+				break;
+			case ("String literal") : ret = new PrimitiveType(literal.getLine(), DataTypes.STRING);
+				break;
+			case ("Literal") : ret = new PrimitiveType(literal.getLine(), DataTypes.NULL);
+				break;	
+		}
+		output.append(", Type: " +  ret.getName() );
+		output.append(getScopeHierarchyString(literal.scope));
 		return output.toString();
 	}
 
@@ -457,7 +501,7 @@ public class PrettyPrinter implements Visitor {
 	public String getScopeHierarchyString(FrameScope scope) {
 		String result = ", Symbol table: " + scope.getName();
 		FrameScope parentScope = scope;
-		while (parentScope.getType() != ScopeType.Method) {
+		while (parentScope.getType() != ScopeType.Method && parentScope.getType() != ScopeType.StatementBlock) {
 			result += " in " + parentScope.getName(); 
 			parentScope = parentScope.getParent();
 		}
