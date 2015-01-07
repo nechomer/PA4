@@ -4,7 +4,15 @@ class NullObj {
 
     A a = null;
     A b = new A();
-
+    string s1 = "mom";
+    string s2 = "momy";
+    string s3 = "mr\ner\ne";
+    Library.print(s1);
+    Library.print(s2);
+    Library.print(s3);
+    Library.println(s1);
+    Library.println(s2);
+    Library.println(s3);
     b.foo();
 
     Library.printi(b.a);

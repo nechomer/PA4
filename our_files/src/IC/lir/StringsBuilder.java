@@ -255,8 +255,9 @@ public class StringsBuilder implements Visitor {
 	@Override
 	public Object visit(Literal literal) {
 		if (literal.getType() == LiteralTypes.STRING) {
-			if (!strings.containsKey(literal.getValue())) {
-				strings.put("" + literal.getValue(), "str" + counter);
+			String str = formatString(literal.getValue().toString());
+			if (!strings.containsKey(str)) {
+				strings.put("" + str, "str" + counter);
 				counter++;
 			}
 		}
@@ -293,6 +294,12 @@ public class StringsBuilder implements Visitor {
 	
 	public static Map<String,String> getStringsMap() {
 		return strings;
+	}
+	
+	public static String formatString(String strToFormat) {
+		//String ret = strToFormat.replaceAll("\n", "\\\\n");
+		String ret = strToFormat.replaceAll("\n", "");
+		return ret;
 	}
 
 }
