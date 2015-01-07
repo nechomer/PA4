@@ -459,6 +459,8 @@ public class SemanticChecker implements Visitor {
 		  for (int i=0; i<t.getDimension()-1;i++) {
 			  temp.incrementDimension();
 		  }
+		  
+		  location.setArrType(temp.getName());
 		  return temp;
 	}
 

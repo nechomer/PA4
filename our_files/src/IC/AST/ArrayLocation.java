@@ -11,6 +11,8 @@ public class ArrayLocation extends Location {
 	private Expression array;
 
 	private Expression index;
+	
+	private String arrType;
 
 	public Object accept(Visitor visitor) {
 		return visitor.visit(this);
@@ -36,5 +38,13 @@ public class ArrayLocation extends Location {
 
 	public Expression getIndex() {
 		return index;
+	}
+	
+	public String getArrType() {
+		return arrType;
+	}
+
+	public void setArrType(String arrType) {
+		this.arrType = arrType;
 	}
 }
