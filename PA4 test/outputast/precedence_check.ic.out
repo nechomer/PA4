@@ -1,0 +1,256 @@
+Parsed -Linput/Library/libic.sig successfully!
+Parsed precedence_check.ic successfully!
+
+Abstract Syntax Tree: -Linput/Library/libic.sig
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+
+Abstract Syntax Tree: input\precedence_check.ic
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+1: Declaration of class: PrecedenceCheck, Type: PrecedenceCheck, Symbol table: Global
+    3: Declaration of static method: main, Type: {string[] -> void}, Symbol table: PrecedenceCheck
+        3: Parameter: args, Type: string[], Symbol table: main
+        4: Declaration of local variable: a, with initial value, Type: int, Symbol table: main
+            4: Integer literal: 1, Type: int, Symbol table: main
+        5: Declaration of local variable: b, with initial value, Type: int, Symbol table: main
+            5: Integer literal: 2, Type: int, Symbol table: main
+        6: Declaration of local variable: c, with initial value, Type: int, Symbol table: main
+            6: Integer literal: 3, Type: int, Symbol table: main
+        8: Declaration of local variable: d, with initial value, Type: boolean, Symbol table: main
+            8: Boolean literal: true, Type: boolean, Symbol table: main
+        9: Declaration of local variable: e, with initial value, Type: boolean, Symbol table: main
+            9: Boolean literal: false, Type: boolean, Symbol table: main
+        10: Declaration of local variable: f, Type: boolean, Symbol table: main
+        12: Assignment statement, Symbol table: main
+            12: Reference to variable: c, Type: int, Symbol table: main
+            12: Mathematical binary operation: addition, Type: int, Symbol table: main
+                12: Mathematical binary operation: addition, Type: int, Symbol table: main
+                    12: Reference to variable: a, Type: int, Symbol table: main
+                    12: Reference to variable: b, Type: int, Symbol table: main
+                12: Reference to variable: c, Type: int, Symbol table: main
+        13: Method call statement
+          13: Call to static method: printi, in class Library
+              13: Reference to variable: c, Type: int, Symbol table: main
+        14: Method call statement
+          14: Call to static method: println, in class Library
+              14: String literal: "", Type: string, Symbol table: main
+        16: Assignment statement, Symbol table: main
+            16: Reference to variable: c, Type: int, Symbol table: main
+            16: Mathematical binary operation: subtraction, Type: int, Symbol table: main
+                16: Mathematical binary operation: subtraction, Type: int, Symbol table: main
+                    16: Reference to variable: c, Type: int, Symbol table: main
+                    16: Reference to variable: b, Type: int, Symbol table: main
+                16: Reference to variable: a, Type: int, Symbol table: main
+        17: Method call statement
+          17: Call to static method: printi, in class Library
+              17: Reference to variable: c, Type: int, Symbol table: main
+        18: Method call statement
+          18: Call to static method: println, in class Library
+              18: String literal: "", Type: string, Symbol table: main
+        20: Assignment statement, Symbol table: main
+            20: Reference to variable: c, Type: int, Symbol table: main
+            20: Mathematical binary operation: multiplication, Type: int, Symbol table: main
+                20: Mathematical binary operation: multiplication, Type: int, Symbol table: main
+                    20: Reference to variable: a, Type: int, Symbol table: main
+                    20: Reference to variable: b, Type: int, Symbol table: main
+                20: Reference to variable: c, Type: int, Symbol table: main
+        21: Method call statement
+          21: Call to static method: printi, in class Library
+              21: Reference to variable: c, Type: int, Symbol table: main
+        22: Method call statement
+          22: Call to static method: println, in class Library
+              22: String literal: "", Type: string, Symbol table: main
+        24: Assignment statement, Symbol table: main
+            24: Reference to variable: c, Type: int, Symbol table: main
+            24: Mathematical binary operation: division, Type: int, Symbol table: main
+                24: Mathematical binary operation: division, Type: int, Symbol table: main
+                    24: Reference to variable: c, Type: int, Symbol table: main
+                    24: Reference to variable: b, Type: int, Symbol table: main
+                24: Reference to variable: a, Type: int, Symbol table: main
+        25: Method call statement
+          25: Call to static method: printi, in class Library
+              25: Reference to variable: c, Type: int, Symbol table: main
+        26: Method call statement
+          26: Call to static method: println, in class Library
+              26: String literal: "", Type: string, Symbol table: main
+        28: Assignment statement, Symbol table: main
+            28: Reference to variable: c, Type: int, Symbol table: main
+            28: Mathematical unary operation: unary subtraction, Type: int, Symbol table: main
+              28: Mathematical unary operation: unary subtraction, Type: int, Symbol table: main
+                28: Mathematical unary operation: unary subtraction, Type: int, Symbol table: main
+                  28: Reference to variable: a, Type: int, Symbol table: main
+        29: Method call statement
+          29: Call to static method: printi, in class Library
+              29: Reference to variable: c, Type: int, Symbol table: main
+        30: Method call statement
+          30: Call to static method: println, in class Library
+              30: String literal: "", Type: string, Symbol table: main
+        32: Assignment statement, Symbol table: main
+            32: Reference to variable: c, Type: int, Symbol table: main
+            32: Reference to variable: a, Type: int, Symbol table: main
+        33: Method call statement
+          33: Call to static method: printi, in class Library
+              33: Reference to variable: c, Type: int, Symbol table: main
+        34: Method call statement
+          34: Call to static method: println, in class Library
+              34: String literal: "", Type: string, Symbol table: main
+        36: Assignment statement, Symbol table: main
+            36: Reference to variable: c, Type: int, Symbol table: main
+            36: Mathematical binary operation: multiplication, Type: int, Symbol table: main
+                36: Mathematical unary operation: unary subtraction, Type: int, Symbol table: main
+                  36: Reference to variable: a, Type: int, Symbol table: main
+                36: Reference to variable: b, Type: int, Symbol table: main
+        37: Method call statement
+          37: Call to static method: printi, in class Library
+              37: Reference to variable: c, Type: int, Symbol table: main
+        38: Method call statement
+          38: Call to static method: println, in class Library
+              38: String literal: "", Type: string, Symbol table: main
+        40: Assignment statement, Symbol table: main
+            40: Reference to variable: c, Type: int, Symbol table: main
+            40: Mathematical binary operation: division, Type: int, Symbol table: main
+                40: Mathematical unary operation: unary subtraction, Type: int, Symbol table: main
+                  40: Reference to variable: b, Type: int, Symbol table: main
+                40: Reference to variable: a, Type: int, Symbol table: main
+        41: Method call statement
+          41: Call to static method: printi, in class Library
+              41: Reference to variable: c, Type: int, Symbol table: main
+        42: Method call statement
+          42: Call to static method: println, in class Library
+              42: String literal: "", Type: string, Symbol table: main
+        44: Assignment statement, Symbol table: main
+            44: Reference to variable: c, Type: int, Symbol table: main
+            44: Mathematical binary operation: subtraction, Type: int, Symbol table: main
+                44: Mathematical binary operation: addition, Type: int, Symbol table: main
+                    44: Reference to variable: a, Type: int, Symbol table: main
+                    44: Mathematical binary operation: division, Type: int, Symbol table: main
+                        44: Mathematical binary operation: multiplication, Type: int, Symbol table: main
+                            44: Reference to variable: c, Type: int, Symbol table: main
+                            44: Reference to variable: a, Type: int, Symbol table: main
+                        44: Reference to variable: b, Type: int, Symbol table: main
+                44: Reference to variable: b, Type: int, Symbol table: main
+        45: Method call statement
+          45: Call to static method: printi, in class Library
+              45: Reference to variable: c, Type: int, Symbol table: main
+        46: Method call statement
+          46: Call to static method: println, in class Library
+              46: String literal: "", Type: string, Symbol table: main
+        48: Assignment statement, Symbol table: main
+            48: Reference to variable: f, Type: boolean, Symbol table: main
+            48: Logical unary operation: logical negation, Type: boolean, Symbol table: main
+              48: Logical unary operation: logical negation, Type: boolean, Symbol table: main
+                48: Logical unary operation: logical negation, Type: boolean, Symbol table: main
+                  48: Reference to variable: d, Type: boolean, Symbol table: main
+        49: Method call statement
+          49: Call to static method: printb, in class Library
+              49: Reference to variable: f, Type: boolean, Symbol table: main
+        50: Method call statement
+          50: Call to static method: println, in class Library
+              50: String literal: "", Type: string, Symbol table: main
+        52: Assignment statement, Symbol table: main
+            52: Reference to variable: f, Type: boolean, Symbol table: main
+            52: Logical binary operation: logical and, Type: boolean, Symbol table: main
+                52: Logical binary operation: logical and, Type: boolean, Symbol table: main
+                    52: Reference to variable: e, Type: boolean, Symbol table: main
+                    52: Reference to variable: f, Type: boolean, Symbol table: main
+                52: Reference to variable: d, Type: boolean, Symbol table: main
+        53: Method call statement
+          53: Call to static method: printb, in class Library
+              53: Reference to variable: f, Type: boolean, Symbol table: main
+        54: Method call statement
+          54: Call to static method: println, in class Library
+              54: String literal: "", Type: string, Symbol table: main
+        56: Assignment statement, Symbol table: main
+            56: Reference to variable: f, Type: boolean, Symbol table: main
+            56: Logical binary operation: logical or, Type: boolean, Symbol table: main
+                56: Logical binary operation: logical or, Type: boolean, Symbol table: main
+                    56: Reference to variable: e, Type: boolean, Symbol table: main
+                    56: Reference to variable: f, Type: boolean, Symbol table: main
+                56: Reference to variable: d, Type: boolean, Symbol table: main
+        57: Method call statement
+          57: Call to static method: printb, in class Library
+              57: Reference to variable: f, Type: boolean, Symbol table: main
+        58: Method call statement
+          58: Call to static method: println, in class Library
+              58: String literal: "", Type: string, Symbol table: main
+        60: Assignment statement, Symbol table: main
+            60: Reference to variable: f, Type: boolean, Symbol table: main
+            60: Logical binary operation: logical and, Type: boolean, Symbol table: main
+                60: Parenthesized expression
+                  60: Logical binary operation: inequality, Type: boolean, Symbol table: main
+                      60: Reference to variable: e, Type: boolean, Symbol table: main
+                      60: Reference to variable: f, Type: boolean, Symbol table: main
+                60: Parenthesized expression
+                  60: Logical binary operation: less than, Type: boolean, Symbol table: main
+                      60: Reference to variable: a, Type: int, Symbol table: main
+                      60: Reference to variable: b, Type: int, Symbol table: main
+        61: Method call statement
+          61: Call to static method: printb, in class Library
+              61: Reference to variable: f, Type: boolean, Symbol table: main
+        62: Method call statement
+          62: Call to static method: println, in class Library
+              62: String literal: "", Type: string, Symbol table: main
+        64: Assignment statement, Symbol table: main
+            64: Reference to variable: f, Type: boolean, Symbol table: main
+            64: Logical binary operation: logical or, Type: boolean, Symbol table: main
+                64: Logical binary operation: logical and, Type: boolean, Symbol table: main
+                    64: Reference to variable: f, Type: boolean, Symbol table: main
+                    64: Reference to variable: d, Type: boolean, Symbol table: main
+                64: Reference to variable: e, Type: boolean, Symbol table: main
+        65: Method call statement
+          65: Call to static method: printb, in class Library
+              65: Reference to variable: f, Type: boolean, Symbol table: main
+        66: Method call statement
+          66: Call to static method: println, in class Library
+              66: String literal: "", Type: string, Symbol table: main

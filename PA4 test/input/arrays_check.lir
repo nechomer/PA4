@@ -99,6 +99,7 @@ StaticCall __checkNullRef(a=R2),Rdummy
 MoveField R2.1, R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move 0, integerarr
 Move 2, R1
@@ -119,6 +120,7 @@ StaticCall __checkArrayAccess(a=R2, i=R3),Rdummy
 MoveArray R2[R3], R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move 3, R1
 StaticCall __checkSize(n=R1),Rdummy

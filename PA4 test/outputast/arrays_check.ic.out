@@ -1,0 +1,128 @@
+Parsed -Linput/Library/libic.sig successfully!
+Parsed arrays_check.ic successfully!
+
+Abstract Syntax Tree: -Linput/Library/libic.sig
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+
+Abstract Syntax Tree: input\arrays_check.ic
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+1: Declaration of class: Arrays, Type: Arrays, Symbol table: Global
+    3: Declaration of field: a, Type: int, Symbol table: Arrays
+    5: Declaration of static method: main, Type: {string[] -> void}, Symbol table: Arrays
+        5: Parameter: args, Type: string[], Symbol table: main
+        8: Declaration of local variable: arr, with initial value, Type: Arrays[], Symbol table: main
+            8: Array allocation, Type: Arrays[], Symbol table: main
+                8: Integer literal: 5, Type: int, Symbol table: main
+        9: Assignment statement, Symbol table: main
+            9: Reference to array, Type: Arrays, Symbol table: main
+                9: Reference to variable: arr, Type: Arrays[], Symbol table: main
+                9: Integer literal: 0, Type: int, Symbol table: main
+            9: Instantiation of class: Arrays, Type: Arrays, Symbol table: main
+        10: Assignment statement, Symbol table: main
+            10: Reference to variable: a, in external scope, Type: int, Symbol table: main
+              10: Reference to array, Type: Arrays, Symbol table: main
+                  10: Reference to variable: arr, Type: Arrays[], Symbol table: main
+                  10: Integer literal: 0, Type: int, Symbol table: main
+            10: Integer literal: 5, Type: int, Symbol table: main
+        11: Method call statement
+          11: Call to static method: printi, in class Library
+              11: Reference to variable: a, in external scope, Type: int, Symbol table: main
+                11: Reference to array, Type: Arrays, Symbol table: main
+                    11: Reference to variable: arr, Type: Arrays[], Symbol table: main
+                    11: Integer literal: 0, Type: int, Symbol table: main
+        13: Method call statement
+          13: Call to static method: println, in class Library
+              13: String literal: "", Type: string, Symbol table: main
+        16: Declaration of local variable: integerarr, Type: int[], Symbol table: main
+        17: Assignment statement, Symbol table: main
+            17: Reference to variable: integerarr, Type: int[], Symbol table: main
+            17: Array allocation, Type: int[], Symbol table: main
+                17: Integer literal: 2, Type: int, Symbol table: main
+        18: Assignment statement, Symbol table: main
+            18: Reference to array, Type: int, Symbol table: main
+                18: Reference to variable: integerarr, Type: int[], Symbol table: main
+                18: Integer literal: 1, Type: int, Symbol table: main
+            18: Integer literal: 39, Type: int, Symbol table: main
+        19: Method call statement
+          19: Call to static method: printi, in class Library
+              19: Reference to array, Type: int, Symbol table: main
+                  19: Reference to variable: integerarr, Type: int[], Symbol table: main
+                  19: Integer literal: 1, Type: int, Symbol table: main
+        21: Method call statement
+          21: Call to static method: println, in class Library
+              21: String literal: "", Type: string, Symbol table: main
+        24: Declaration of local variable: doublearr, with initial value, Type: int[][], Symbol table: main
+            24: Array allocation, Type: int[][], Symbol table: main
+                24: Integer literal: 3, Type: int, Symbol table: main
+        25: Assignment statement, Symbol table: main
+            25: Reference to array, Type: int, Symbol table: main
+                25: Reference to variable: doublearr, Type: int[][], Symbol table: main
+                25: Integer literal: 0, Type: int, Symbol table: main
+            25: Array allocation, Type: int[], Symbol table: main
+                25: Integer literal: 5, Type: int, Symbol table: main
+        26: Assignment statement, Symbol table: main
+            26: Reference to array, Type: int, Symbol table: main
+                26: Reference to array, Type: int, Symbol table: main
+                    26: Reference to variable: doublearr, Type: int[][], Symbol table: main
+                    26: Integer literal: 0, Type: int, Symbol table: main
+                26: Integer literal: 0, Type: int, Symbol table: main
+            26: Integer literal: 3, Type: int, Symbol table: main
+        27: Method call statement
+          27: Call to static method: printi, in class Library
+              27: Reference to array, Type: int, Symbol table: main
+                  27: Reference to array, Type: int, Symbol table: main
+                      27: Reference to variable: doublearr, Type: int[][], Symbol table: main
+                      27: Integer literal: 0, Type: int, Symbol table: main
+                  27: Integer literal: 0, Type: int, Symbol table: main

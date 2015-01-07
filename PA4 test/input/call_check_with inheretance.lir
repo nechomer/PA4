@@ -123,25 +123,30 @@ Library __exit(0),Rdummy
 
 _CallChecks_foo:
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Return Rdummy
 
 _CallChecks_sfoo:
 Move str2, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Return Rdummy
 
 _X_foo:
 Move str3, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Return Rdummy
 
 _Y_foo:
 Move str4, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Return Rdummy
 
 _Z_foo:
 Move str5, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Return Rdummy

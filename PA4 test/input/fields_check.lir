@@ -91,6 +91,7 @@ Library __allocateObject(20), R2
 MoveField _DV_C, R2.0
 StaticCall __checkNullRef(a=R2),Rdummy
 MoveField R2.3, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Library __allocateObject(20), R3
 MoveField _DV_C, R3.0

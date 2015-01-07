@@ -1,0 +1,3 @@
+Parsed -Linput/Library/libic.sig successfully!
+Parsed semantic_check_fail_PA3_no_main.ic successfully!
+7: semantic error;  Main method is not static! 

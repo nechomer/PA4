@@ -1,0 +1,51 @@
+Parsed -Linput/Library/libic.sig successfully!
+Parsed fields_check.ic successfully!
+
+Abstract Syntax Tree: -Linput/Library/libic.sig
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+java.lang.NullPointerException
+	at IC.SemanticChecks.TypeTabelBuilder.formatType(TypeTabelBuilder.java:403)
+	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:306)
+	at IC.AST.VariableLocation.accept(VariableLocation.java:18)
+	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:343)
+	at IC.AST.StaticCall.accept(StaticCall.java:15)
+	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:186)
+	at IC.AST.CallStatement.accept(CallStatement.java:14)
+	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:162)
+	at IC.AST.StaticMethod.accept(StaticMethod.java:13)
+	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:74)
+	at IC.AST.ICClass.accept(ICClass.java:21)
+	at IC.AST.PrettyPrinter.visit(PrettyPrinter.java:51)
+	at IC.AST.Program.accept(Program.java:15)
+	at IC.Compiler.main(Compiler.java:95)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader.main(JarRsrcLoader.java:58)

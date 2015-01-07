@@ -1,0 +1,143 @@
+Parsed -Linput/Library/libic.sig successfully!
+Parsed while_check.ic successfully!
+
+Abstract Syntax Tree: -Linput/Library/libic.sig
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+
+Abstract Syntax Tree: input\while_check.ic
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+1: Declaration of class: WhileCheck, Type: WhileCheck, Symbol table: Global
+    3: Declaration of static method: main, Type: {string[] -> void}, Symbol table: WhileCheck
+        3: Parameter: args, Type: string[], Symbol table: main
+        5: Declaration of local variable: arr, with initial value, Type: int[], Symbol table: main
+            5: Array allocation, Type: int[], Symbol table: main
+                5: Integer literal: 6, Type: int, Symbol table: main
+        6: Declaration of local variable: i, with initial value, Type: int, Symbol table: main
+            6: Integer literal: 0, Type: int, Symbol table: main
+        9: While statement, Symbol table: main
+            9: Logical binary operation: less than, Type: boolean, Symbol table: main
+                9: Reference to variable: i, Type: int, Symbol table: main
+                9: Reference to array length
+                  9: Reference to variable: arr, Type: int[], Symbol table: main
+            9: Block of statements, Symbol table: main
+                10: Method call statement
+                  10: Call to static method: printi, in class Library
+                      10: Reference to variable: i, Type: int, Symbol table: statement block in main
+                11: Method call statement
+                  11: Call to static method: print, in class Library
+                      11: String literal: ": ", Type: string, Symbol table: statement block in main
+                12: Method call statement
+                  12: Call to static method: printi, in class Library
+                      12: Reference to array, Type: int, Symbol table: statement block in main
+                          12: Reference to variable: arr, Type: int[], Symbol table: statement block in main
+                          12: Reference to variable: i, Type: int, Symbol table: statement block in main
+                13: Method call statement
+                  13: Call to static method: println, in class Library
+                      13: String literal: "", Type: string, Symbol table: statement block in main
+                14: Assignment statement, Symbol table: statement block in main
+                    14: Reference to variable: i, Type: int, Symbol table: statement block in main
+                    14: Mathematical binary operation: addition, Type: int, Symbol table: statement block in main
+                        14: Reference to variable: i, Type: int, Symbol table: statement block in main
+                        14: Integer literal: 1, Type: int, Symbol table: statement block in main
+        19: Assignment statement, Symbol table: main
+            19: Reference to variable: i, Type: int, Symbol table: main
+            19: Integer literal: 0, Type: int, Symbol table: main
+        20: While statement, Symbol table: main
+            20: Logical binary operation: less than, Type: boolean, Symbol table: main
+                20: Reference to variable: i, Type: int, Symbol table: main
+                20: Reference to array length
+                  20: Reference to variable: arr, Type: int[], Symbol table: main
+            20: Block of statements, Symbol table: main
+                21: Assignment statement, Symbol table: statement block in main
+                    21: Reference to array, Type: int, Symbol table: statement block in main
+                        21: Reference to variable: arr, Type: int[], Symbol table: statement block in main
+                        21: Reference to variable: i, Type: int, Symbol table: statement block in main
+                    21: Mathematical binary operation: subtraction, Type: int, Symbol table: statement block in main
+                        21: Reference to array length
+                          21: Reference to variable: arr, Type: int[], Symbol table: statement block in main
+                        21: Reference to variable: i, Type: int, Symbol table: statement block in main
+                22: Assignment statement, Symbol table: statement block in main
+                    22: Reference to variable: i, Type: int, Symbol table: statement block in main
+                    22: Mathematical binary operation: addition, Type: int, Symbol table: statement block in main
+                        22: Reference to variable: i, Type: int, Symbol table: statement block in main
+                        22: Integer literal: 1, Type: int, Symbol table: statement block in main
+        26: Assignment statement, Symbol table: main
+            26: Reference to variable: i, Type: int, Symbol table: main
+            26: Integer literal: 0, Type: int, Symbol table: main
+        27: While statement, Symbol table: main
+            27: Logical binary operation: less than, Type: boolean, Symbol table: main
+                27: Reference to variable: i, Type: int, Symbol table: main
+                27: Reference to array length
+                  27: Reference to variable: arr, Type: int[], Symbol table: main
+            27: Block of statements, Symbol table: main
+                28: Method call statement
+                  28: Call to static method: printi, in class Library
+                      28: Reference to variable: i, Type: int, Symbol table: statement block in main
+                29: Method call statement
+                  29: Call to static method: print, in class Library
+                      29: String literal: ": ", Type: string, Symbol table: statement block in main
+                30: Method call statement
+                  30: Call to static method: printi, in class Library
+                      30: Reference to array, Type: int, Symbol table: statement block in main
+                          30: Reference to variable: arr, Type: int[], Symbol table: statement block in main
+                          30: Reference to variable: i, Type: int, Symbol table: statement block in main
+                31: Method call statement
+                  31: Call to static method: println, in class Library
+                      31: String literal: "", Type: string, Symbol table: statement block in main
+                32: Assignment statement, Symbol table: statement block in main
+                    32: Reference to variable: i, Type: int, Symbol table: statement block in main
+                    32: Mathematical binary operation: addition, Type: int, Symbol table: statement block in main
+                        32: Reference to variable: i, Type: int, Symbol table: statement block in main
+                        32: Integer literal: 1, Type: int, Symbol table: statement block in main

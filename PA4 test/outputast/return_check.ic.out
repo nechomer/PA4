@@ -1,0 +1,168 @@
+Parsed -Linput/Library/libic.sig successfully!
+Parsed return_check.ic successfully!
+
+Abstract Syntax Tree: -Linput/Library/libic.sig
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+
+Abstract Syntax Tree: input\return_check.ic
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+1: Declaration of class: ReturnCheck, Type: ReturnCheck, Symbol table: Global
+    3: Declaration of static method: main, Type: {string[] -> void}, Symbol table: ReturnCheck
+        3: Parameter: args, Type: string[], Symbol table: main
+        4: Declaration of local variable: rc, with initial value, Type: ReturnCheck, Symbol table: main
+            4: Instantiation of class: ReturnCheck, Type: ReturnCheck, Symbol table: main
+        5: Method call statement
+          5: Call to virtual method: checkRetFuncs, in external scope
+              5: Reference to variable: rc, Type: ReturnCheck, Symbol table: main
+    8: Declaration of virtual method: checkRetFuncs, Type: { -> void}, Symbol table: ReturnCheck
+        9: Method call statement
+          9: Call to virtual method: retvoid
+        10: Method call statement
+          10: Call to virtual method: retvobj
+        11: Method call statement
+          11: Call to virtual method: retArr
+        12: Method call statement
+          12: Call to virtual method: retArrLocation
+        13: Method call statement
+          13: Call to virtual method: retThis
+        14: Method call statement
+          14: Call to virtual method: retNewObjThis
+        15: Method call statement
+          15: Call to virtual method: retNewObj
+        16: Method call statement
+          16: Call to virtual method: retNewArr
+        17: Method call statement
+          17: Call to virtual method: retArrLength
+        18: Method call statement
+          18: Call to virtual method: retNegation
+        19: Method call statement
+          19: Call to virtual method: retNegative
+        20: Method call statement
+          20: Call to virtual method: retNull
+        21: Method call statement
+          21: Call to virtual method: retIntCalling
+    24: Declaration of virtual method: retvoid, Type: { -> void}, Symbol table: ReturnCheck
+        25: Return statement, Symbol table: retvoid
+    28: Declaration of virtual method: retvobj, Type: { -> C}, Symbol table: ReturnCheck
+        29: Declaration of local variable: c, with initial value, Type: C, Symbol table: retvobj
+            29: Instantiation of class: C, Type: C, Symbol table: retvobj
+        30: Return statement, with return value, Symbol table: retvobj
+          30: Reference to variable: c, Type: C, Symbol table: retvobj
+    33: Declaration of virtual method: retArr, Type: { -> C[]}, Symbol table: ReturnCheck
+        34: Declaration of local variable: c, with initial value, Type: C[], Symbol table: retArr
+            34: Array allocation, Type: C[], Symbol table: retArr
+                34: Integer literal: 2, Type: int, Symbol table: retArr
+        35: Return statement, with return value, Symbol table: retArr
+          35: Reference to variable: c, Type: C[], Symbol table: retArr
+    38: Declaration of virtual method: retArrLocation, Type: { -> C}, Symbol table: ReturnCheck
+        39: Declaration of local variable: c, with initial value, Type: C[], Symbol table: retArrLocation
+            39: Array allocation, Type: C[], Symbol table: retArrLocation
+                39: Integer literal: 0, Type: int, Symbol table: retArrLocation
+        40: Assignment statement, Symbol table: retArrLocation
+            40: Reference to array, Type: C, Symbol table: retArrLocation
+                40: Reference to variable: c, Type: C[], Symbol table: retArrLocation
+                40: Integer literal: 0, Type: int, Symbol table: retArrLocation
+            40: Instantiation of class: C, Type: C, Symbol table: retArrLocation
+        41: Return statement, with return value, Symbol table: retArrLocation
+          41: Reference to array, Type: C, Symbol table: retArrLocation
+              41: Reference to variable: c, Type: C[], Symbol table: retArrLocation
+              41: Integer literal: 1, Type: int, Symbol table: retArrLocation
+    44: Declaration of virtual method: retThis, Type: { -> C}, Symbol table: ReturnCheck
+        45: Return statement, with return value, Symbol table: retThis
+          45: Call to virtual method: retThis, in external scope
+              45: Parenthesized expression
+                45: Instantiation of class: C, Type: C, Symbol table: retThis
+    48: Declaration of virtual method: retNewObjThis, Type: { -> C}, Symbol table: ReturnCheck
+        49: Return statement, with return value, Symbol table: retNewObjThis
+          49: Call to virtual method: retThis, in external scope
+              49: Parenthesized expression
+                49: Instantiation of class: C, Type: C, Symbol table: retNewObjThis
+    52: Declaration of virtual method: retNewObj, Type: { -> C}, Symbol table: ReturnCheck
+        53: Return statement, with return value, Symbol table: retNewObj
+          53: Instantiation of class: C, Type: C, Symbol table: retNewObj
+    56: Declaration of virtual method: retNewArr, Type: { -> int[]}, Symbol table: ReturnCheck
+        57: Return statement, with return value, Symbol table: retNewArr
+          57: Array allocation, Type: int[], Symbol table: retNewArr
+              57: Integer literal: 34, Type: int, Symbol table: retNewArr
+    60: Declaration of virtual method: retArrLength, Type: { -> int}, Symbol table: ReturnCheck
+        61: Declaration of local variable: arr, with initial value, Type: int[], Symbol table: retArrLength
+            61: Array allocation, Type: int[], Symbol table: retArrLength
+                61: Integer literal: 2, Type: int, Symbol table: retArrLength
+        62: Return statement, with return value, Symbol table: retArrLength
+          62: Reference to array length
+            62: Reference to variable: arr, Type: int[], Symbol table: retArrLength
+    65: Declaration of virtual method: retNegation, Type: { -> boolean}, Symbol table: ReturnCheck
+        66: Declaration of local variable: a, with initial value, Type: boolean, Symbol table: retNegation
+            66: Boolean literal: true, Type: boolean, Symbol table: retNegation
+        67: Return statement, with return value, Symbol table: retNegation
+          67: Logical unary operation: logical negation, Type: boolean, Symbol table: retNegation
+            67: Reference to variable: a, Type: boolean, Symbol table: retNegation
+    70: Declaration of virtual method: retNegative, Type: { -> int}, Symbol table: ReturnCheck
+        71: Declaration of local variable: a, with initial value, Type: int, Symbol table: retNegative
+            71: Integer literal: 1, Type: int, Symbol table: retNegative
+        72: Return statement, with return value, Symbol table: retNegative
+          72: Mathematical unary operation: unary subtraction, Type: int, Symbol table: retNegative
+            72: Reference to variable: a, Type: int, Symbol table: retNegative
+    75: Declaration of virtual method: retNull, Type: { -> string}, Symbol table: ReturnCheck
+        76: Return statement, with return value, Symbol table: retNull
+          76: Null literal: null, Type: null, Symbol table: retNull
+    79: Declaration of virtual method: retIntCalling, Type: { -> int}, Symbol table: ReturnCheck
+        80: Return statement, with return value, Symbol table: retIntCalling
+          80: Parenthesized expression
+            80: Integer literal: 6, Type: int, Symbol table: retIntCalling
+84: Declaration of class: C, Type: C, Symbol table: Global
+    86: Declaration of virtual method: retThis, Type: { -> C}, Symbol table: C
+        87: Return statement, with return value, Symbol table: retThis
+          87: Reference to 'this' instance

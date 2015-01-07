@@ -89,6 +89,7 @@ Move R0, c
 Move c, R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move c, R0
 Move b, R1
@@ -99,6 +100,7 @@ Move R0, c
 Move c, R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move a, R0
 Move b, R1
@@ -109,6 +111,7 @@ Move R0, c
 Move c, R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move c, R0
 Move b, R1
@@ -121,6 +124,7 @@ Move R0, c
 Move c, R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move a, R0
 Neg R0
@@ -130,12 +134,14 @@ Move R0, c
 Move c, R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move a, R0
 Move R0, c
 Move c, R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move a, R0
 Neg R0
@@ -145,6 +151,7 @@ Move R0, c
 Move c, R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move b, R0
 Neg R0
@@ -155,6 +162,7 @@ Move R0, c
 Move c, R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move a, R0
 Move c, R1
@@ -170,6 +178,7 @@ Move R0, c
 Move c, R1
 Library __printi(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move d, R0
 Xor 1,R0
@@ -179,6 +188,7 @@ Move R0, f
 Move f, R1
 Library __printb(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move e, R0
 Compare 0, R0
@@ -195,6 +205,7 @@ Move R0, f
 Move f, R1
 Library __printb(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move e, R0
 Compare 0, R0
@@ -211,6 +222,7 @@ Move R0, f
 Move f, R1
 Library __printb(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move 0, R0
 Move e, R1
@@ -234,6 +246,7 @@ Move R0, f
 Move f, R1
 Library __printb(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move f, R0
 Compare 0, R0
@@ -250,5 +263,6 @@ Move R0, f
 Move f, R1
 Library __printb(R1), Rdummy
 Move str1, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Library __exit(0),Rdummy

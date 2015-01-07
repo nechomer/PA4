@@ -76,18 +76,28 @@ _error4:
 _ic_main:
 Move str1, R0
 Move str2, R1
+StaticCall __checkNullRef(a=R0),Rdummy
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __stringCat(R0,R1), R0
 Move R0, s
 Move s, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Move str3, R0
 Move str4, R1
+StaticCall __checkNullRef(a=R0),Rdummy
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __stringCat(R0,R1), R0
 Move str5, R1
+StaticCall __checkNullRef(a=R0),Rdummy
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __stringCat(R0,R1), R0
 Move str6, R1
+StaticCall __checkNullRef(a=R0),Rdummy
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __stringCat(R0,R1), R0
 Move R0, s
 Move s, R1
+StaticCall __checkNullRef(a=R1),Rdummy
 Library __println(R1), Rdummy
 Library __exit(0),Rdummy

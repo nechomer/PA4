@@ -1,0 +1,120 @@
+Parsed -Linput/Library/libic.sig successfully!
+Parsed call_check_with inheretance.ic successfully!
+
+Abstract Syntax Tree: -Linput/Library/libic.sig
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+
+Abstract Syntax Tree: input\call_check_with inheretance.ic
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+1: Declaration of class: CallChecks, Type: CallChecks, Symbol table: Global
+    3: Declaration of static method: main, Type: {string[] -> void}, Symbol table: CallChecks
+        3: Parameter: args, Type: string[], Symbol table: main
+        5: Declaration of local variable: x, with initial value, Type: X, Symbol table: main
+            5: Instantiation of class: X, Type: X, Symbol table: main
+        6: Declaration of local variable: y, with initial value, Type: Y, Symbol table: main
+            6: Instantiation of class: Y, Type: Y, Symbol table: main
+        7: Declaration of local variable: z, with initial value, Type: Z, Symbol table: main
+            7: Instantiation of class: Z, Type: Z, Symbol table: main
+        9: Method call statement
+          9: Call to virtual method: foo, in external scope
+              9: Reference to variable: x, Type: X, Symbol table: main
+              9: Integer literal: 1, Type: int, Symbol table: main
+              9: Integer literal: 2, Type: int, Symbol table: main
+        10: Method call statement
+          10: Call to virtual method: foo, in external scope
+              10: Reference to variable: y, Type: Y, Symbol table: main
+              10: Integer literal: 1, Type: int, Symbol table: main
+              10: Integer literal: 2, Type: int, Symbol table: main
+        11: Method call statement
+          11: Call to virtual method: foo, in external scope
+              11: Reference to variable: z, Type: Z, Symbol table: main
+              11: Integer literal: 1, Type: int, Symbol table: main
+              11: Integer literal: 2, Type: int, Symbol table: main
+        13: Method call statement
+          13: Call to static method: sfoo, in class CallChecks
+        14: Declaration of local variable: c, with initial value, Type: CallChecks, Symbol table: main
+            14: Instantiation of class: CallChecks, Type: CallChecks, Symbol table: main
+        15: Method call statement
+          15: Call to virtual method: foo, in external scope
+              15: Reference to variable: c, Type: CallChecks, Symbol table: main
+    19: Declaration of virtual method: foo, Type: { -> void}, Symbol table: CallChecks
+        20: Method call statement
+          20: Call to static method: println, in class Library
+              20: String literal: "foo inside main class", Type: string, Symbol table: foo
+    23: Declaration of static method: sfoo, Type: { -> void}, Symbol table: CallChecks
+        24: Method call statement
+          24: Call to static method: println, in class Library
+              24: String literal: "static foo inside main class", Type: string, Symbol table: sfoo
+28: Declaration of class: X, Type: X, Symbol table: Global
+    29: Declaration of virtual method: foo, Type: {int, int -> void}, Symbol table: X
+        29: Parameter: a, Type: int, Symbol table: foo
+        29: Parameter: b, Type: int, Symbol table: foo
+        30: Method call statement
+          30: Call to static method: println, in class Library
+              30: String literal: "foo inside X", Type: string, Symbol table: foo
+34: Declaration of class: Y, subclass of X, Type: Y, Symbol table: X
+    35: Declaration of virtual method: foo, Type: {int, int -> void}, Symbol table: Y
+        35: Parameter: a, Type: int, Symbol table: foo
+        35: Parameter: b, Type: int, Symbol table: foo
+        36: Method call statement
+          36: Call to static method: println, in class Library
+              36: String literal: "foo inside Y", Type: string, Symbol table: foo
+40: Declaration of class: Z, subclass of Y, Type: Z, Symbol table: Y
+    41: Declaration of virtual method: foo, Type: {int, int -> void}, Symbol table: Z
+        41: Parameter: a, Type: int, Symbol table: foo
+        41: Parameter: b, Type: int, Symbol table: foo
+        42: Method call statement
+          42: Call to static method: println, in class Library
+              42: String literal: "foo inside Z", Type: string, Symbol table: foo

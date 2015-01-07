@@ -1,0 +1,114 @@
+Parsed -Linput/Library/libic.sig successfully!
+Parsed if_check.ic successfully!
+
+Abstract Syntax Tree: -Linput/Library/libic.sig
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+
+Abstract Syntax Tree: input\if_check.ic
+
+1: Declaration of class: Library, Type: Library, Symbol table: Global
+    2: Declaration of library method: println, Type: void
+        2: Parameter: s, Type: string, Symbol table: println
+    3: Declaration of library method: print, Type: void
+        3: Parameter: s, Type: string, Symbol table: print
+    4: Declaration of library method: printi, Type: void
+        4: Parameter: i, Type: int, Symbol table: printi
+    5: Declaration of library method: printb, Type: void
+        5: Parameter: b, Type: boolean, Symbol table: printb
+    7: Declaration of library method: readi, Type: int
+    8: Declaration of library method: readln, Type: string
+    9: Declaration of library method: eof, Type: boolean
+    11: Declaration of library method: stoi, Type: int
+        11: Parameter: s, Type: string, Symbol table: stoi
+        11: Parameter: n, Type: int, Symbol table: stoi
+    13: Declaration of library method: itos, Type: string
+        13: Parameter: i, Type: int, Symbol table: itos
+    14: Declaration of library method: stoa, Type: int[]
+        14: Parameter: s, Type: string, Symbol table: stoa
+    15: Declaration of library method: atos, Type: string
+        15: Parameter: a, Type: int[], Symbol table: atos
+    17: Declaration of library method: random, Type: int
+        17: Parameter: n, Type: int, Symbol table: random
+    18: Declaration of library method: time, Type: int
+    19: Declaration of library method: exit, Type: int
+        19: Parameter: i, Type: int, Symbol table: exit
+1: Declaration of class: IfCheck, Type: IfCheck, Symbol table: Global
+    3: Declaration of static method: main, Type: {string[] -> void}, Symbol table: IfCheck
+        3: Parameter: args, Type: string[], Symbol table: main
+        4: Method call statement
+          4: Call to static method: printi, in class Library
+              4: Call to static method: bar, in class B
+        5: Method call statement
+          5: Call to static method: printi, in class Library
+              5: Call to static method: foo, in class B
+10: Declaration of class: B, Type: B, Symbol table: Global
+    12: Declaration of static method: bar, Type: { -> int}, Symbol table: B
+        13: If statement, with Else operation, Symbol table: bar
+            13: Logical binary operation: less than, Type: boolean, Symbol table: bar
+                13: Integer literal: 3, Type: int, Symbol table: bar
+                13: Integer literal: 6, Type: int, Symbol table: bar
+            14: Return statement, with return value, Symbol table: bar
+              14: Integer literal: 3, Type: int, Symbol table: bar
+            15: Block of statements, Symbol table: bar
+                16: Return statement, with return value, Symbol table: statement block in bar
+                  16: Integer literal: 6, Type: int, Symbol table: statement block in bar
+    20: Declaration of static method: foo, Type: { -> int}, Symbol table: B
+        22: Declaration of local variable: a, with initial value, Type: int, Symbol table: foo
+            22: Integer literal: 1, Type: int, Symbol table: foo
+        23: Declaration of local variable: b, Type: int, Symbol table: foo
+        24: Declaration of local variable: c, Type: int, Symbol table: foo
+        26: Assignment statement, Symbol table: foo
+            26: Reference to variable: c, Type: int, Symbol table: foo
+            26: Reference to variable: a, Type: int, Symbol table: foo
+        28: If statement, with Else operation, Symbol table: foo
+            28: Logical binary operation: greater than, Type: boolean, Symbol table: foo
+                28: Reference to variable: b, Type: int, Symbol table: foo
+                28: Integer literal: 0, Type: int, Symbol table: foo
+            28: Block of statements, Symbol table: foo
+                29: If statement, with Else operation, Symbol table: statement block in foo
+                    29: Logical binary operation: equality, Type: boolean, Symbol table: statement block in foo
+                        29: Reference to variable: a, Type: int, Symbol table: statement block in foo
+                        29: Integer literal: 1, Type: int, Symbol table: statement block in foo
+                    29: Block of statements, Symbol table: statement block in foo
+                        30: Return statement, with return value, Symbol table: statement block in statement block in foo
+                          30: Integer literal: 1, Type: int, Symbol table: statement block in statement block in foo
+                    31: Block of statements, Symbol table: statement block in foo
+                        32: Return statement, with return value, Symbol table: statement block in statement block in foo
+                          32: Integer literal: 2, Type: int, Symbol table: statement block in statement block in foo
+            34: Block of statements, Symbol table: foo
+                35: If statement, with Else operation, Symbol table: statement block in foo
+                    35: Logical binary operation: less than, Type: boolean, Symbol table: statement block in foo
+                        35: Reference to variable: c, Type: int, Symbol table: statement block in foo
+                        35: Integer literal: 2, Type: int, Symbol table: statement block in foo
+                    35: Block of statements, Symbol table: statement block in foo
+                        36: Return statement, with return value, Symbol table: statement block in statement block in foo
+                          36: Integer literal: 3, Type: int, Symbol table: statement block in statement block in foo
+                    37: Block of statements, Symbol table: statement block in foo
+                        38: Return statement, with return value, Symbol table: statement block in statement block in foo
+                          38: Integer literal: 4, Type: int, Symbol table: statement block in statement block in foo
