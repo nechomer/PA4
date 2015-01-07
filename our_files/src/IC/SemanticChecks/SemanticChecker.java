@@ -404,7 +404,7 @@ public class SemanticChecker implements Visitor {
 				throw new SemanticException(location,
 						"Inappropriate Use Of Variable Location! Entered Method Name Instead Of Variable");
 			}
-
+			location.setLocationType((Type) variable);
 			return (Type) variable;
 			
 		} else {
@@ -419,6 +419,7 @@ public class SemanticChecker implements Visitor {
 				throw new SemanticException(location, location.getName()
 						+ " doesn't exist in " + c.getName());
 			}
+			location.setLocationType(field.getType());
 			return field.getType();
 		}
 	}
