@@ -322,12 +322,8 @@ public class PrettyPrinter implements Visitor {
 		StringBuffer output = new StringBuffer();
 
 		indent(output, location);
-		Type t = null;
-		if( location.getArray() instanceof VariableLocation){
-			t = (Type)location.scope.retrieveIdentifier(((VariableLocation)location.getArray()).getName());  ///TODO fix 
-		}
 		output.append("Reference to array");
-		output.append(", Type: " + t.getName());
+		output.append(", Type: " + location.getArrType());
 		output.append(getScopeHierarchyString(location.scope));
 		depth += 2;
 		output.append(location.getArray().accept(this));
