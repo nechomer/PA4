@@ -414,11 +414,15 @@ public class SemanticChecker implements Visitor {
 			location.setcName(ctype.getName());
 			ICClass c = (ICClass) location.scope.retrieveIdentifier(ctype
 					.getName());
+			if (c == null) {
+				throw new SemanticException(location, location.getName()
+						+ " is not a reachable field ");
+			}
 			//Look up the field definition in the class
 			Field field = c.scope.getField(location.getName());
 			if (field == null) {
 				throw new SemanticException(location, location.getName()
-						+ " doesn't exist in " + c.getName());
+						+ " doesn't exist in " + (location.getLocation()));
 			}
 			location.setLocationType(field.getType());
 			return field.getType();
