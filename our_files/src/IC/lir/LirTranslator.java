@@ -45,7 +45,7 @@ import IC.AST.While;
 
 public class LirTranslator implements Visitor {
 	
-	private Map<String,String> strMap;
+	private Map<String,String> stringsMap;
 	private String currClass;
 	private String globalTestLabel = null;
 	private String globalEndLabel = null;
@@ -55,7 +55,7 @@ public class LirTranslator implements Visitor {
 	
 	
 	public LirTranslator(Map<String,String> strMap) {
-		this.strMap = strMap;
+		this.stringsMap = strMap;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class LirTranslator implements Visitor {
 	 */
 	@Override
 	public Object visit(Program program) {
-		String lir = runtimeErrorFuncs();
+		String lir = makeLirRuntimeErrorFuncs();
 		for (ICClass icClass : program.getClasses()) {
             lir += icClass.accept(this);
         }
@@ -248,8 +248,8 @@ public class LirTranslator implements Visitor {
 	public Object visit(If ifStatement) {
 		String lir = "";
 		String condReg = getNextReg();
-		String falseLabel = getNextLabel("false_label");
-		String endLabel = getNextLabel("end_label");
+		String falseLabel = makeNextLirLabel("false_label");
+		String endLabel = makeNextLirLabel("end_label");
 		
 		lir += ifStatement.getCondition().accept(this);
 		lir += "Compare 0, " + condReg + "\n";
@@ -287,8 +287,8 @@ public class LirTranslator implements Visitor {
 		String lir = "";
 		String condReg = getNextReg();
 		
-		String testLabel = getNextLabel("test_label");
-		String endLabel = getNextLabel("end_label");
+		String testLabel = makeNextLirLabel("test_label");
+		String endLabel = makeNextLirLabel("end_label");
 		String oldTestLabel = globalTestLabel;
 		String oldEndLabel = globalEndLabel;
 		globalTestLabel = testLabel;
@@ -523,7 +523,7 @@ public class LirTranslator implements Visitor {
 				lir += paramRegs.get(paramRegs.size()-1);
 		} else {
 			lir += "StaticCall _" + call.getClassName() + "_" + call.getName() + "(";
-			lir += getCallArgsStr(call, paramRegs);
+			lir += translateCallArgsToLir(call, paramRegs);
 		}
 
 		lir += "), " + resReg + "\n";
@@ -570,7 +570,7 @@ public class LirTranslator implements Visitor {
 			
 		//call the method
 		lir += "VirtualCall " + objReg + "." + methodOffset;
-		lir += "(" + getCallArgsStr(call, paramRegs) + "), " + resReg + "\n";
+		lir += "(" + translateCallArgsToLir(call, paramRegs) + "), " + resReg + "\n";
 		
 		// pop used registers
 		currReg = startMax;
@@ -583,7 +583,7 @@ public class LirTranslator implements Visitor {
 	 * @param paramRegs - The parameter registers list
 	 * @return - The string representation of all parameter registers in format of <Reg>=<Defined argument>
 	 */
-	private String getCallArgsStr(Call call, List<String> paramRegs) {
+	private String translateCallArgsToLir(Call call, List<String> paramRegs) {
 		List<Formal> fl = call.getMethod().getFormals();
 		String lir ="";
 		for ( int i = 0; i < fl.size() ; i++ ) {
@@ -715,9 +715,9 @@ public class LirTranslator implements Visitor {
 		String binaryLir = "";
 		if ( ( binaryOp.getOperator() == BinaryOps.LAND ) ||
 				( binaryOp.getOperator() == BinaryOps.LOR ) )
-			binaryLir += andOrCode(binaryOp);
+			binaryLir += makeLirLogicalBinaryAndOrCode(binaryOp);
 		else
-			binaryLir += comparrisonCode(binaryOp);
+			binaryLir += makeLirComparrisonCode(binaryOp);
 		
 		currReg = lastReg;
 		return binaryLir;
@@ -734,7 +734,7 @@ public class LirTranslator implements Visitor {
 	 * Move 1, <Result Reg>
 	 * <logical_op_end label>
 	 */
-	private String comparrisonCode(LogicalBinaryOp binaryOp) {
+	private String makeLirComparrisonCode(LogicalBinaryOp binaryOp) {
 		
 		String testEnd = makeUniqueJumpLabel("logical_op_end");
 		String binaryLir = "";
@@ -770,7 +770,7 @@ public class LirTranslator implements Visitor {
 	 * And/OR <Reg2>, <Reg1>
 	 * <logical_op_end label>:
 	 */
-	private String andOrCode(LogicalBinaryOp binaryOp) {
+	private String makeLirLogicalBinaryAndOrCode(LogicalBinaryOp binaryOp) {
 
 		String testEnd = makeUniqueJumpLabel("logical_op_end");
 		String binaryLir = "";
@@ -856,7 +856,7 @@ public class LirTranslator implements Visitor {
 		case TRUE:
 			return "Move 1, " + getNextReg() + "\n";
 		case STRING:
-			return "Move " + strMap.get(StringsBuilder.formatString(literal.getValue().toString())) + ", " + getNextReg() + "\n";
+			return "Move " + stringsMap.get(StringsBuilder.formatString(literal.getValue().toString())) + ", " + getNextReg() + "\n";
 		}
 		return null;
 	}
@@ -881,13 +881,13 @@ public class LirTranslator implements Visitor {
 	 * @param label
 	 * @return
 	 */
-	private String getNextLabel(String label) {
+	private String makeNextLirLabel(String label) {
 		return "_" + label + "_" + (++currLabel);
 	}
 	/**
 	 * @return
 	 */
-	private static String runtimeErrorFuncs(){
+	private static String makeLirRuntimeErrorFuncs(){
 		return nullPtrCheckCode + arrIdxOutOfBoundsCheckCode + arrIdxCheckCode + zeroDivCheckCode;
 	} 
 
@@ -1011,7 +1011,4 @@ public class LirTranslator implements Visitor {
 	private String makeUniqueJumpLabel(String name) {
 		return "_" + name + "_" +(++currLabel);
 	}
-
-
-
 }
