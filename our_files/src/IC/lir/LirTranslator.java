@@ -856,7 +856,7 @@ public class LirTranslator implements Visitor {
 		case TRUE:
 			return "Move 1, " + getNextReg() + "\n";
 		case STRING:
-			return "Move " + strMap.get(literal.getValue()) + ", " + getNextReg() + "\n";
+			return "Move " + strMap.get(StringsBuilder.formatString(literal.getValue().toString())) + ", " + getNextReg() + "\n";
 		}
 		return null;
 	}
