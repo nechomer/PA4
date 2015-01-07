@@ -60,7 +60,7 @@ public class Main
             System.out.println("finished part 3!");
             
             if (programNode != null) 
-                System.out.println(programNode.accept(new PrettyPrinter(args[0])));
+                System.out.println(programNode.accept(new PrettyPrinter(args[0],false)));
             
 //            // Syntax Analysis
 //            ASTNode progAst = null, libAst = null;            
